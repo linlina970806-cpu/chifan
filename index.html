@@ -110,40 +110,40 @@ h2{font-size:19px;margin:0;line-height:1.25} .tag{font-size:12px;background:#fff
 <button class="wheel-launch" id="wheelLaunch">🎡 今天吃什么？点这里开始随机</button>
 
 <main id="grid" class="grid">
-<article class="card" data-category="中餐" data-search="yuanbao jiaozi 中餐">
-          <div class="photoWrap">
-            <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Real+Dish+Photo+Coming" alt="中餐示意图" loading="lazy">
-            <span class="rank">#1</span>
-          </div>
-          <div class="body">
-            <div class="row">
-              <h2>Yuanbao Jiaozi</h2>
-              <span class="tag">中餐</span>
-            </div>
-            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
-            <div class="actions">
-              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Yuanbao+Jiaozi+San+Francisco+CA">📍 地图</a>
-              <button class="fav">♡ 收藏</button>
-            </div>
-          </div>
-        </article>
-<article class="card" data-category="中餐" data-search="z &amp; y restaurant 中餐">
-          <div class="photoWrap">
-            <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Real+Dish+Photo+Coming" alt="中餐示意图" loading="lazy">
-            <span class="rank">#2</span>
-          </div>
-          <div class="body">
-            <div class="row">
-              <h2>Z &amp; Y Restaurant</h2>
-              <span class="tag">中餐</span>
-            </div>
-            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
-            <div class="actions">
-              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Z+%26+Y+Restaurant+San+Francisco+CA">📍 地图</a>
-              <button class="fav">♡ 收藏</button>
-            </div>
-          </div>
-        </article>
+<article class="card" data-category="中餐" data-search="奈哥酸菜鱼 中餐">
+  <div class="photoWrap">
+    <img src="naige.JPG" alt="奈哥酸菜鱼菜品" loading="lazy">
+    <span class="rank">#1</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>奈哥酸菜鱼</h2>
+      <span class="tag">中餐</span>
+    </div>
+    <p>酸菜鱼 · 炸串 · 店主推荐</p>
+    <div class="actions">
+      <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%A5%88%E5%93%A5%E9%85%B8%E8%8F%9C%E9%B1%BC+San+Francisco+CA">📍 地图</a>
+      <button class="fav">♡ 收藏</button>
+    </div>
+  </div>
+</article>
+<article class="card" data-category="中餐" data-search="青蔬麻辣烫 中餐">
+  <div class="photoWrap">
+    <img src="qingshu.JPG" alt="青蔬麻辣烫菜品" loading="lazy">
+    <span class="rank">#2</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>青蔬麻辣烫</h2>
+      <span class="tag">中餐</span>
+    </div>
+    <p>麻辣烫 · 自选菜 · 店主推荐</p>
+    <div class="actions">
+      <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E9%9D%92%E8%94%AC%E9%BA%BB%E8%BE%A3%E7%83%AB+San+Francisco+CA">📍 地图</a>
+      <button class="fav">♡ 收藏</button>
+    </div>
+  </div>
+</article>
 <article class="card" data-category="中餐" data-search="z &amp; y peking duck 中餐">
           <div class="photoWrap">
             <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Real+Dish+Photo+Coming" alt="中餐示意图" loading="lazy">
@@ -1819,6 +1819,21 @@ h2{font-size:19px;margin:0;line-height:1.25} .tag{font-size:12px;background:#fff
 </div>
 </div>
 
+<div class="wheel-modal" id="wheelModal" aria-hidden="true">
+  <div class="wheel-box">
+    <h2>今天吃什么？</h2>
+    <p class="wheel-tip">先倒数 3 秒，然后店名会巨快轮换。想停的时候按 <span class="space-key">SPACE 空格</span></p>
+    <div class="countdown" id="countdown">3</div>
+    <div class="slot" id="slotName">准备开始</div>
+    <div class="winner-cat" id="slotCat"></div>
+    <div class="wheel-actions">
+      <button class="spin-btn" id="spinBtn">▶ 重新开始</button>
+      <a class="map-btn" id="winnerMap" target="_blank" rel="noopener">📍 看地图</a>
+      <button class="close-btn" id="closeWheel">关闭</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const cards=[...document.querySelectorAll('.card')];
 const filterBtns=[...document.querySelectorAll('.filters button')];
@@ -1977,23 +1992,17 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+
+document.querySelectorAll('.card img').forEach(img=>{
+  img.addEventListener('error',()=>{
+    img.removeAttribute('src');
+    img.alt='菜品图片暂未加载';
+    img.style.background='#fff1e8';
+  });
+});
+
 </script>
 
-<div class="wheel-modal" id="wheelModal" aria-hidden="true">
-  <div class="wheel-box">
-    <h2>今天吃什么？</h2>
-    <p class="wheel-tip">先倒数 3 秒，然后店名会巨快轮换。想停的时候按 <span class="space-key">SPACE 空格</span></p>
-    <div class="countdown" id="countdown">3</div>
-    <div class="slot" id="slotName">准备开始</div>
-    <div class="winner-cat" id="slotCat"></div>
-    <div class="wheel-actions">
-      <button class="spin-btn" id="spinBtn">▶ 重新开始</button>
-      <a class="map-btn" id="winnerMap" target="_blank" rel="noopener">📍 看地图</a>
-      <button class="close-btn" id="closeWheel">关闭</button>
-    </div>
-  </div>
-</div>
-</div>
 
 </body>
 </html>
