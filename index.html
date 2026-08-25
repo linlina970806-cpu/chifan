@@ -3,24 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lina 的试验网站 · Beta｜今天想吃什么？</title>
+<title>旧金山最值得吃的 100 家餐厅｜今天想吃什么？</title>
 <style>
-:root{--bg:#fff8f0;--card:#fff;--text:#202020;--muted:#727272;--accent:#ff6b35;--line:#eadfd5}
+:root{--bg:#fff8f0;--card:rgba(255,255,255,.95);--text:#202020;--muted:#727272;--accent:#ff6b35;--line:#eadfd5;--teal:#2e6f73}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif}
+body{margin:0;min-height:100vh;background:linear-gradient(rgba(255,248,240,.68),rgba(255,248,240,.8)),url("https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=2400&q=85") center top/cover fixed;color:var(--text);font-family:"Avenir Next",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
 .wrap{max-width:1180px;margin:auto;padding:28px 18px 70px}
-.hero{padding:30px 28px;border-radius:26px;background:linear-gradient(135deg,#fff2e5,#ffd9c1);margin-bottom:18px}
+.hero{padding:30px 28px;border-radius:26px;background:linear-gradient(135deg,rgba(255,242,229,.96),rgba(255,217,193,.88));margin-bottom:18px;box-shadow:0 18px 45px rgba(91,58,39,.12);backdrop-filter:blur(8px)}
 .beta{font-size:14px;font-weight:700;color:#b64a1e;margin-bottom:8px}
 h1{margin:0;font-size:42px}
 .sub{color:#665f5a;margin:8px 0 0}
-.search{width:100%;margin-top:20px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;font-size:16px;outline:none;background:#fff}
+.search{width:100%;margin-top:20px;padding:14px 16px;border:1px solid rgba(234,223,213,.9);border-radius:14px;font-size:16px;outline:none;background:rgba(255,255,255,.92);box-shadow:0 5px 18px rgba(91,58,39,.08);transition:box-shadow .2s,border-color .2s}
+.search:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(255,107,53,.14),0 8px 22px rgba(91,58,39,.1)}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
-.filters button{border:1px solid var(--line);background:#fff;padding:9px 14px;border-radius:999px;cursor:pointer}
+.filters button{border:1px solid var(--line);background:rgba(255,255,255,.9);padding:9px 14px;border-radius:999px;cursor:pointer;transition:transform .18s,background .18s,box-shadow .18s}
+.filters button:hover,.areaFilters button:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(91,58,39,.1)}
 .filters button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0 18px;color:var(--muted)}
-.random{border:0;background:#222;color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer}
+.areaTitle{font-size:12px;font-weight:700;color:var(--muted);margin-top:4px}
+.areaFilters{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 18px}
+.areaFilters button{border:1px solid #d8e2e5;background:#f7fbfb;color:#31545a;padding:8px 13px;border-radius:999px;cursor:pointer}
+.areaFilters button.active{background:#2e6f73;color:#fff;border-color:#2e6f73}
+.foodMap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(230px,.65fr);gap:8px;margin:4px 0 10px}
+.mapCanvas{min-height:118px;border:1px solid #cbdcdf;border-radius:11px;padding:10px;background:radial-gradient(circle at 25% 30%,#dceef0 0 8%,transparent 9%),radial-gradient(circle at 70% 65%,#dceef0 0 12%,transparent 13%),linear-gradient(135deg,#f4fbfa,#e7f2f1);position:relative;overflow:hidden}
+.mapCanvas{min-height:142px;border:1px solid #cbdcdf;border-radius:13px;padding:12px;background:radial-gradient(circle at 25% 30%,#dceef0 0 8%,transparent 9%),radial-gradient(circle at 70% 65%,#dceef0 0 12%,transparent 13%),linear-gradient(135deg,#f4fbfa,#e7f2f1);position:relative;overflow:hidden}
+.mapCanvas:before{content:"";position:absolute;inset:18px;background:repeating-linear-gradient(25deg,transparent 0 30px,rgba(46,111,115,.09) 31px 33px);transform:rotate(-8deg);pointer-events:none}
+.mapHeading{position:relative;font-size:19px;margin:0 0 3px;color:#21484c}
+.mapSub{position:relative;margin:0;color:#517176;font-size:12px;max-width:320px;line-height:1.4}
+.mapPin{position:relative;display:inline-flex;align-items:center;gap:3px;margin:9px 4px 0 0;padding:4px 7px;border-radius:6px;background:#fff;color:#21484c;font-size:10px;box-shadow:0 3px 10px rgba(33,72,76,.1)}
+.mapRandom{position:relative;margin-top:10px}
+.mapPin:before{content:"•";font-size:22px;line-height:10px;color:var(--accent)}
+.mapList{border:1px solid var(--line);border-radius:11px;background:#fff;padding:8px}
+.mapList h3{margin:0 0 4px;font-size:13px}
+#mapListItems{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px}
+.mapSpot{display:flex;justify-content:space-between;align-items:center;gap:5px;padding:5px 2px;border-top:1px solid #f0e7df;color:#333;text-decoration:none;font-size:11px}
+.mapSpot span{color:var(--muted);font-size:12px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0 18px;color:#5f5148}
+.random{border:0;background:#222;color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer;box-shadow:0 7px 16px rgba(0,0,0,.16);transition:transform .18s,background .18s}
+.random:hover{background:#3b3b3b;transform:translateY(-2px)}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
-.card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-width:0;height:100%}
+.card{background:var(--card);border:1px solid rgba(234,223,213,.92);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-width:0;height:100%;box-shadow:0 8px 22px rgba(91,58,39,.08);animation:cardIn .5s both}
+.card:nth-child(2n){animation-delay:.05s}.card:nth-child(3n){animation-delay:.1s}
 .photoWrap{position:relative;height:175px;overflow:hidden;background:#f0ebe6}
 .photoWrap img{width:100%;height:100%;display:block;object-fit:cover}
 .rank{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.68);color:#fff;padding:5px 8px;border-radius:999px;font-size:11px}
@@ -31,24 +53,27 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 .desc{font-size:13px;color:var(--muted);line-height:1.55;margin:10px 0}
 .details{font-size:12px;line-height:1.55;color:#555;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
 .details div{margin:2px 0}
+.recommendation{font-weight:700;color:#31545a}
 .details a{color:inherit;text-decoration:none}
 .rating{font-weight:700;color:#222}
 .actions{display:flex;gap:8px;margin-top:auto;padding-top:12px}
 .actions a,.fav{text-decoration:none;color:#222;background:#fff;border:1px solid var(--line);padding:8px 10px;border-radius:10px;font-size:13px;cursor:pointer}
 .fav.on{background:#fff0f3}
 .empty{display:none;text-align:center;padding:40px;color:var(--muted)}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* Wheel */
 .wheelModal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;z-index:999;padding:18px}
 .wheelModal.show{display:flex}
-.wheelBox{width:min(760px,100%);background:#fff8f0;border-radius:28px;padding:30px;text-align:center}
-.count{font-size:66px;font-weight:900;color:var(--accent);min-height:76px}
-.slot{background:#fff;border:3px solid var(--accent);border-radius:22px;padding:28px 18px;font-size:34px;font-weight:800;min-height:120px;display:flex;align-items:center;justify-content:center}
+.wheelBox{width:min(860px,100%);background:#fff8f0;border-radius:28px;padding:38px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.25)}
+.count{font-size:80px;font-weight:900;color:var(--accent);min-height:92px}
+.slot{background:#fff;border:3px solid var(--accent);border-radius:22px;padding:36px 22px;font-size:42px;font-weight:800;min-height:160px;display:flex;align-items:center;justify-content:center}
 .wheelActions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
 .wheelActions button,.wheelActions a{border:0;border-radius:11px;padding:10px 14px;text-decoration:none;cursor:pointer}
 .startWheel{background:#222;color:#fff} .closeWheel{background:#eee;color:#222} .winnerMap{background:var(--accent);color:#fff;display:none}
 
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.foodMap{grid-template-columns:1fr}}
 @media(max-width:560px){.grid{grid-template-columns:1fr}.photoWrap{height:200px}h1{font-size:34px}}
 </style>
 </head>
@@ -56,8 +81,8 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 <div class="wrap">
 <section class="hero">
   <div class="beta">Lina 的试验网站 · Beta</div>
-  <h1>今天想吃什么？</h1>
-  <p class="sub">旧金山餐厅推荐 · 搜索 · 分类 · 收藏 · 地图</p>
+  <h1>旧金山最值得吃的 100 家餐厅</h1>
+  <p class="sub">精选餐厅推荐 · 搜索 · 分类 · 收藏 · 吃货地图</p>
   <input id="search" class="search" placeholder="Search restaurant or cuisine">
 </section>
 
@@ -66,10 +91,28 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
   <button type="button" data-filter="中餐">中餐</button><button type="button" data-filter="点心">点心</button><button type="button" data-filter="火锅">火锅</button><button type="button" data-filter="烧烤">烧烤</button><button type="button" data-filter="越南菜">越南菜</button><button type="button" data-filter="日料">日料</button><button type="button" data-filter="韩餐">韩餐</button><button type="button" data-filter="泰国菜">泰国菜</button>
 </div>
 
+<div class="areaTitle">按旧金山区域</div>
+<div class="areaFilters" id="areaFilters">
+  <button class="active" type="button" data-area="全部">全部区域</button>
+  <button type="button" data-area="Chinatown">Chinatown</button><button type="button" data-area="Richmond">Richmond</button><button type="button" data-area="Sunset / Parkside">Sunset / Parkside</button><button type="button" data-area="Mission">Mission</button><button type="button" data-area="SoMa">SoMa</button><button type="button" data-area="Japantown">Japantown</button><button type="button" data-area="Tenderloin / Union Square">Tenderloin / Union Square</button><button type="button" data-area="Castro / Noe Valley">Castro / Noe Valley</button><button type="button" data-area="Marina / North Beach">Marina / North Beach</button>
+</div>
+
 <div class="toolbar">
   <span id="count">共 100 家</span>
-  <button class="random" id="random" type="button">🎡 今天吃什么</button>
 </div>
+
+<section class="foodMap" aria-labelledby="foodMapTitle">
+  <div class="mapCanvas">
+    <h2 class="mapHeading" id="foodMapTitle">旧金山吃货地图</h2>
+    <p class="mapSub">从 Chinatown 的点心，到 Sunset 的深夜热锅，按区域找到下一站。</p>
+    <button class="random mapRandom" id="random" type="button">🎡 今天吃什么</button>
+    <div id="mapPins"></div>
+  </div>
+  <div class="mapList">
+    <h3>区域餐厅</h3>
+    <div id="mapListItems"></div>
+  </div>
+</section>
 
 <main class="grid" id="grid">
 <article class="card" data-category="中餐" data-search="奈哥酸菜鱼 中餐">
@@ -218,7 +261,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 </article>
 <article class="card" data-category="中餐" data-search="great eastern restaurant 中餐">
   <div class="photoWrap">
-    <img src="https://fooddiscoveryapp.com/_next/image?q=70&amp;url=https%3A%2F%2Fd3azhvew791s0n.cloudfront.net%2Frestaurants%2F3f19c84e-498b-4aa2-b83d-2f444d84785e%2Fimage-7.jpg&amp;w=1536" alt="Restaurant dish" loading="lazy">
+    <img src="https://s3-media0.fl.yelpcdn.com/bphoto/keDYDKm6twhga79rtJ_ZZw/l.jpg" alt="Restaurant dish" loading="lazy">
     <span class="rank">#9</span>
   </div>
   <div class="body">
@@ -702,38 +745,38 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
     </div>
   </div>
 </article>
-<article class="card" data-category="点心" data-search="city view restaurant 点心">
+<article class="card" data-category="点心" data-search="dumpling time 点心">
   <div class="photoWrap">
-    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <img src="https://img.restaurantguru.com/c33f-Restaurant-Dumpling-Time-meals.jpg" alt="Restaurant dish" loading="lazy">
     <span class="rank">#36</span>
   </div>
   <div class="body">
     <div class="row">
-      <h2>City View Restaurant</h2>
-      <span class="tag">Dim Sum · Cantonese</span>
+      <h2>Dumpling Time</h2>
+      <span class="tag">Dim Sum · Dumplings</span>
     </div>
-    <p class="desc">Polished Chinatown dim sum spot serving har gow, siu mai, rice noodle rolls, baked BBQ pork buns, custard buns and Peking duck with lotus buns.</p>
-    <div class="details"><div class="rating">⭐ 3.9</div><div>📍 33 Walter U Lum Pl, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14153982838">(415) 398-2838</a></div></div>
+    <p class="desc">Design District dumpling specialist known for soup dumplings, potstickers, pork buns and handmade Cantonese-style small plates.</p>
+    <div class="details"><div class="rating">⭐ 4.1</div><div>📍 11 Division St, San Francisco, CA 94103</div><div>☎️ <a href="tel:+14158746026">(415) 874-6026</a></div></div>
     <div class="actions">
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=City+View+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Time+11+Division+St+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
       <button class="fav" type="button">♡ Save</button>
     </div>
   </div>
 </article>
-<article class="card" data-category="点心" data-search="hang ah tea room 点心">
+<article class="card" data-category="泰国菜" data-search="burma superstar burmese 泰国菜">
   <div class="photoWrap">
-    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <img src="https://d3h1lg3ksw6i6b.cloudfront.net/media/image/2019/05/15/027ab0052757405bbcbbc8835fb0150b_burma_superstar_dishes_credit_BobMcClenahan_HERO.jpg" alt="Restaurant dish" loading="lazy">
     <span class="rank">#37</span>
   </div>
   <div class="body">
     <div class="row">
-      <h2>Hang Ah Tea Room</h2>
-      <span class="tag">Dim Sum · Cantonese</span>
+      <h2>Burma Superstar</h2>
+      <span class="tag">Burmese · Southeast Asian</span>
     </div>
-    <p class="desc">Historic Chinatown tea room dating to 1920, known for classic shrimp dumplings, potstickers, BBQ pork buns, soup dumplings and house chili oil.</p>
-    <div class="details"><div class="rating">⭐ 3.5</div><div>📍 1 Pagoda Pl, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14159825686">(415) 982-5686</a></div></div>
+    <p class="desc">Inner Richmond Burmese favorite known for tea leaf salad, samusa soup, curries, noodles and bold herb-forward dishes.</p>
+    <div class="details"><div class="rating">⭐ 4.3</div><div>📍 309 Clement St, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14153870874">(415) 387-0874</a></div></div>
     <div class="actions">
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=Hang+Ah+Tea+Room+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Burma+Superstar+309+Clement+St+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
       <button class="fav" type="button">♡ Save</button>
     </div>
   </div>
@@ -774,20 +817,20 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
     </div>
   </div>
 </article>
-<article class="card" data-category="点心" data-search="dim sum bistro 点心">
+<article class="card" data-category="中餐" data-search="the chairman chinese bao 中餐">
   <div class="photoWrap">
-    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <img src="https://whatnow.com/wp-content/uploads/2022/06/The-Chairman-993x1024.jpg" alt="Restaurant dish" loading="lazy">
     <span class="rank">#40</span>
   </div>
   <div class="body">
     <div class="row">
-      <h2>Dim Sum Bistro</h2>
-      <span class="tag">Dim Sum · Takeout</span>
+      <h2>The Chairman</h2>
+      <span class="tag">Modern Chinese · Bao</span>
     </div>
-    <p class="desc">Fast Chinatown counter-service dim sum shop with fresh har gow, pork-and-shrimp siu mai, soup dumplings, sticky rice, BBQ pork buns and pan-fried snacks.</p>
-    <div class="details"><div class="rating">⭐ 4.3</div><div>📍 675 Broadway, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14157887028">(415) 788-7028</a></div></div>
+    <p class="desc">Modern Chinese sandwich shop best known for steamed bao filled with slow-braised pork belly, chicken, tofu and seasonal toppings.</p>
+    <div class="details"><div class="rating">⭐ 4.2</div><div>📍 670 Larkin St, San Francisco, CA 94109</div><div>☎️ <a href="tel:+14158729239">(415) 872-9239</a></div></div>
     <div class="actions">
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=Dim+Sum+Bistro+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=The+Chairman+670+Larkin+St+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
       <button class="fav" type="button">♡ Save</button>
     </div>
   </div>
@@ -810,38 +853,38 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
     </div>
   </div>
 </article>
-<article class="card" data-category="火锅" data-search="m pot 火锅">
+<article class="card" data-category="日料" data-search="ippudo ramen 日料">
   <div class="photoWrap">
-    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <img src="https://preview.redd.it/karaka-spicy-ramen-from-ippudo-in-san-francisco-v0-sldhb3cvfu4c1.jpg?auto=webp&amp;s=3ba59d7f30e70cbb04054631f0e3ed2da31a5d41" alt="Restaurant dish" loading="lazy">
     <span class="rank">#42</span>
   </div>
   <div class="body">
     <div class="row">
-      <h2>M Pot</h2>
-      <span class="tag">Malatang · Sichuan Hot Pot</span>
+      <h2>Ippudo</h2>
+      <span class="tag">Japanese · Ramen</span>
     </div>
-    <p class="desc">Build-your-own Sichuan malatang spot where you choose meats, vegetables, tofu and noodles by weight, then pick a broth and spice level.</p>
-    <div class="details"><div class="rating">⭐ 4.6</div><div>📍 832 Clement St, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14155718076">(415) 571-8076</a></div></div>
+    <p class="desc">Japanese ramen house serving rich tonkotsu broth, hand-pulled noodles, spicy ramen variations and izakaya-style sides.</p>
+    <div class="details"><div class="rating">⭐ 4.1</div><div>📍 18 Yerba Buena Ln, San Francisco, CA 94103</div><div>☎️ <a href="tel:+14153488462">(415) 348-8462</a></div></div>
     <div class="actions">
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=M+Pot+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Ippudo+18+Yerba+Buena+Ln+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
       <button class="fav" type="button">♡ Save</button>
     </div>
   </div>
 </article>
-<article class="card" data-category="火锅" data-search="the pots hot pot 火锅">
+<article class="card" data-category="日料" data-search="ramenwell ramen 日料">
   <div class="photoWrap">
-    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <img src="https://s3-media0.fl.yelpcdn.com/bphoto/ll0z7cqsHjZvq71iUYk4pw/o.jpg" alt="Restaurant dish" loading="lazy">
     <span class="rank">#43</span>
   </div>
   <div class="body">
     <div class="row">
-      <h2>The Pots Hot Pot</h2>
-      <span class="tag">AYCE Hot Pot</span>
+      <h2>Ramenwell</h2>
+      <span class="tag">Japanese · Ramen</span>
     </div>
-    <p class="desc">Outer Sunset all-you-can-eat hot pot with individual pots, Wagyu and lamb, a large vegetable and sauce bar, multiple broths and a substantial dessert section.</p>
-    <div class="details"><div class="rating">⭐ 4.0</div><div>📍 2652 Judah St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14156827889">(415) 682-7889</a></div></div>
+    <p class="desc">Mission District ramen shop serving hearty bowls, noodles, Japanese small plates and carefully prepared seasonal toppings.</p>
+    <div class="details"><div class="rating">⭐ 4.2</div><div>📍 3378 18th St, San Francisco, CA 94110</div><div>☎️ <a href="tel:+14158650522">(415) 865-0522</a></div></div>
     <div class="actions">
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=The+Pots+Hot+Pot+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Ramenwell+3378+18th+St+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
       <button class="fav" type="button">♡ Save</button>
     </div>
   </div>
@@ -990,38 +1033,38 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
     </div>
   </div>
 </article>
-<article class="card" data-category="烧烤" data-search="taste of old street 老街把把烧 烧烤">
+<article class="card" data-category="韩餐" data-search="bonchon korean fried chicken 韩餐">
   <div class="photoWrap">
-    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <img src="https://external-preview.redd.it/D9gToydFrIlesQ7HDgCWjL8ciYVZ7w-466h7yhFCHlA.jpg?auto=webp&amp;s=61d00bc0b556fce0e1fb2cfd0a12f4258fa47e68" alt="Restaurant dish" loading="lazy">
     <span class="rank">#52</span>
   </div>
   <div class="body">
     <div class="row">
-      <h2>Taste of Old Street 老街把把烧</h2>
-      <span class="tag">Chengdu BBQ · Skewers</span>
+      <h2>Bonchon</h2>
+      <span class="tag">Korean · Fried Chicken</span>
     </div>
-    <p class="desc">Chengdu-style skewer shop serving lamb and other grilled skewers alongside dan dan noodles, wontons, rice noodles and spicy Sichuan snacks.</p>
-    <div class="details"><div class="rating">⭐ 4.7</div><div>📍 5336 Geary Blvd, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14156919327">(415) 691-9327</a></div></div>
+    <p class="desc">Korean fried chicken restaurant known for crisp double-fried wings, soy garlic and spicy sauces, plus Korean comfort-food sides.</p>
+    <div class="details"><div class="rating">⭐ 4.1</div><div>📍 1569 Fillmore St, San Francisco, CA 94115</div><div>☎️ <a href="tel:+14155718201">(415) 571-8201</a></div></div>
     <div class="actions">
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=Taste+of+Old+Street+%E8%80%81%E8%A1%97%E6%8A%8A%E6%8A%8A%E7%83%A7+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Bonchon+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
       <button class="fav" type="button">♡ Save</button>
     </div>
   </div>
 </article>
-<article class="card" data-category="烧烤" data-search="top sf bbq 烧烤">
+<article class="card" data-category="泰国菜" data-search="the spice jar southeast asian 泰国菜">
   <div class="photoWrap">
-    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <img src="https://s3-media0.fl.yelpcdn.com/bphoto/pczlsOCmNdMV8Lo8cIKDww/348s.jpg" alt="Restaurant dish" loading="lazy">
     <span class="rank">#53</span>
   </div>
   <div class="body">
     <div class="row">
-      <h2>Top SF BBQ</h2>
-      <span class="tag">Chinese BBQ · Skewers</span>
+      <h2>The Spice Jar</h2>
+      <span class="tag">Southeast Asian · Thai</span>
     </div>
     
     
-    <p class="desc">Chinese-style barbecue with lamb, beef, chicken, seafood and vegetable skewers. The cumin-forward seasoning, grilled oysters, squid and fried mantou make it a good late-night group spot.</p><div class="details"><div class="rating">⭐ 4.5</div><div>📍 2311 Clement St, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14155718201">(415) 571-8201</a></div></div><div class="actions">
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=Top+SF+BBQ+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+    <p class="desc">Clement Street neighborhood restaurant serving Southeast Asian comfort food, curries, noodles, fried rice and flavorful small plates.</p><div class="details"><div class="rating">⭐ 4.3</div><div>📍 2500 Bryant St, San Francisco, CA 94110</div><div>☎️ <a href="tel:+14154018710">(415) 401-8710</a></div></div><div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=The+Spice+Jar+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
       <button class="fav" type="button">♡ Save</button>
     </div>
   </div>
@@ -1136,7 +1179,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 </article>
 <article class="card" data-category="烧烤" data-search="ilcha 烧烤">
   <div class="photoWrap">
-    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <img src="https://s.hdnux.com/photos/01/55/51/53/28744406/7/ratio3x2_1920.jpg" alt="Restaurant dish" loading="lazy">
     <span class="rank">#60</span>
   </div>
   <div class="body">
@@ -1892,20 +1935,125 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 
 <script>
 const cards=[...document.querySelectorAll('.card')];
+const verifiedPhotos={
+  "Eric's Restaurant":"https://img.restaurantguru.com/c0fb-Erics-Restaurant-meals-1.jpg",
+  "Ah Ma's Kitchen":"https://tb-static.uber.com/prod/image-proc/processed_images/fa659f4c8d3ed5dc0f43a59dbb56e360/5283d81c664b43c5f57a3a186d273063.jpeg",
+  "Homey Kitchen":"https://usmenuguide.com/wp-content/uploads/2026/04/homeykitchensanfranciscofood200.jpg",
+  "Pàng":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_4:3,g_center,f_auto/images/SF_Pàng_LotusChips_PatrickWong_iPhoneContent_EDIT_04_injpre",
+  "The Happy Crane":"https://s.hdnux.com/photos/01/53/60/31/28247631/3/1920x0.jpg",
+  "Chef Xiong Kitchen":"https://usmenuguide.com/wp-content/uploads/2025/07/chefxiongkitchensanfranciscofood10.jpg",
+  "Sichuan Home":"https://s3-media0.fl.yelpcdn.com/bphoto/7yhsKVUZxypF-Qfhevkohg/348s.jpg",
+  "Tsing Tao Restaurant":"https://fastly.4sqi.net/img/general/600x600/7440763_U6sFUM0TJoBaHhFxgHhKSQ2kBOmnztu44ZtXc0GVJbw.jpg",
+  "Dumpling Home":"https://offloadmedia.feverup.com/secretsanfrancisco.com/wp-content/uploads/2023/07/13022106/dumpling-home.jpg",
+  "Dumpling Story":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_4:3,g_center,f_auto/images/Dumpling_Story_Meal_Brittany_Finnegan_San_Francisco-2_u3ysjs",
+  "Dumpling Kitchen":"https://s3-media0.fl.yelpcdn.com/bphoto/KAawxDD37_6jAeBmnqE3DA/348s.jpg",
+  "Dumpling Baby":"https://s3-media0.fl.yelpcdn.com/bphoto/zgWxZHKUZZf648QamhB34Q/o.jpg",
+  "Dumpling Specialist":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_4:3,g_center,f_auto/images/Dumpling_Specialist_Group_Shot_San_Francisco_Brittany_Finnegan-2_deb75t",
+  "Kingdom of Dumpling":"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/59/59/dc/kingdom-of-dumpling.jpg?w=1200&h=-1&s=1",
+  "Good Mong Kok Bakery":"https://www.sftourismtips.com/images/good-mang-bakery-sf.jpg",
+  "Yank Sing":"https://img02.restaurantguru.com/cd67-Restaurant-Yank-Sing-Stevenson-St-dishes-5.jpg",
+  "Dragon Beaux":"https://www.foodandwine.com/thmb/btmvHFgfim4vbnm5Klfk9H6N1_o=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Bay-Area-Guide-to-Chinese-Dining-According-to-Melissa-King-FT-BLOG0625-Dragon-Beaux-01-c8e0f9a3ea2c43bdb4e10b4c0f199f23.jpg",
+  "HK Lounge Bistro":"https://images.squarespace-cdn.com/content/v1/5441a7c9e4b0178deca3ffe0/1710458939468-LBPBXA42S6UR4C0N9G4B/HK-Lounge_Bistro_San_Francisco-09.jpg",
+  "City View Restaurant":"https://s.hdnux.com/photos/01/32/31/51/23697997/5/rawImage.jpg",
+  "Hang Ah Tea Room":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_16:9,g_center,f_auto/images/MZink_SF_HarborviewRest_group_01_qybzth",
+  "Palette Tea House":"https://www.7x7.com/media-library/image.jpg?id=19411769&width=1200&quality=85&coordinates=0%2C0%2C0%2C0&height=800",
+  "Osmanthus Dim Sum Lounge":"https://www.foodnut.com/wp-content/uploads/2022/12/Osmanthus-Dim-Sum-San-Francisco-00001-1024x768.jpg",
+  "Dim Sum Bistro":"https://www.theluxeinsider.com/wp-content/uploads/2023/10/dim-sum-san-francisco.jpg",
+  "Mumu Hot Pot":"https://s3-media0.fl.yelpcdn.com/bphoto/SobvZtjsAhppJxGdwEZoWg/l.jpg",
+  "M Pot":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_16:9,g_center,f_auto/images/MuuKata_JimJoomSet_CarlyHackbarth_SF3_adigwf",
+  "The Pots Hot Pot":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_4:3,g_center,f_auto/images/thepots2_pmtcro",
+  "Jin Pot Shabu House":"https://s3-media0.fl.yelpcdn.com/bphoto/zkaqzhuseo2HuBlG39cMLg/348s.jpg",
+  "Hotpot Bay":"https://website-cdn.menusifu.com/wp-content/uploads/hotpotbay.com/2025/12/yswx_20251217_a0e5791b4d2d419f88e4b41f187388ca.jpg",
+  "Shabu Club":"https://s3-media0.fl.yelpcdn.com/bphoto/3FjZDjtynynCHCF39Y9nCw/348s.jpg",
+  "Nan Hot Pot SF":"https://s3-media0.fl.yelpcdn.com/bphoto/mNdShq_uKq2hKH3luj5dqw/348s.jpg",
+  "Tang Bar":"https://nomtasticfoods.net/wp-content/uploads/2020/08/Tang-Bar-5453-1440x1440.jpg",
+  "Muukata6395":"https://platform.sf.eater.com/wp-content/uploads/sites/28/chorus/uploads/chorus_asset/file/24854691/IMG_1736.PNG?quality=90&strip=all&crop=0,0,100,100",
+  "Boiling Hot Pot":"https://boilinghotpot.has.restaurant/wp-content/uploads/sites/14/2021/01/boiling_hot_pot_san_francisco_7-e1611177630961.jpg",
+  "NORTHERN CHINA BBQ":"https://s.hdnux.com/photos/01/50/51/53/27433704/10/rawImage.jpg",
+  "Hing Lung Company":"https://media-cdn.tripadvisor.com/media/photo-s/2b/24/b2/76/dec-2023.jpg",
+  "K-Elements BBQ":"https://img.restaurantguru.com/ca2f-K-Elements-BBQ-San-Francisco-dishes-2.jpg",
+  "Ilcha":"https://p16-va.lemon8cdn.com/tos-maliva-v-ac5634-us/ooQAVEtGlBAw1es9DDCYAWjNFAbEJIftu1hT2P~tplv-tej9nj120t-origin.webp",
+  "Pho 2000":"https://s3-media0.fl.yelpcdn.com/bphoto/2YoueDw0t8KGLoQMnt-2RA/348s.jpg",
+  "Pho Huong Viet":"https://img.restaurantguru.com/r428-Pho-Huong-Viet-food-2023-01.jpg",
+  "Perilla":"https://img.restaurantguru.com/c5a0-Perilla-San-Francisco-dishes.jpg",
+  "Thanh Long Restaurant":"https://img.restaurantguru.com/caac-Thanh-Long-San-Francisco-food.jpg",
+  "PPQ Dungeness Island":"https://img.restaurantguru.com/cca9-PPQ-Dungeness-Island-San-Francisco-burger.jpg",
+  "Saigon Sandwich":"https://img.restaurantguru.com/c773-Saigon-Sandwich-San-Francisco-food.jpg",
+  "Bodega SF":"https://images.squarespace-cdn.com/content/v1/66d792fdaeff3c2991c349c2/1f5ccd10-f6ec-4ed7-911a-d85b87239e65/Bodega+x+ERIN+NG+(Apr+23)+-+029.jpg",
+  "Mong Thu Cafe":"https://img.restaurantguru.com/ce54-Restaurant-Mong-Thu-Cafe-food.jpg",
+  "Tín Vietnamese Cuisine":"https://img.restaurantguru.com/ceb4-meals-Tin-Vietnamese-Cuisine-2.jpg",
+  "Taishoken":"https://s.hdnux.com/photos/01/27/10/75/22843202/10/ratio3x2_1920.jpg",
+  "Izakaya Sozai":"https://img.restaurantguru.com/cd9a-Restaurant-Izakaya-Sozai-food-1.jpg",
+  "Ebisu":"https://img.restaurantguru.com/c273-Ebisu-San-Francisco-food.jpg",
+  "Saru Sushi Bar":"https://img.restaurantguru.com/c7ba-food-Saru-Sushi-Bar-1.jpg",
+  "Hamano Sushi":"https://s3-media0.fl.yelpcdn.com/bphoto/hDxKI14wvEmZnngmgl-yHg/348s.jpg",
+  "Koo":"https://media-cdn.grubhub.com/image/upload/d_search:browse-images:default.jpg/w_1200,q_auto,fl_lossy,dpr_auto,c_fill,f_auto,h_800,g_auto/fcqyft89jgz7bdfkd8xb",
+  "Akiko's Restaurant":"https://fastly.4sqi.net/img/general/600x600/48767704_hleh5QTgy28JbSCKwKZtO8hGrpgWMA33ca5qmOn8n8Q.jpg",
+  "Omakase":"https://lh3.googleusercontent.com/Y9VHYJZ394QeK4Or9K_-VtUY7WAvvmQCGVbG8ljMzvSkI2_QVl-65olVV9DKy-M_MpGYLMnkKODU8pl809uKY4UNpfG-9gBtT2S-nqpVkWQ=s1600-e7-v1-rj",
+  "Daeho Kalbijjim & Beef Soup":"https://img02.restaurantguru.com/c913-Daeho-Kalbijjim-and-Beef-Soup-dishes-1.jpg",
+  "Han Il Kwan":"https://cdn.restaurants-world.com/han-il-kwan/3.png",
+  "Umma":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_4:3,g_auto,f_auto/images/Umma_Ginger_sesame_soy_chicken_wings_SF_Erin_Ng_ajssmx",
+  "Jin Mi Korean Cuisine":"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/3b/58/2e/chicken-bulgogi-and-ban.jpg?w=700&h=-1&s=1",
+  "Toyose":"https://s3-media0.fl.yelpcdn.com/bphoto/yAfTuQCdlBJ3q0S5DeA31w/l.jpg",
+  "SAN HO WON":"https://willwanderforfood.com/wp-content/uploads/2021/12/IMG_0429.jpeg",
+  "Brothers Restaurant":"https://zenkimchi.com/wp-content/uploads/2010/08/Brothersfacade1.jpg",
+  "Wooden Charcoal Korean Village Barbecue House":"https://s3-media0.fl.yelpcdn.com/bphoto/1pwMOp2KiHah_HYiXwtVNg/348s.jpg",
+  "YakiniQ Cafe":"https://s3-media0.fl.yelpcdn.com/bphoto/yxx5U5EDH9JREsMocanEzw/o.jpg",
+  "Yummy Yummy":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_4:3,g_center,f_auto/images/Yummy_Yummy_Interior2_SF_ERIN_NG_fyw5dk",
+  "Pho Tân Hòa":"https://res.cloudinary.com/the-infatuation/image/upload/c_scale,w_1200,q_auto,f_auto/images/Pho_Tan_Hoa_Group_1_SF_ERIN_NG_ln3sbo",
+  "Gao Viet Kitchen":"https://s.hdnux.com/photos/01/30/54/07/23249402/3/ratio3x2_1920.jpg",
+  "Mensho Tokyo":"https://s.hdnux.com/photos/01/23/25/35/21845866/7/1200x0.jpg",
+  "Marufuku Ramen":"https://img.restaurantguru.com/c66d-Marufuku-Ramen-San-Francisco-dishes.jpg",
+  "Hinodeya Ramen":"https://tb-static.uber.com/prod/image-proc/processed_images/4025d61522fb4865bc872951d03ab827/df577d3a0807d3bb859f2fb53aefcd86.jpeg",
+  "Rintaro":"https://s3-media0.fl.yelpcdn.com/bphoto/rvgutBTRC2mbmVSbwJa_-w/348s.jpg",
+  "Ju-Ni":"https://assets3.thrillist.com/v1/image/3046328/1200x600/scale;;webp=auto;jpeg_quality=85.jpg",
+  "Robin":"https://s.hdnux.com/photos/01/34/40/56/24251282/3/1920x0.jpg",
+  "Wako Japanese Restaurant":"https://img3.restaurantguru.com/c4c3-dishes-Wako-Japanese-Restaurant-5.jpg",
+  "Cocobang":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_16:9,g_center,f_auto/images/MZink-SF-Cocobang-Exterior-03_b4pnor"
+};
+cards.forEach(card=>{const name=card.querySelector('h2').childNodes[0].textContent.trim();const image=card.querySelector('img');if(image&&(/placehold\.co|images\.openai\.com/.test(image.src))&&verifiedPhotos[name])image.src=verifiedPhotos[name];});
 const filterBtns=[...document.querySelectorAll('.filters button')];
+const areaBtns=[...document.querySelectorAll('.areaFilters button')];
+const mapListItems=document.getElementById('mapListItems');
+const mapPins=document.getElementById('mapPins');
 const search=document.getElementById('search');
 const count=document.getElementById('count');
 const empty=document.getElementById('empty');
 let filter='全部';
+let area='全部';
+
+function areaOf(card){
+  const address=card.querySelector('.details')?.innerText||'';
+  if(/Jackson|Clay|Kearny|Stockton|Waverly|Walter U Lum|Grant St/.test(address))return 'Chinatown';
+  if(/Mission|Valencia|18th St|24th St|Bryant|Florida|Potrero/.test(address))return 'Mission';
+  if(/Post St|Buchanan|Cyril Magnin|Fillmore St/.test(address))return 'Japantown';
+  if(/Larkin|Taylor|Jones|Mason|Golden Gate|Turk|Eddy|Geary St/.test(address))return 'Tenderloin / Union Square';
+  if(/Clement|Geary Blvd|Balboa|6th Ave/.test(address))return 'Richmond';
+  if(/Irving|Judah|Taraval|Noriega|Alemany|Varela|19th Ave|20th Ave/.test(address))return 'Sunset / Parkside';
+  if(/Folsom|Howard|Townsend|Spear|Embarcadero|Division St|3rd St|4th St|5th St/.test(address))return 'SoMa';
+  if(/Church|Castro|Noe/.test(address))return 'Castro / Noe Valley';
+  if(/Lombard|Chestnut|Columbus|North Point|Vallejo/.test(address))return 'Marina / North Beach';
+  return '其他区域';
+}
+
+function renderMap(){
+  const counts={};
+  cards.forEach(card=>{const key=areaOf(card);counts[key]=(counts[key]||0)+1;});
+  const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  mapPins.innerHTML=entries.slice(0,5).map(([name,total])=>`<span class="mapPin">${name} ${total} 家</span>`).join('');
+  mapListItems.innerHTML=entries.map(([name,total])=>`<a class="mapSpot" href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(name+' San Francisco restaurants')}" target="_blank" rel="noopener"><strong>${name}</strong><span>${total} 家 · Map ↗</span></a>`).join('');
+}
+renderMap();
 
 function apply(){
   const q=search.value.trim().toLowerCase();
   let visible=[];
   cards.forEach(c=>{
     const okCat=filter==='全部'||c.dataset.category===filter;
+    const okArea=area==='全部'||areaOf(c)===area;
     const text=(c.dataset.search+' '+c.innerText).toLowerCase();
     const okQ=!q||text.includes(q);
-    const show=okCat&&okQ;
+    const show=okCat&&okArea&&okQ;
     c.style.display=show?'flex':'none';
     if(show) visible.push(c);
   });
@@ -1917,6 +2065,12 @@ filterBtns.forEach(b=>b.addEventListener('click',()=>{
   filterBtns.forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
   filter=b.dataset.filter;
+  apply();
+}));
+areaBtns.forEach(b=>b.addEventListener('click',()=>{
+  areaBtns.forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  area=b.dataset.area;
   apply();
 }));
 search.addEventListener('input',apply);
