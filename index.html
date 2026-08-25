@@ -83,7 +83,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 .slot{background:#fff;border:3px solid var(--accent);border-radius:22px;padding:36px 22px;font-size:42px;font-weight:800;min-height:160px;display:flex;align-items:center;justify-content:center}
 .wheelActions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
 .wheelActions button,.wheelActions a{border:0;border-radius:11px;padding:10px 14px;text-decoration:none;cursor:pointer}
-.startWheel{background:#222;color:#fff} .closeWheel{background:#eee;color:#222} .winnerMap{background:var(--accent);color:#fff;display:none}
+.startWheel{background:#222;color:#fff} .stopWheel{background:var(--accent);color:#fff} .stopWheel:disabled{opacity:.45;cursor:not-allowed} .closeWheel{background:#eee;color:#222} .winnerMap{background:var(--accent);color:#fff;display:none}
 
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.foodMap{grid-template-columns:1fr}}
@@ -1944,12 +1944,12 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 <div class="wheelModal" id="wheelModal">
   <div class="wheelBox">
     <h2 style="font-size:30px;margin:0 0 8px">今天吃什么？</h2>
-    <p style="color:#777;margin:0 0 14px">3 秒倒计时后快速轮换，按空格停止</p>
+    <p style="color:#777;margin:0 0 14px">3 秒倒计时后自动揭晓</p>
     <div class="count" id="wheelCount">3</div>
     <div class="slot" id="slotName">准备开始</div>
     <div class="wheelActions">
       <button class="startWheel" id="restartWheel" type="button">重新开始</button>
-      <a class="winnerMap" id="winnerMap" target="_blank" rel="noopener">📍 Map</a>
+      <a class="winnerMap" id="winnerMap">查看餐厅图片</a>
       <button class="closeWheel" id="closeWheel" type="button">关闭</button>
     </div>
   </div>
@@ -1957,6 +1957,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 
 <script>
 const cards=[...document.querySelectorAll('.card')];
+cards.forEach(card=>{const rank=card.querySelector('.rank')?.textContent.trim().replace('#','');if(rank){card.id=`restaurant-${rank}`;card.querySelector('.rank').id=`rank-${rank}`;}});
 const verifiedPhotos={
   "Eric's Restaurant":"https://img.restaurantguru.com/c0fb-Erics-Restaurant-meals-1.jpg",
   "Ah Ma's Kitchen":"https://tb-static.uber.com/prod/image-proc/processed_images/fa659f4c8d3ed5dc0f43a59dbb56e360/5283d81c664b43c5f57a3a186d273063.jpeg",
@@ -2115,12 +2116,12 @@ const closeBtn=document.getElementById('closeWheel');
 const wheelCount=document.getElementById('wheelCount');
 const slotName=document.getElementById('slotName');
 const winnerMap=document.getElementById('winnerMap');
-let spinTimer=null,countTimer=null,spinning=false,current=null;
+let spinTimer=null,countTimer=null,autoStopTimer=null,spinning=false,current=null;
 
 function pool(){
   return apply().map(c=>({
     name:c.querySelector('h2').innerText.trim(),
-    map:c.querySelector('.actions a')?.href||'#'
+    card:c
   }));
 }
 function tick(){
@@ -2130,7 +2131,7 @@ function tick(){
 }
 function begin(){
   clearInterval(spinTimer);clearInterval(countTimer);
-  spinning=false;current=null;winnerMap.style.display='none';
+  clearTimeout(autoStopTimer);spinning=false;current=null;winnerMap.style.display='none';
   slotName.textContent='准备开始';
   let n=3;wheelCount.textContent=n;
   countTimer=setInterval(()=>{
@@ -2140,25 +2141,23 @@ function begin(){
       clearInterval(countTimer);
       wheelCount.textContent='GO!';
       spinning=true;
+      tick();
       spinTimer=setInterval(tick,35);
-      setTimeout(()=>{if(spinning)wheelCount.textContent=''},350);
+      autoStopTimer=setTimeout(stop,1500);
     }
   },1000);
 }
 function stop(){
   if(!spinning)return;
   clearInterval(spinTimer);spinning=false;
+  clearTimeout(autoStopTimer);
   wheelCount.textContent='就吃这个！';
-  if(current){winnerMap.href=current.map;winnerMap.style.display='inline-block';}
+  if(current){winnerMap.href=`#${current.card.querySelector('.rank').id}`;winnerMap.style.display='inline-block';}
 }
 randomBtn.addEventListener('click',()=>{modal.classList.add('show');begin();});
 restart.addEventListener('click',begin);
-closeBtn.addEventListener('click',()=>{clearInterval(spinTimer);clearInterval(countTimer);spinning=false;modal.classList.remove('show');});
-document.addEventListener('keydown',e=>{
-  if(e.code==='Space'&&modal.classList.contains('show')&&!['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)){
-    e.preventDefault(); stop();
-  }
-});
+winnerMap.addEventListener('click',e=>{e.preventDefault();const targetId=winnerMap.getAttribute('href');if(!targetId)return;const target=document.querySelector(targetId);closeBtn.click();history.replaceState(null,'',targetId);setTimeout(()=>target?.scrollIntoView({behavior:'smooth',block:'start'}),80);});
+closeBtn.addEventListener('click',()=>{clearInterval(spinTimer);clearInterval(countTimer);clearTimeout(autoStopTimer);spinning=false;modal.classList.remove('show');});
 </script>
 </body>
 </html>
