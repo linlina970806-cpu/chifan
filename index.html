@@ -1,0 +1,69 @@
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff8f0;
+    padding: 40px;
+}
+
+h1 {
+    font-size: 48px;
+}
+
+button {
+    font-size: 18px;
+    padding: 12px 20px;
+    margin-right: 10px;
+    border-radius: 20px;
+    border: none;
+    background-color: #ff6b35;
+    color: white;
+}
+.restaurant {
+    background-color: white;
+    padding: 24px;
+    margin-top: 30px;
+    border-radius: 20px;
+    max-width: 600px;
+}.restaurant-img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 16px;
+}</style>
+
+<h1>今天想吃什么？</h1>
+
+<p>发现真正值得吃的餐厅</p>
+<button onclick="filterRestaurants('全部')">全部</button>
+<button onclick="filterRestaurants('麻辣烫')">麻辣烫</button>
+<button>烧烤</button>
+<button>日料</button>
+<button onclick="filterRestaurants('中餐')">中餐</button>
+<div class="restaurant" data-category="中餐">
+    <img src="naige.jpg" class="restaurant-img">
+    <h2>奈哥酸菜鱼</h2>
+    <p>⭐ 4.8 · 人均 $30</p>
+    <p>推荐：酸菜鱼、炸串</p>
+    <p>点评：鱼片嫩，酸菜很香，值得专门来吃。</p>
+<</div>
+<div class="restaurant" data-category="麻辣烫">
+    <img src="qingshu.jpg" class="restaurant-img">
+    <h2>青蔬麻辣烫</h2>
+    <p>⭐ 4.7 · 人均 $25</p>
+    <p>推荐：麻辣烫、炸串</p>
+    <p>点评：菜品选择多，口味可以自己搭配，适合一个人或者朋友一起吃。</p>
+</div>
+
+<script>
+function filterRestaurants(category) {
+    const restaurants = document.querySelectorAll('.restaurant');
+restaurants.forEach(function(restaurant) {
+    if (category === '全部' || restaurant.dataset.category === category) {
+        restaurant.style.display = 'block';
+    } else {
+        restaurant.style.display = 'none';
+    }
+});
+}
+   
+</script>
