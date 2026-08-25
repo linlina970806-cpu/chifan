@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>旧金山最值得吃的 100 家餐厅｜今天想吃什么？</title>
+<title>Chifan 吃饭｜旧金山最值得吃的 100 家餐厅</title>
 <style>
 :root{--bg:#fff8f0;--card:rgba(255,255,255,.95);--text:#202020;--muted:#727272;--accent:#ff6b35;--line:#eadfd5;--teal:#2e6f73}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;background:linear-gradient(rgba(255,248,240,.68),rgba(255,248,240,.8)),url("https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=2400&q=85") center top/cover fixed;color:var(--text);font-family:"Avenir Next",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
 .wrap{max-width:1180px;margin:auto;padding:28px 18px 70px}
 .hero{padding:30px 28px;border-radius:26px;background:linear-gradient(135deg,rgba(255,242,229,.96),rgba(255,217,193,.88));margin-bottom:18px;box-shadow:0 18px 45px rgba(91,58,39,.12);backdrop-filter:blur(8px)}
-.beta{font-size:14px;font-weight:700;color:#b64a1e;margin-bottom:8px}
+.brandMark{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;color:#b64a1e}.brandMark strong{font-size:18px;letter-spacing:3px}.brandMark span{font-size:12px;color:#806b5e;letter-spacing:1px}
 h1{margin:0;font-size:42px}
 .sub{color:#665f5a;margin:8px 0 0}
 .search{width:100%;margin-top:20px;padding:14px 16px;border:1px solid rgba(234,223,213,.9);border-radius:14px;font-size:16px;outline:none;background:rgba(255,255,255,.92);box-shadow:0 5px 18px rgba(91,58,39,.08);transition:box-shadow .2s,border-color .2s}
@@ -24,7 +24,6 @@ h1{margin:0;font-size:42px}
 .areaFilters button{border:1px solid #d8e2e5;background:#f7fbfb;color:#31545a;padding:8px 13px;border-radius:999px;cursor:pointer}
 .areaFilters button.active{background:#2e6f73;color:#fff;border-color:#2e6f73}
 .foodMap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(230px,.65fr);gap:8px;margin:4px 0 10px}
-.mapCanvas{min-height:118px;border:1px solid #cbdcdf;border-radius:11px;padding:10px;background:radial-gradient(circle at 25% 30%,#dceef0 0 8%,transparent 9%),radial-gradient(circle at 70% 65%,#dceef0 0 12%,transparent 13%),linear-gradient(135deg,#f4fbfa,#e7f2f1);position:relative;overflow:hidden}
 .mapCanvas{min-height:142px;border:1px solid #cbdcdf;border-radius:13px;padding:12px;background:radial-gradient(circle at 25% 30%,#dceef0 0 8%,transparent 9%),radial-gradient(circle at 70% 65%,#dceef0 0 12%,transparent 13%),linear-gradient(135deg,#f4fbfa,#e7f2f1);position:relative;overflow:hidden}
 .mapCanvas:before{content:"";position:absolute;inset:18px;background:repeating-linear-gradient(25deg,transparent 0 30px,rgba(46,111,115,.09) 31px 33px);transform:rotate(-8deg);pointer-events:none}
 .mapHeading{position:relative;font-size:19px;margin:0 0 3px;color:#21484c}
@@ -45,6 +44,7 @@ h1{margin:0;font-size:42px}
 .card:nth-child(2n){animation-delay:.05s}.card:nth-child(3n){animation-delay:.1s}
 .photoWrap{position:relative;height:175px;overflow:hidden;background:#f0ebe6}
 .photoWrap img{width:100%;height:100%;display:block;object-fit:cover}
+.photoWrap img.photoFallback{object-fit:contain;padding:28px;background:linear-gradient(135deg,#fff4eb,#f8dfcf)}
 .rank{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.68);color:#fff;padding:5px 8px;border-radius:999px;font-size:11px}
 .body{padding:15px;display:flex;flex-direction:column;flex:1;min-width:0}
 .row{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
@@ -53,12 +53,12 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 .desc{font-size:13px;color:var(--muted);line-height:1.55;margin:10px 0}
 .details{font-size:12px;line-height:1.55;color:#555;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
 .details div{margin:2px 0}
-.recommendation{font-weight:700;color:#31545a}
 .details a{color:inherit;text-decoration:none}
 .rating{font-weight:700;color:#222}
 .actions{display:flex;gap:8px;margin-top:auto;padding-top:12px}
 .actions a,.fav{text-decoration:none;color:#222;background:#fff;border:1px solid var(--line);padding:8px 10px;border-radius:10px;font-size:13px;cursor:pointer}
 .fav.on{background:#fff0f3}
+.filters button:focus-visible,.areaFilters button:focus-visible,.random:focus-visible,.fav:focus-visible,.actions a:focus-visible,.introSkip:focus-visible,.wheelActions button:focus-visible,.wheelActions a:focus-visible{outline:3px solid rgba(255,107,53,.35);outline-offset:2px}
 .empty{display:none;text-align:center;padding:40px;color:var(--muted)}
 @keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
@@ -94,7 +94,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 .slot{background:#fff;border:3px solid var(--accent);border-radius:22px;padding:36px 22px;font-size:42px;font-weight:800;min-height:160px;display:flex;align-items:center;justify-content:center}
 .wheelActions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
 .wheelActions button,.wheelActions a{border:0;border-radius:11px;padding:10px 14px;text-decoration:none;cursor:pointer}
-.startWheel{background:#222;color:#fff} .stopWheel{background:var(--accent);color:#fff} .stopWheel:disabled{opacity:.45;cursor:not-allowed} .closeWheel{background:#eee;color:#222} .winnerMap{background:var(--accent);color:#fff;display:none}
+.startWheel{background:#222;color:#fff} .closeWheel{background:#eee;color:#222} .winnerMap{background:var(--accent);color:#fff;display:none}
 
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.foodMap{grid-template-columns:1fr}}
@@ -116,7 +116,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 </div>
 <div class="wrap">
 <section class="hero">
-  <div class="beta">Lina 的试验网站 · Beta</div>
+  <div class="brandMark"><strong>CHIFAN</strong><span>旧金山吃饭指南</span></div>
   <h1>旧金山最值得吃的 100 家餐厅</h1>
   <p class="sub">精选餐厅推荐 · 搜索 · 分类 · 收藏 · 吃货地图</p>
   <input id="search" class="search" placeholder="Search restaurant or cuisine">
@@ -153,7 +153,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 <main class="grid" id="grid">
 <article class="card" data-category="中餐" data-search="奈哥酸菜鱼 中餐">
   <div class="photoWrap">
-    <img src="naige.JPG" alt="Restaurant dish" loading="lazy">
+    <img src="naige.jpg" alt="奈哥酸菜鱼的酸菜鱼菜品" loading="lazy">
     <span class="rank">#1</span>
   </div>
   <div class="body">
@@ -171,7 +171,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 </article>
 <article class="card" data-category="中餐" data-search="青蔬麻辣烫 中餐">
   <div class="photoWrap">
-    <img src="qingshu.JPG" alt="Restaurant dish" loading="lazy">
+    <img src="qingshu.jpg" alt="青蔬麻辣烫的麻辣烫菜品" loading="lazy">
     <span class="rank">#2</span>
   </div>
   <div class="body">
@@ -197,7 +197,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
       <h2>Z &amp; Y Peking Duck</h2>
       <span class="tag">Chinese · Peking Duck · Dim Sum</span>
     </div>
-    
+    <p class="desc">Chinatown 北京菜餐厅，主打需提前预订的传统北京烤鸭、桌边片鸭和北京风味点心。</p>
     <div class="details"><div class="rating">⭐ 4.5</div><div>📍 606 Jackson St, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14159861899">(415) 986-1899</a></div></div>
     <div class="actions">
       <a href="https://www.google.com/maps/search/?api=1&amp;query=Z+%26+Y+Peking+Duck+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
@@ -215,7 +215,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
       <h2>R&amp;G Lounge</h2>
       <span class="tag">Cantonese · Seafood</span>
     </div>
-    
+    <p class="desc">Chinatown 老牌粤菜馆，以椒盐焗蟹、海鲜和传统粤式宴席菜闻名，适合多人聚餐。</p>
     <div class="details"><div class="rating">⭐ 3.7</div><div>📍 631 Kearny St, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14159827877">(415) 982-7877</a></div></div>
     <div class="actions">
       <a href="https://www.google.com/maps/search/?api=1&amp;query=R%26G+Lounge+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
@@ -233,7 +233,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
       <h2>China Live</h2>
       <span class="tag">Modern Chinese · Dim Sum</span>
     </div>
-    
+    <p class="desc">结合餐厅、市场与茶饮空间的现代中餐目的地，可尝点心、烤鸭和多款共享式菜肴。</p>
     <div class="details"><div class="rating">⭐ 3.9</div><div>📍 644 Broadway, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14157888188">(415) 788-8188</a></div></div>
     <div class="actions">
       <a href="https://www.google.com/maps/search/?api=1&amp;query=China+Live+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
@@ -251,7 +251,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
       <h2>Mister Jiu's</h2>
       <span class="tag">Modern Chinese · Fine Dining</span>
     </div>
-    
+    <p class="desc">位于 Chinatown 的现代中餐厅，以当代手法演绎粤菜与加州食材，适合特别场合。</p>
     <div class="details"><div class="rating">⭐ 3.7</div><div>📍 28 Waverly Pl, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14158579688">(415) 857-9688</a></div></div>
     <div class="actions">
       <a href="https://www.google.com/maps/search/?api=1&amp;query=Mister+Jiu%27s+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
@@ -269,7 +269,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
       <h2>Harborview Restaurant &amp; Bar</h2>
       <span class="tag">Cantonese · Dim Sum · Seafood</span>
     </div>
-    
+    <p class="desc">Embarcadero 海景粤菜餐厅，供应午市点心、海鲜和经典粤菜，也适合家庭聚餐与宴会。</p>
     <div class="details"><div class="rating">⭐ 4.0</div><div>📍 4 Embarcadero Center, San Francisco, CA 94111</div><div>☎️ <a href="tel:+14153991200">(415) 399-1200</a></div></div>
     <div class="actions">
       <a href="https://www.google.com/maps/search/?api=1&amp;query=Harborview+Restaurant+%26+Bar+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
@@ -2048,7 +2048,20 @@ const verifiedPhotos={
   "Wako Japanese Restaurant":"https://img3.restaurantguru.com/c4c3-dishes-Wako-Japanese-Restaurant-5.jpg",
   "Cocobang":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_16:9,g_center,f_auto/images/MZink-SF-Cocobang-Exterior-03_b4pnor"
 };
-cards.forEach(card=>{const name=card.querySelector('h2').childNodes[0].textContent.trim();const image=card.querySelector('img');if(image&&(/placehold\.co|images\.openai\.com/.test(image.src))&&verifiedPhotos[name])image.src=verifiedPhotos[name];});
+cards.forEach(card=>{
+  const name=card.querySelector('h2').childNodes[0].textContent.trim();
+  const image=card.querySelector('img');
+  if(!image)return;
+  if((/placehold\.co|images\.openai\.com/.test(image.src))&&verifiedPhotos[name])image.src=verifiedPhotos[name];
+  if(image.alt==='Restaurant dish')image.alt=`${name} 餐厅菜品`;
+  image.addEventListener('error',()=>{
+    if(image.dataset.fallback)return;
+    image.dataset.fallback='true';
+    image.classList.add('photoFallback');
+    const safeName=name.replace(/[<>&"']/g,'');
+    image.src=`data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560"><rect width="900" height="560" fill="#fff4eb"/><circle cx="450" cy="215" r="88" fill="#ffdbc8"/><path d="M390 220h120M420 180l-30 40m90-40 30 40" stroke="#b64a1e" stroke-width="14" stroke-linecap="round"/><text x="450" y="360" text-anchor="middle" font-family="sans-serif" font-size="34" fill="#6f5142">${safeName}</text><text x="450" y="410" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#9b7a68">图片暂时无法加载</text></svg>`)}`;
+  });
+});
 const filterBtns=[...document.querySelectorAll('.filters button')];
 const areaBtns=[...document.querySelectorAll('.areaFilters button')];
 const intro=document.getElementById('intro');
@@ -2118,10 +2131,20 @@ areaBtns.forEach(b=>b.addEventListener('click',()=>{
   apply();
 }));
 search.addEventListener('input',apply);
-document.querySelectorAll('.fav').forEach(b=>b.addEventListener('click',()=>{
-  b.classList.toggle('on');
-  b.textContent=b.classList.contains('on')?'♥ Saved':'♡ Save';
-}));
+let savedFavorites=[];
+try{savedFavorites=JSON.parse(localStorage.getItem('chifan-favorites')||'[]');}catch(_){savedFavorites=[];}
+document.querySelectorAll('.fav').forEach(b=>{
+  const card=b.closest('.card');
+  const key=card?.id||'';
+  const setState=on=>{b.classList.toggle('on',on);b.textContent=on?'♥ Saved':'♡ Save';b.setAttribute('aria-pressed',String(on));};
+  b.setAttribute('aria-label',`收藏 ${card.querySelector('h2').innerText.trim()}`);
+  setState(savedFavorites.includes(key));
+  b.addEventListener('click',()=>{
+    setState(!b.classList.contains('on'));
+    savedFavorites=[...document.querySelectorAll('.fav.on')].map(button=>button.closest('.card').id);
+    try{localStorage.setItem('chifan-favorites',JSON.stringify(savedFavorites));}catch(_){}
+  });
+});
 
 const modal=document.getElementById('wheelModal');
 const randomBtn=document.getElementById('random');
@@ -2172,6 +2195,8 @@ randomBtn.addEventListener('click',()=>{modal.classList.add('show');begin();});
 restart.addEventListener('click',begin);
 winnerMap.addEventListener('click',e=>{e.preventDefault();const targetId=winnerMap.getAttribute('href');if(!targetId)return;const target=document.querySelector(targetId);closeBtn.click();history.replaceState(null,'',targetId);setTimeout(()=>target?.scrollIntoView({behavior:'smooth',block:'start'}),80);});
 closeBtn.addEventListener('click',()=>{clearInterval(spinTimer);clearInterval(countTimer);clearTimeout(autoStopTimer);spinning=false;modal.classList.remove('show');});
+modal.addEventListener('click',event=>{if(event.target===modal)closeBtn.click();});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&modal.classList.contains('show'))closeBtn.click();});
 </script>
 </body>
 </html>
