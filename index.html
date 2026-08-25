@@ -1,318 +1,1804 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>今天想吃什么？</title>
-  <style>
-    :root{
-      --bg:#fff8f0;
-      --card:#ffffff;
-      --text:#222;
-      --muted:#6f6f6f;
-      --accent:#ff6b35;
-      --line:#ece6df;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
-      background:var(--bg);
-      color:var(--text);
-    }
-    .wrap{max-width:1100px;margin:0 auto;padding:32px 18px 60px}
-    .hero{
-      background:linear-gradient(135deg,#fff4e8,#ffe2cf);
-      border-radius:28px;
-      padding:34px 28px;
-      margin-bottom:24px;
-    }
-    h1{font-size:42px;margin:0 0 8px}
-    .subtitle{margin:0;color:var(--muted);font-size:17px}
-    .search{
-      width:100%;margin-top:22px;padding:15px 18px;border:1px solid var(--line);
-      border-radius:16px;font-size:16px;background:#fff;outline:none;
-    }
-    .filters{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}
-    .filters button{
-      border:0;background:#fff;padding:11px 16px;border-radius:999px;
-      font-size:15px;cursor:pointer;box-shadow:0 1px 0 rgba(0,0,0,.04);
-    }
-    .filters button.active{background:var(--accent);color:#fff}
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:18px;
-    }
-    .restaurant{
-      background:var(--card);border-radius:22px;overflow:hidden;
-      border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.04);
-    }
-    .photo-wrap{
-      height:240px;
-      overflow:hidden;
-      background:#f3eee8;
-    }
-    .photo{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      transition:transform .35s ease;
-    }
-    .restaurant:hover .photo{transform:scale(1.045)}
-    .content{padding:20px}
-    .topline{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-    h2{font-size:23px;margin:0 0 6px}
-    .badge{
-      font-size:13px;padding:6px 10px;border-radius:999px;background:#fff0e8;color:#b94c1e;white-space:nowrap;
-    }
-    .meta{color:var(--muted);font-size:14px;margin:5px 0}
-    .desc{line-height:1.65;margin:12px 0 16px}
-    .actions{display:flex;gap:10px;flex-wrap:wrap}
-    .actions a,.fav{
-      text-decoration:none;border:1px solid var(--line);background:#fff;color:#222;
-      padding:10px 13px;border-radius:12px;font-size:14px;cursor:pointer;
-    }
-    .fav.active{background:#fff0f3}
-    .empty{display:none;text-align:center;color:var(--muted);padding:40px 0}
-    .credits{
-      margin-top:34px;
-      font-size:12px;
-      line-height:1.6;
-      color:#8a8a8a;
-    }
-    .credits a{color:#777}
-    @media(max-width:760px){
-      h1{font-size:34px}
-      .grid{grid-template-columns:1fr}
-      .photo-wrap{height:220px}
-      .hero{padding:28px 20px}
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>今天想吃什么？｜旧金山100家餐厅</title>
+<style>
+:root{--bg:#fff8f0;--card:#fff;--text:#202020;--muted:#777;--accent:#ff6b35;--line:#ece4dc}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif}
+.wrap{max-width:1180px;margin:auto;padding:28px 18px 70px}
+.hero{padding:34px;border-radius:28px;background:linear-gradient(135deg,#fff3e7,#ffd8bf);margin-bottom:18px}
+h1{margin:0;font-size:44px} .sub{color:#665f5a;margin:8px 0 0}
+.search{width:100%;margin-top:22px;padding:15px 17px;border:1px solid var(--line);border-radius:15px;font-size:16px;outline:none}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin:20px 0}
+.filters button{border:1px solid var(--line);background:white;padding:10px 15px;border-radius:999px;cursor:pointer}
+.filters button.active{background:var(--accent);color:white;border-color:var(--accent)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 2px 18px;color:var(--muted)}
+.random{border:0;background:#222;color:white;padding:10px 14px;border-radius:12px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:21px;overflow:hidden;box-shadow:0 7px 26px rgba(0,0,0,.04)}
+.photoWrap{height:190px;position:relative;background:#eee;overflow:hidden}
+.photoWrap img{width:100%;height:100%;object-fit:cover;display:block;transition:.3s transform}
+.card:hover img{transform:scale(1.035)}
+.rank{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.68);color:#fff;padding:6px 9px;border-radius:999px;font-size:12px}
+.body{padding:17px} .row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+h2{font-size:19px;margin:0;line-height:1.25} .tag{font-size:12px;background:#fff0e8;color:#b64a1e;padding:5px 8px;border-radius:999px;white-space:nowrap}
+.body p{font-size:14px;color:var(--muted);line-height:1.55;min-height:44px}
+.actions{display:flex;gap:8px} .actions a,.fav{font-size:14px;text-decoration:none;color:#222;background:white;border:1px solid var(--line);padding:9px 11px;border-radius:11px;cursor:pointer}
+.fav.on{background:#fff0f3} .empty{display:none;text-align:center;padding:50px;color:var(--muted)}
+.note{margin-top:30px;color:#8a8a8a;font-size:12px;line-height:1.6}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){h1{font-size:34px}.hero{padding:26px 20px}.grid{grid-template-columns:1fr}.photoWrap{height:215px}}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <h1>今天想吃什么？</h1>
-      <p class="subtitle">旧金山中文餐厅推荐 · 少一点踩雷，多一点好吃</p>
-      <input id="searchInput" class="search" placeholder="搜索餐厅、分类、推荐菜，例如：火锅 / 越南粉" />
-    </section>
+<div class="wrap">
+<section class="hero">
+  <h1>今天想吃什么？</h1>
+  <p class="sub">旧金山 100 家餐厅 · 中文分类 · 搜索 · 收藏 · 地图</p>
+  <input id="search" class="search" placeholder="搜店名或菜系，例如：火锅 / Pho / Dumpling">
+</section>
 
-    <div class="filters">
-      <button class="active" data-filter="全部">全部</button>
-      <button data-filter="中餐">中餐</button>
-      <button data-filter="麻辣烫">麻辣烫</button>
-      <button data-filter="火锅">火锅</button>
-      <button data-filter="烧烤">烧烤</button>
-      <button data-filter="越南粉">越南粉</button>
-    </div>
+<div class="filters">
+<button class="active" data-filter="全部">全部</button><button data-filter="中餐">中餐</button><button data-filter="点心">点心</button><button data-filter="火锅">火锅</button><button data-filter="烧烤">烧烤</button><button data-filter="越南菜">越南菜</button><button data-filter="日料">日料</button><button data-filter="韩餐">韩餐</button><button data-filter="泰国菜">泰国菜</button>
+</div>
 
-    <main class="grid" id="restaurantGrid">
+<div class="toolbar">
+  <span id="count">共 100 家</span>
+  <button class="random" id="random">🎲 随机帮我选一家</button>
+</div>
 
-      <article class="restaurant" data-category="中餐" data-search="奈哥酸菜鱼 酸菜鱼 炸串 中餐">
-        <div class="photo-wrap"><img class="photo" src="naige.JPG" alt="奈哥酸菜鱼"></div>
-        <div class="content">
-          <div class="topline">
-            <div>
-              <h2>奈哥酸菜鱼</h2>
-              <p class="meta">⭐ 4.8 · 人均约 $30</p>
+<main id="grid" class="grid">
+
+        <article class="card" data-category="中餐" data-search="yuanbao jiaozi 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#1</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Yuanbao Jiaozi</h2>
+              <span class="tag">中餐</span>
             </div>
-            <span class="badge">中餐</span>
-          </div>
-          <p class="desc">推荐：酸菜鱼、炸串。鱼片嫩，酸菜香，适合想吃重口味中餐的时候。</p>
-          <div class="actions">
-            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=%E5%A5%88%E5%93%A5%E9%85%B8%E8%8F%9C%E9%B1%BC%20San%20Francisco">📍 地图</a>
-            <button class="fav">♡ 收藏</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="restaurant" data-category="麻辣烫" data-search="青蔬麻辣烫 麻辣烫 炸串 自选菜">
-        <div class="photo-wrap"><img class="photo" src="qingshu.JPG" alt="青蔬麻辣烫"></div>
-        <div class="content">
-          <div class="topline">
-            <div>
-              <h2>青蔬麻辣烫</h2>
-              <p class="meta">⭐ 4.7 · 人均约 $25</p>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Yuanbao+Jiaozi+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
             </div>
-            <span class="badge">麻辣烫</span>
           </div>
-          <p class="desc">推荐：麻辣烫、炸串。自选菜自由度高，一个人吃也方便。</p>
-          <div class="actions">
-            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=%E9%9D%92%E8%94%AC%E9%BA%BB%E8%BE%A3%E7%83%AB%20San%20Francisco">📍 地图</a>
-            <button class="fav">♡ 收藏</button>
+        </article>
+        <article class="card" data-category="中餐" data-search="z &amp; y restaurant 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#2</span>
           </div>
-        </div>
-      </article>
-
-      <article class="restaurant" data-category="火锅" data-search="Mumu Hot Pot 火锅 Parkmerced 一人一锅 肉类拼盘">
-        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Chinese_hot_pot.jpg" alt="火锅"></div>
-        <div class="content">
-          <div class="topline">
-            <div>
+          <div class="body">
+            <div class="row">
+              <h2>Z &amp; Y Restaurant</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Z+%26+Y+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="z &amp; y peking duck 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#3</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Z &amp; Y Peking Duck</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Z+%26+Y+Peking+Duck+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="r&amp;g lounge 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#4</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>R&amp;G Lounge</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=R%26G+Lounge+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="china live 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#5</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>China Live</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=China+Live+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="mister jiu&#x27;s 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#6</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Mister Jiu&#x27;s</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Mister+Jiu%27s+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="harborview restaurant &amp; bar 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#7</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Harborview Restaurant &amp; Bar</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Harborview+Restaurant+%26+Bar+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="capital restaurant 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#8</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Capital Restaurant</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Capital+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="great eastern restaurant 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#9</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Great Eastern Restaurant</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Great+Eastern+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="house of nanking 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#10</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>House of Nanking</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=House+of+Nanking+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="san tung 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#11</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>San Tung</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=San+Tung+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="old mandarin islamic restaurant 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#12</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Old Mandarin Islamic Restaurant</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Old+Mandarin+Islamic+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="terra cotta warrior 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#13</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Terra Cotta Warrior</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Terra+Cotta+Warrior+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="beijing restaurant 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#14</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Beijing Restaurant</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Beijing+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="chong qing xiao mian 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#15</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Chong Qing Xiao Mian</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Chong+Qing+Xiao+Mian+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="spices 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#16</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Spices</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Spices+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="mama ji&#x27;s 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#17</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Mama Ji&#x27;s</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Mama+Ji%27s+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="eric&#x27;s restaurant 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#18</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Eric&#x27;s Restaurant</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Eric%27s+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="ah ma&#x27;s kitchen 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#19</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Ah Ma&#x27;s Kitchen</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Ah+Ma%27s+Kitchen+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="homey kitchen 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#20</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Homey Kitchen</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Homey+Kitchen+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="pàng 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#21</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Pàng</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=P%C3%A0ng+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="the happy crane 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#22</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>The Happy Crane</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=The+Happy+Crane+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="chef xiong kitchen 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#23</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Chef Xiong Kitchen</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Chef+Xiong+Kitchen+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="sichuan home 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#24</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Sichuan Home</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Sichuan+Home+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="中餐" data-search="tsing tao restaurant 中餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chinese%20food%20dishes.jpg" alt="中餐示意图" loading="lazy">
+            <span class="rank">#25</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Tsing Tao Restaurant</h2>
+              <span class="tag">中餐</span>
+            </div>
+            <p>中式料理 · 点击地图查看位置与最新营业信息</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Tsing+Tao+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="dumpling home 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#26</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Dumpling Home</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Dumpling+Home+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="dumpling story 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#27</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Dumpling Story</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Dumpling+Story+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="dumpling kitchen 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#28</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Dumpling Kitchen</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Dumpling+Kitchen+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="dumpling baby 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#29</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Dumpling Baby</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Dumpling+Baby+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="dumpling specialist 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#30</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Dumpling Specialist</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Dumpling+Specialist+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="kingdom of dumpling 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#31</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Kingdom of Dumpling</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Kingdom+of+Dumpling+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="good mong kok bakery 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#32</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Good Mong Kok Bakery</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Good+Mong+Kok+Bakery+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="yank sing 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#33</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Yank Sing</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Yank+Sing+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="dragon beaux 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#34</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Dragon Beaux</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Dragon+Beaux+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="hk lounge bistro 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#35</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>HK Lounge Bistro</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=HK+Lounge+Bistro+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="city view restaurant 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#36</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>City View Restaurant</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=City+View+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="hang ah tea room 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#37</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Hang Ah Tea Room</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Hang+Ah+Tea+Room+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="palette tea house 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#38</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Palette Tea House</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Palette+Tea+House+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="osmanthus dim sum lounge 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#39</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Osmanthus Dim Sum Lounge</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Osmanthus+Dim+Sum+Lounge+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="点心" data-search="dim sum bistro 点心">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dim%20sum.jpg" alt="点心示意图" loading="lazy">
+            <span class="rank">#40</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Dim Sum Bistro</h2>
+              <span class="tag">点心</span>
+            </div>
+            <p>点心 / 饺子 · 适合早茶、午餐和多人分享</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Dim+Sum+Bistro+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="火锅" data-search="mumu hot pot 火锅">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pictures%20of%20hot%20pot%20food.jpg" alt="火锅示意图" loading="lazy">
+            <span class="rank">#41</span>
+          </div>
+          <div class="body">
+            <div class="row">
               <h2>Mumu Hot Pot</h2>
-              <p class="meta">📍 2 Varela Ave · Parkmerced</p>
+              <span class="tag">火锅</span>
             </div>
-            <span class="badge">火锅</span>
+            <p>火锅 · 适合聚餐，建议出发前确认等位与预约</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Mumu+Hot+Pot+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
           </div>
-          <p class="desc">一人一锅，汤底和组合选择丰富，适合两人或多人聚餐。</p>
-          <div class="actions">
-            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=Mumu%20Hot%20Pot%202%20Varela%20Ave%20San%20Francisco">📍 地图</a>
-            <button class="fav">♡ 收藏</button>
+        </article>
+        <article class="card" data-category="火锅" data-search="m pot 火锅">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pictures%20of%20hot%20pot%20food.jpg" alt="火锅示意图" loading="lazy">
+            <span class="rank">#42</span>
           </div>
-        </div>
-      </article>
-
-      <article class="restaurant" data-category="火锅" data-search="Hotpot Bay 火锅 Taraval Parkside 一人一锅 牛肉 羊肉">
-        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Chinese_Hotpot.jpg" alt="火锅"></div>
-        <div class="content">
-          <div class="topline">
-            <div>
+          <div class="body">
+            <div class="row">
+              <h2>M Pot</h2>
+              <span class="tag">火锅</span>
+            </div>
+            <p>火锅 · 适合聚餐，建议出发前确认等位与预约</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=M+Pot+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="火锅" data-search="the pots hot pot 火锅">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pictures%20of%20hot%20pot%20food.jpg" alt="火锅示意图" loading="lazy">
+            <span class="rank">#43</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>The Pots Hot Pot</h2>
+              <span class="tag">火锅</span>
+            </div>
+            <p>火锅 · 适合聚餐，建议出发前确认等位与预约</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=The+Pots+Hot+Pot+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="火锅" data-search="jin pot shabu house 火锅">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pictures%20of%20hot%20pot%20food.jpg" alt="火锅示意图" loading="lazy">
+            <span class="rank">#44</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Jin Pot Shabu House</h2>
+              <span class="tag">火锅</span>
+            </div>
+            <p>火锅 · 适合聚餐，建议出发前确认等位与预约</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Jin+Pot+Shabu+House+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="火锅" data-search="hotpot bay 火锅">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pictures%20of%20hot%20pot%20food.jpg" alt="火锅示意图" loading="lazy">
+            <span class="rank">#45</span>
+          </div>
+          <div class="body">
+            <div class="row">
               <h2>Hotpot Bay</h2>
-              <p class="meta">📍 1626 Taraval St · Parkside</p>
+              <span class="tag">火锅</span>
             </div>
-            <span class="badge">火锅</span>
-          </div>
-          <p class="desc">个人锅形式，分量足，适合一个人或朋友各吃各的。</p>
-          <div class="actions">
-            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=Hotpot%20Bay%201626%20Taraval%20St%20San%20Francisco">📍 地图</a>
-            <button class="fav">♡ 收藏</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="restaurant" data-category="烧烤" data-search="Northern China BBQ 烧烤 烤串 羊肉串 牛肉串">
-        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Freshippo_red_willow_twig_lamb_skewers.jpg" alt="羊肉串"></div>
-        <div class="content">
-          <div class="topline">
-            <div>
-              <h2>Northern China BBQ</h2>
-              <p class="meta">📍 San Francisco</p>
+            <p>火锅 · 适合聚餐，建议出发前确认等位与预约</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Hotpot+Bay+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
             </div>
-            <span class="badge">烧烤</span>
           </div>
-          <p class="desc">偏北方中式烤串，适合想吃羊肉串、牛肉串和烤蔬菜的时候。</p>
-          <div class="actions">
-            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=Northern%20China%20BBQ%20San%20Francisco">📍 地图</a>
-            <button class="fav">♡ 收藏</button>
+        </article>
+        <article class="card" data-category="火锅" data-search="shabu club 火锅">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pictures%20of%20hot%20pot%20food.jpg" alt="火锅示意图" loading="lazy">
+            <span class="rank">#46</span>
           </div>
-        </div>
-      </article>
-
-      <article class="restaurant" data-category="烧烤" data-search="老街把把烧 烧烤 川味 烤串">
-        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Barbecued_lamb_sticks.jpg" alt="烧烤"></div>
-        <div class="content">
-          <div class="topline">
-            <div>
-              <h2>老街把把烧</h2>
-              <p class="meta">📍 San Francisco</p>
+          <div class="body">
+            <div class="row">
+              <h2>Shabu Club</h2>
+              <span class="tag">火锅</span>
             </div>
-            <span class="badge">烧烤</span>
+            <p>火锅 · 适合聚餐，建议出发前确认等位与预约</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Shabu+Club+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
           </div>
-          <p class="desc">偏川味烧烤，口味重，适合喜欢辣味和串串的人。</p>
-          <div class="actions">
-            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=%E8%80%81%E8%A1%97%E6%8A%8A%E6%8A%8A%E7%83%A7%20San%20Francisco">📍 地图</a>
-            <button class="fav">♡ 收藏</button>
+        </article>
+        <article class="card" data-category="火锅" data-search="nan hot pot sf 火锅">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pictures%20of%20hot%20pot%20food.jpg" alt="火锅示意图" loading="lazy">
+            <span class="rank">#47</span>
           </div>
-        </div>
-      </article>
-
-      <article class="restaurant" data-category="越南粉" data-search="Pho 2000 越南粉 牛肉河粉 Larkin Tenderloin">
-        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Vietnamese_Ph%E1%BB%9F.jpg" alt="越南粉"></div>
-        <div class="content">
-          <div class="topline">
-            <div>
+          <div class="body">
+            <div class="row">
+              <h2>Nan Hot Pot SF</h2>
+              <span class="tag">火锅</span>
+            </div>
+            <p>火锅 · 适合聚餐，建议出发前确认等位与预约</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Nan+Hot+Pot+SF+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="火锅" data-search="tang bar 火锅">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pictures%20of%20hot%20pot%20food.jpg" alt="火锅示意图" loading="lazy">
+            <span class="rank">#48</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Tang Bar</h2>
+              <span class="tag">火锅</span>
+            </div>
+            <p>火锅 · 适合聚餐，建议出发前确认等位与预约</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Tang+Bar+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="火锅" data-search="muukata6395 火锅">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pictures%20of%20hot%20pot%20food.jpg" alt="火锅示意图" loading="lazy">
+            <span class="rank">#49</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Muukata6395</h2>
+              <span class="tag">火锅</span>
+            </div>
+            <p>火锅 · 适合聚餐，建议出发前确认等位与预约</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Muukata6395+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="火锅" data-search="boiling hot pot 火锅">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pictures%20of%20hot%20pot%20food.jpg" alt="火锅示意图" loading="lazy">
+            <span class="rank">#50</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Boiling Hot Pot</h2>
+              <span class="tag">火锅</span>
+            </div>
+            <p>火锅 · 适合聚餐，建议出发前确认等位与预约</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Boiling+Hot+Pot+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="烧烤" data-search="northern china bbq 烧烤">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Freshippo%20red%20willow%20twig%20lamb%20skewers.jpg" alt="烧烤示意图" loading="lazy">
+            <span class="rank">#51</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>NORTHERN CHINA BBQ</h2>
+              <span class="tag">烧烤</span>
+            </div>
+            <p>烧烤 / 烤串 · 适合晚餐和夜宵</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=NORTHERN+CHINA+BBQ+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="烧烤" data-search="taste of old street 老街把把烧 烧烤">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Freshippo%20red%20willow%20twig%20lamb%20skewers.jpg" alt="烧烤示意图" loading="lazy">
+            <span class="rank">#52</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Taste of Old Street 老街把把烧</h2>
+              <span class="tag">烧烤</span>
+            </div>
+            <p>烧烤 / 烤串 · 适合晚餐和夜宵</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Taste+of+Old+Street+%E8%80%81%E8%A1%97%E6%8A%8A%E6%8A%8A%E7%83%A7+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="烧烤" data-search="top sf bbq 烧烤">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Freshippo%20red%20willow%20twig%20lamb%20skewers.jpg" alt="烧烤示意图" loading="lazy">
+            <span class="rank">#53</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Top SF BBQ</h2>
+              <span class="tag">烧烤</span>
+            </div>
+            <p>烧烤 / 烤串 · 适合晚餐和夜宵</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Top+SF+BBQ+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="烧烤" data-search="hing lung company 烧烤">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Freshippo%20red%20willow%20twig%20lamb%20skewers.jpg" alt="烧烤示意图" loading="lazy">
+            <span class="rank">#54</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Hing Lung Company</h2>
+              <span class="tag">烧烤</span>
+            </div>
+            <p>烧烤 / 烤串 · 适合晚餐和夜宵</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Hing+Lung+Company+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="烧烤" data-search="san ho won 烧烤">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Freshippo%20red%20willow%20twig%20lamb%20skewers.jpg" alt="烧烤示意图" loading="lazy">
+            <span class="rank">#55</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>SAN HO WON</h2>
+              <span class="tag">烧烤</span>
+            </div>
+            <p>烧烤 / 烤串 · 适合晚餐和夜宵</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=SAN+HO+WON+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="烧烤" data-search="brothers restaurant 烧烤">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Freshippo%20red%20willow%20twig%20lamb%20skewers.jpg" alt="烧烤示意图" loading="lazy">
+            <span class="rank">#56</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Brothers Restaurant</h2>
+              <span class="tag">烧烤</span>
+            </div>
+            <p>烧烤 / 烤串 · 适合晚餐和夜宵</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Brothers+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="烧烤" data-search="wooden charcoal korean village barbecue house 烧烤">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Freshippo%20red%20willow%20twig%20lamb%20skewers.jpg" alt="烧烤示意图" loading="lazy">
+            <span class="rank">#57</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Wooden Charcoal Korean Village Barbecue House</h2>
+              <span class="tag">烧烤</span>
+            </div>
+            <p>烧烤 / 烤串 · 适合晚餐和夜宵</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Wooden+Charcoal+Korean+Village+Barbecue+House+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="烧烤" data-search="yakiniq cafe 烧烤">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Freshippo%20red%20willow%20twig%20lamb%20skewers.jpg" alt="烧烤示意图" loading="lazy">
+            <span class="rank">#58</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>YakiniQ Cafe</h2>
+              <span class="tag">烧烤</span>
+            </div>
+            <p>烧烤 / 烤串 · 适合晚餐和夜宵</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=YakiniQ+Cafe+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="烧烤" data-search="k-elements bbq 烧烤">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Freshippo%20red%20willow%20twig%20lamb%20skewers.jpg" alt="烧烤示意图" loading="lazy">
+            <span class="rank">#59</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>K-Elements BBQ</h2>
+              <span class="tag">烧烤</span>
+            </div>
+            <p>烧烤 / 烤串 · 适合晚餐和夜宵</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=K-Elements+BBQ+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="烧烤" data-search="ilcha 烧烤">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Freshippo%20red%20willow%20twig%20lamb%20skewers.jpg" alt="烧烤示意图" loading="lazy">
+            <span class="rank">#60</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Ilcha</h2>
+              <span class="tag">烧烤</span>
+            </div>
+            <p>烧烤 / 烤串 · 适合晚餐和夜宵</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Ilcha+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="越南菜" data-search="pho 2000 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#61</span>
+          </div>
+          <div class="body">
+            <div class="row">
               <h2>Pho 2000</h2>
-              <p class="meta">📍 637 Larkin St · Tenderloin</p>
+              <span class="tag">越南菜</span>
             </div>
-            <span class="badge">越南粉</span>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Pho+2000+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
           </div>
-          <p class="desc">传统越南粉选择多，也有米粉和越南小吃，适合一个人快速吃一碗。</p>
-          <div class="actions">
-            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=Pho%202000%20637%20Larkin%20St%20San%20Francisco">📍 地图</a>
-            <button class="fav">♡ 收藏</button>
+        </article>
+        <article class="card" data-category="越南菜" data-search="pho huong viet 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#62</span>
           </div>
-        </div>
-      </article>
-
-      <article class="restaurant" data-category="越南粉" data-search="Perilla 越南粉 Irving Sunset garlic noodles">
-        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Vietnamese_Pho.jpg" alt="越南粉"></div>
-        <div class="content">
-          <div class="topline">
-            <div>
+          <div class="body">
+            <div class="row">
+              <h2>Pho Huong Viet</h2>
+              <span class="tag">越南菜</span>
+            </div>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Pho+Huong+Viet+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="越南菜" data-search="yummy yummy 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#63</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Yummy Yummy</h2>
+              <span class="tag">越南菜</span>
+            </div>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Yummy+Yummy+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="越南菜" data-search="pho tân hòa 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#64</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Pho Tân Hòa</h2>
+              <span class="tag">越南菜</span>
+            </div>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Pho+T%C3%A2n+H%C3%B2a+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="越南菜" data-search="gao viet kitchen 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#65</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Gao Viet Kitchen</h2>
+              <span class="tag">越南菜</span>
+            </div>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Gao+Viet+Kitchen+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="越南菜" data-search="perilla 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#66</span>
+          </div>
+          <div class="body">
+            <div class="row">
               <h2>Perilla</h2>
-              <p class="meta">📍 Irving St · Sunset</p>
+              <span class="tag">越南菜</span>
             </div>
-            <span class="badge">越南粉</span>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Perilla+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
           </div>
-          <p class="desc">Sunset 一带方便去的越南菜选择，适合想吃河粉或蒜香面的时候。</p>
-          <div class="actions">
-            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=Perilla%20Irving%20St%20San%20Francisco">📍 地图</a>
-            <button class="fav">♡ 收藏</button>
+        </article>
+        <article class="card" data-category="越南菜" data-search="thanh long restaurant 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#67</span>
           </div>
-        </div>
-      </article>
+          <div class="body">
+            <div class="row">
+              <h2>Thanh Long Restaurant</h2>
+              <span class="tag">越南菜</span>
+            </div>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Thanh+Long+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="越南菜" data-search="ppq dungeness island 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#68</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>PPQ Dungeness Island</h2>
+              <span class="tag">越南菜</span>
+            </div>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=PPQ+Dungeness+Island+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="越南菜" data-search="saigon sandwich 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#69</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Saigon Sandwich</h2>
+              <span class="tag">越南菜</span>
+            </div>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Saigon+Sandwich+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="越南菜" data-search="bodega sf 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#70</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Bodega SF</h2>
+              <span class="tag">越南菜</span>
+            </div>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Bodega+SF+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="越南菜" data-search="mong thu cafe 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#71</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Mong Thu Cafe</h2>
+              <span class="tag">越南菜</span>
+            </div>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Mong+Thu+Cafe+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="越南菜" data-search="tín vietnamese cuisine 越南菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vietnamese%20Pho.jpg" alt="越南菜示意图" loading="lazy">
+            <span class="rank">#72</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Tín Vietnamese Cuisine</h2>
+              <span class="tag">越南菜</span>
+            </div>
+            <p>越南粉 / 越南菜 · 河粉、米粉、越南小吃</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=T%C3%ADn+Vietnamese+Cuisine+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="mensho tokyo 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#73</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Mensho Tokyo</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Mensho+Tokyo+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="marufuku ramen 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#74</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Marufuku Ramen</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Marufuku+Ramen+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="hinodeya ramen 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#75</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Hinodeya Ramen</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Hinodeya+Ramen+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="taishoken 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#76</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Taishoken</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Taishoken+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="izakaya sozai 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#77</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Izakaya Sozai</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Izakaya+Sozai+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="rintaro 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#78</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Rintaro</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Rintaro+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="ebisu 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#79</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Ebisu</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Ebisu+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="saru sushi bar 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#80</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Saru Sushi Bar</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Saru+Sushi+Bar+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="hamano sushi 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#81</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Hamano Sushi</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Hamano+Sushi+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="koo 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#82</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Koo</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Koo+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="akiko&#x27;s restaurant 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#83</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Akiko&#x27;s Restaurant</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Akiko%27s+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="ju-ni 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#84</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Ju-Ni</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Ju-Ni+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="robin 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#85</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Robin</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Robin+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="omakase 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#86</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Omakase</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Omakase+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="日料" data-search="wako japanese restaurant 日料">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ramen%20Bowl.jpg" alt="日料示意图" loading="lazy">
+            <span class="rank">#87</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Wako Japanese Restaurant</h2>
+              <span class="tag">日料</span>
+            </div>
+            <p>日料 / 拉面 / 寿司 · 适合一人食或约会</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Wako+Japanese+Restaurant+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="韩餐" data-search="daeho kalbijjim &amp; beef soup 韩餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20BBQ.jpg" alt="韩餐示意图" loading="lazy">
+            <span class="rank">#88</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Daeho Kalbijjim &amp; Beef Soup</h2>
+              <span class="tag">韩餐</span>
+            </div>
+            <p>韩餐 / 韩式烧烤 · 烤肉、汤饭、家常菜</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Daeho+Kalbijjim+%26+Beef+Soup+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="韩餐" data-search="han il kwan 韩餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20BBQ.jpg" alt="韩餐示意图" loading="lazy">
+            <span class="rank">#89</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Han Il Kwan</h2>
+              <span class="tag">韩餐</span>
+            </div>
+            <p>韩餐 / 韩式烧烤 · 烤肉、汤饭、家常菜</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Han+Il+Kwan+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="韩餐" data-search="umma 韩餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20BBQ.jpg" alt="韩餐示意图" loading="lazy">
+            <span class="rank">#90</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Umma</h2>
+              <span class="tag">韩餐</span>
+            </div>
+            <p>韩餐 / 韩式烧烤 · 烤肉、汤饭、家常菜</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Umma+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="韩餐" data-search="jin mi korean cuisine 韩餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20BBQ.jpg" alt="韩餐示意图" loading="lazy">
+            <span class="rank">#91</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Jin Mi Korean Cuisine</h2>
+              <span class="tag">韩餐</span>
+            </div>
+            <p>韩餐 / 韩式烧烤 · 烤肉、汤饭、家常菜</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Jin+Mi+Korean+Cuisine+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="韩餐" data-search="toyose 韩餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20BBQ.jpg" alt="韩餐示意图" loading="lazy">
+            <span class="rank">#92</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Toyose</h2>
+              <span class="tag">韩餐</span>
+            </div>
+            <p>韩餐 / 韩式烧烤 · 烤肉、汤饭、家常菜</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Toyose+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="韩餐" data-search="cocobang 韩餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20BBQ.jpg" alt="韩餐示意图" loading="lazy">
+            <span class="rank">#93</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Cocobang</h2>
+              <span class="tag">韩餐</span>
+            </div>
+            <p>韩餐 / 韩式烧烤 · 烤肉、汤饭、家常菜</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Cocobang+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="韩餐" data-search="my tofu house 韩餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20BBQ.jpg" alt="韩餐示意图" loading="lazy">
+            <span class="rank">#94</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>My Tofu House</h2>
+              <span class="tag">韩餐</span>
+            </div>
+            <p>韩餐 / 韩式烧烤 · 烤肉、汤饭、家常菜</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=My+Tofu+House+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="韩餐" data-search="manna 韩餐">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20BBQ.jpg" alt="韩餐示意图" loading="lazy">
+            <span class="rank">#95</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Manna</h2>
+              <span class="tag">韩餐</span>
+            </div>
+            <p>韩餐 / 韩式烧烤 · 烤肉、汤饭、家常菜</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Manna+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="泰国菜" data-search="kin khao 泰国菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pad%20thai.jpg" alt="泰国菜示意图" loading="lazy">
+            <span class="rank">#96</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Kin Khao</h2>
+              <span class="tag">泰国菜</span>
+            </div>
+            <p>泰国菜 · 咖喱、炒粉、酸辣风味</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Kin+Khao+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="泰国菜" data-search="nari 泰国菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pad%20thai.jpg" alt="泰国菜示意图" loading="lazy">
+            <span class="rank">#97</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Nari</h2>
+              <span class="tag">泰国菜</span>
+            </div>
+            <p>泰国菜 · 咖喱、炒粉、酸辣风味</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Nari+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="泰国菜" data-search="farmhouse kitchen thai cuisine 泰国菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pad%20thai.jpg" alt="泰国菜示意图" loading="lazy">
+            <span class="rank">#98</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Farmhouse Kitchen Thai Cuisine</h2>
+              <span class="tag">泰国菜</span>
+            </div>
+            <p>泰国菜 · 咖喱、炒粉、酸辣风味</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Farmhouse+Kitchen+Thai+Cuisine+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="泰国菜" data-search="lers ros 泰国菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pad%20thai.jpg" alt="泰国菜示意图" loading="lazy">
+            <span class="rank">#99</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Lers Ros</h2>
+              <span class="tag">泰国菜</span>
+            </div>
+            <p>泰国菜 · 咖喱、炒粉、酸辣风味</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Lers+Ros+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-category="泰国菜" data-search="saap ver authentic thai cuisine 泰国菜">
+          <div class="photoWrap">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pad%20thai.jpg" alt="泰国菜示意图" loading="lazy">
+            <span class="rank">#100</span>
+          </div>
+          <div class="body">
+            <div class="row">
+              <h2>Saap Ver Authentic Thai Cuisine</h2>
+              <span class="tag">泰国菜</span>
+            </div>
+            <p>泰国菜 · 咖喱、炒粉、酸辣风味</p>
+            <div class="actions">
+              <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Saap+Ver+Authentic+Thai+Cuisine+San+Francisco+CA">📍 地图</a>
+              <button class="fav">♡ 收藏</button>
+            </div>
+          </div>
+        </article>
+</main>
+<div id="empty" class="empty">没有找到符合条件的餐厅 🍽️</div>
 
-    </main>
+<div class="note">
+  Beta 说明：本版先收录 100 家旧金山餐厅，并使用“菜系示意图”而不是冒充餐厅实拍；点击「地图」可查看地址、营业时间和最新状态。
+  餐厅名单参考了 2026 年旧金山餐厅指南与公开商家信息。后续可以逐家替换成你自己拍摄或取得授权的实拍照片。
+</div>
+</div>
 
-    <div id="empty" class="empty">没有找到符合条件的餐厅 🍽️</div>
+<script>
+const cards=[...document.querySelectorAll('.card')];
+const filterBtns=[...document.querySelectorAll('.filters button')];
+const search=document.getElementById('search');
+const count=document.getElementById('count');
+const empty=document.getElementById('empty');
+let filter='全部';
 
-    <div class="credits">
-      部分示意美食图片来自 Wikimedia Commons：
-      <a href="https://commons.wikimedia.org/wiki/File:Chinese_hot_pot.jpg" target="_blank">Chinese hot pot</a>、
-      <a href="https://commons.wikimedia.org/wiki/File:Chinese_Hotpot.jpg" target="_blank">Chinese Hotpot</a>、
-      <a href="https://commons.wikimedia.org/wiki/File:Freshippo_red_willow_twig_lamb_skewers.jpg" target="_blank">Lamb skewers</a>、
-      <a href="https://commons.wikimedia.org/wiki/File:Barbecued_lamb_sticks.jpg" target="_blank">Barbecued lamb sticks</a>、
-      <a href="https://commons.wikimedia.org/wiki/File:Vietnamese_Ph%E1%BB%9F.jpg" target="_blank">Vietnamese Phở</a>、
-      <a href="https://commons.wikimedia.org/wiki/File:Vietnamese_Pho.jpg" target="_blank">Vietnamese Pho</a>。
-      图片仅作为菜系示意，不代表对应餐厅实拍。
-    </div>
-  </div>
-
-  <script>
-    const filterButtons = document.querySelectorAll('.filters button');
-    const restaurants = document.querySelectorAll('.restaurant');
-    const searchInput = document.getElementById('searchInput');
-    const empty = document.getElementById('empty');
-
-    let currentFilter = '全部';
-
-    function applyFilters(){
-      const keyword = searchInput.value.trim().toLowerCase();
-      let visibleCount = 0;
-
-      restaurants.forEach(card => {
-        const category = card.dataset.category;
-        const text = card.dataset.search.toLowerCase();
-        const categoryMatch = currentFilter === '全部' || category === currentFilter;
-        const searchMatch = !keyword || text.includes(keyword);
-        const show = categoryMatch && searchMatch;
-
-        card.style.display = show ? 'block' : 'none';
-        if(show) visibleCount++;
-      });
-
-      empty.style.display = visibleCount === 0 ? 'block' : 'none';
-    }
-
-    filterButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilter = btn.dataset.filter;
-        applyFilters();
-      });
-    });
-
-    searchInput.addEventListener('input', applyFilters);
-
-    document.querySelectorAll('.fav').forEach(button => {
-      button.addEventListener('click', () => {
-        button.classList.toggle('active');
-        button.textContent = button.classList.contains('active') ? '♥ 已收藏' : '♡ 收藏';
-      });
-    });
-  </script>
+function apply(){
+  const q=search.value.trim().toLowerCase();
+  let visible=[];
+  cards.forEach(c=>{
+    const okCat=filter==='全部'||c.dataset.category===filter;
+    const okQ=!q||c.dataset.search.includes(q);
+    const show=okCat&&okQ;
+    c.style.display=show?'block':'none';
+    if(show) visible.push(c);
+  });
+  count.textContent=`共 ${visible.length} 家`;
+  empty.style.display=visible.length?'none':'block';
+  return visible;
+}
+filterBtns.forEach(b=>b.onclick=()=>{
+  filterBtns.forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); filter=b.dataset.filter; apply();
+});
+search.addEventListener('input',apply);
+document.querySelectorAll('.fav').forEach(b=>b.onclick=()=>{
+  b.classList.toggle('on');
+  b.textContent=b.classList.contains('on')?'♥ 已收藏':'♡ 收藏';
+});
+document.getElementById('random').onclick=()=>{
+  const visible=apply();
+  if(!visible.length)return;
+  const pick=visible[Math.floor(Math.random()*visible.length)];
+  pick.scrollIntoView({behavior:'smooth',block:'center'});
+  pick.animate([{transform:'scale(1)'},{transform:'scale(1.025)'},{transform:'scale(1)'}],{duration:700});
+};
+</script>
 </body>
 </html>
