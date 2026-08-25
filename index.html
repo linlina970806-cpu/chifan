@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chifan 吃饭｜旧金山最值得吃的 100 家餐厅</title>
+<title>Chifan 吃饭｜旧金山湾区餐厅推荐</title>
 <style>
 :root{--bg:#fff8f0;--card:rgba(255,255,255,.95);--text:#202020;--muted:#727272;--accent:#ff6b35;--line:#eadfd5;--teal:#2e6f73}
 *{box-sizing:border-box}
@@ -20,6 +20,10 @@ h1{margin:0;font-size:42px}
 .filters button:hover,.areaFilters button:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(91,58,39,.1)}
 .filters button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .areaTitle{font-size:12px;font-weight:700;color:var(--muted);margin-top:4px}
+.regionFilters{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
+.regionFilters button{border:1px solid #dfd3ca;background:rgba(255,255,255,.92);color:#58483e;padding:9px 13px;border-radius:999px;cursor:pointer;transition:transform .18s,background .18s,box-shadow .18s}
+.regionFilters button:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(91,58,39,.1)}
+.regionFilters button.active{background:#b64a1e;color:#fff;border-color:#b64a1e}
 .areaFilters{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 18px}
 .areaFilters button{border:1px solid #d8e2e5;background:#f7fbfb;color:#31545a;padding:8px 13px;border-radius:999px;cursor:pointer}
 .areaFilters button.active{background:#2e6f73;color:#fff;border-color:#2e6f73}
@@ -58,7 +62,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 .actions{display:flex;gap:8px;margin-top:auto;padding-top:12px}
 .actions a,.fav{text-decoration:none;color:#222;background:#fff;border:1px solid var(--line);padding:8px 10px;border-radius:10px;font-size:13px;cursor:pointer}
 .fav.on{background:#fff0f3}
-.filters button:focus-visible,.areaFilters button:focus-visible,.random:focus-visible,.fav:focus-visible,.actions a:focus-visible,.introSkip:focus-visible,.wheelActions button:focus-visible,.wheelActions a:focus-visible{outline:3px solid rgba(255,107,53,.35);outline-offset:2px}
+.filters button:focus-visible,.regionFilters button:focus-visible,.areaFilters button:focus-visible,.random:focus-visible,.fav:focus-visible,.actions a:focus-visible,.introSkip:focus-visible,.wheelActions button:focus-visible,.wheelActions a:focus-visible{outline:3px solid rgba(255,107,53,.35);outline-offset:2px}
 .empty{display:none;text-align:center;padding:40px;color:var(--muted)}
 @keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
@@ -109,7 +113,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
     <div class="introKicker">SAN FRANCISCO · FOOD GUIDE</div>
     <h2><span>旧金山</span><span>吃货地图</span></h2>
     <div class="introLine"></div>
-    <p>100 家值得吃的餐厅</p>
+    <p>130 家值得吃的餐厅</p>
     <div class="introMeta"><span>GOLDEN GATE</span><span>EST. 2026</span></div>
   </div>
   <div class="introProgress" aria-hidden="true"><i></i></div>
@@ -117,30 +121,43 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 <div class="wrap">
 <section class="hero">
   <div class="brandMark"><strong>CHIFAN</strong><span>旧金山吃饭指南</span></div>
-  <h1>旧金山最值得吃的 100 家餐厅</h1>
-  <p class="sub">精选餐厅推荐 · 搜索 · 分类 · 收藏 · 吃货地图</p>
+  <h1>旧金山湾区餐厅推荐</h1>
+  <p class="sub">从旧金山出发，继续探索湾区值得吃的餐厅 · 搜索 · 分类 · 收藏 · 吃货地图</p>
   <input id="search" class="search" placeholder="Search restaurant or cuisine">
 </section>
 
 <div class="filters">
   <button class="active" type="button" data-filter="全部">全部</button>
-  <button type="button" data-filter="中餐">中餐</button><button type="button" data-filter="点心">点心</button><button type="button" data-filter="火锅">火锅</button><button type="button" data-filter="烧烤">烧烤</button><button type="button" data-filter="越南菜">越南菜</button><button type="button" data-filter="日料">日料</button><button type="button" data-filter="韩餐">韩餐</button><button type="button" data-filter="泰国菜">泰国菜</button>
+  <button type="button" data-filter="中餐">中餐</button><button type="button" data-filter="点心">点心</button><button type="button" data-filter="火锅">火锅</button><button type="button" data-filter="烧烤">烧烤</button><button type="button" data-filter="越南菜">越南菜</button><button type="button" data-filter="日料">日料</button><button type="button" data-filter="韩餐">韩餐</button><button type="button" data-filter="泰国菜">泰国菜</button><button type="button" data-filter="甜品">甜品</button>
 </div>
 
-<div class="areaTitle">按旧金山区域</div>
+<div class="areaTitle">按湾区城市区域</div>
+<div class="regionFilters" id="regionFilters">
+  <button class="active" type="button" data-region="全部">全部湾区</button>
+  <button type="button" data-region="San Francisco">San Francisco</button>
+  <button type="button" data-region="Daly City / South San Francisco">Daly City / South San Francisco</button>
+  <button type="button" data-region="San Mateo / Millbrae">San Mateo / Millbrae</button>
+  <button type="button" data-region="Oakland / Berkeley">Oakland / Berkeley</button>
+  <button type="button" data-region="Fremont / Newark">Fremont / Newark</button>
+  <button type="button" data-region="San Jose / Cupertino / Sunnyvale / Milpitas">San Jose / Cupertino / Sunnyvale / Milpitas</button>
+</div>
+
+<div id="neighborhoodSection">
+<div class="areaTitle">San Francisco 街区</div>
 <div class="areaFilters" id="areaFilters">
   <button class="active" type="button" data-area="全部">全部区域</button>
   <button type="button" data-area="Chinatown">Chinatown</button><button type="button" data-area="Richmond">Richmond</button><button type="button" data-area="Sunset / Parkside">Sunset / Parkside</button><button type="button" data-area="Mission">Mission</button><button type="button" data-area="SoMa">SoMa</button><button type="button" data-area="Japantown">Japantown</button><button type="button" data-area="Tenderloin / Union Square">Tenderloin / Union Square</button><button type="button" data-area="Castro / Noe Valley">Castro / Noe Valley</button><button type="button" data-area="Marina / North Beach">Marina / North Beach</button>
 </div>
+</div>
 
 <div class="toolbar">
-  <span id="count">共 100 家</span>
+  <span id="count">共 130 家</span>
 </div>
 
 <section class="foodMap" aria-labelledby="foodMapTitle">
   <div class="mapCanvas">
-    <h2 class="mapHeading" id="foodMapTitle">旧金山吃货地图</h2>
-    <p class="mapSub">从 Chinatown 的点心，到 Sunset 的深夜热锅，按区域找到下一站。</p>
+    <h2 class="mapHeading" id="foodMapTitle">旧金山湾区吃货地图</h2>
+    <p class="mapSub">从 San Francisco 出发，按城市区域寻找湾区下一站。</p>
     <button class="random mapRandom" id="random" type="button">🎡 今天吃什么</button>
     <div id="mapPins"></div>
   </div>
@@ -1970,8 +1987,61 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 </div>
 
 <script>
+const bayAreaRestaurants=[
+  {name:'Koi Palace',city:'Milpitas',category:'点心',tag:'Cantonese · Dim Sum · Seafood',address:'768 Barber Ln, Milpitas, CA 95035',image:'https://static.wixstatic.com/media/005a6a_953a2421671a43bbaf08a51e240043f6~mv2.jpg/v1/fill/w_1000%2Ch_753%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01/005a6a_953a2421671a43bbaf08a51e240043f6~mv2.jpg',desc:'Milpitas 大型粤菜酒楼，午市以虾饺、烧卖、肠粉等点心为主，晚餐则有海鲜与烧味。'},
+  {name:'Darda Seafood Restaurant',city:'Milpitas',category:'中餐',tag:'Halal Chinese · Seafood',address:'296 Barber Ct, Milpitas, CA 95035',image:'https://img3.restaurantguru.com/c669-Darda-Seafood-Restaurant-dishes-6.jpg',desc:'Milpitas 老牌清真中餐馆，芝麻大饼夹羊肉、牛肉面和各式清真海鲜菜是菜单特色。'},
+  {name:'Saigon Seafood Harbor',city:'Sunnyvale',category:'点心',tag:'Cantonese · Dim Sum · Seafood',address:'1135 N Lawrence Expy, Sunnyvale, CA 94089',image:'https://img02.restaurantguru.com/ca54-Saigon-Seafood-Harbor-dishes-7.jpg',desc:'Sunnyvale 传统粤式海鲜酒楼，周末点心、豉汁凤爪、蒸鱼与宴席菜选择丰富。'},
+  {name:'Joy Dumpling',city:'Cupertino',category:'点心',tag:'Taiwanese · Dumplings',address:'10895 S Blaney Ave, Cupertino, CA 95014',image:'https://joy-dumpling.restaurantmenu.us.com/images/joy-dumpling/joy-dumpling%20%284%29.jpg',desc:'主打现包小笼包、丝瓜虾仁包和北方家常菜，空间宽敞，适合分享多款面点。'},
+  {name:'QQ Noodle',city:'Cupertino',category:'中餐',tag:'Handmade Noodles · Chinese',address:'10889 S Blaney Ave, Cupertino, CA 95014',image:'https://qq-noodle.com/gallery/24%E8%92%9C%E9%86%AE%E9%BA%B5-1536x1082.webp',desc:'以筋道手工面闻名的小店，油泼面、牛肉面和凉皮突出面条口感与香辣调味。'},
+  {name:'Jade Cathay',city:'San Jose',category:'点心',tag:'Cantonese · Dim Sum',address:'1339 N 1st St, San Jose, CA 95112',image:'https://img.cdn4dd.com/cdn-cgi/image/fit%3Dcover%2Cwidth%3D600%2Cheight%3D400%2Cformat%3Dauto%2Cquality%3D80/https%3A/doordash-static.s3.amazonaws.com/media/store/header/8d301930-abe9-4dab-8632-ddca85210691.jpg',desc:'North San Jose 粤菜馆，全天供应蒸点、焗点，也有烧味、粥粉面和家庭式合菜。'},
+  {name:'Ocean Delight Seafood Restaurant',city:'San Jose',category:'点心',tag:'Cantonese · Dim Sum · Seafood',address:'5400 Monterey Hwy, San Jose, CA 95111',image:'https://cdn.kqed.org/wp-content/uploads/sites/24/2016/02/OceanDelight-800x533.jpg',desc:'South San Jose 的传统推车点心与海鲜餐厅，煎韭菜虾饺、酿茄子和蒸点是午市重点。'},
+  {name:'Haidilao Hot Pot Cupertino',city:'Cupertino',category:'火锅',tag:'Sichuan Hot Pot',address:'19409 Stevens Creek Blvd #100, Cupertino, CA 95014',image:'https://img.restaurantguru.com/c994-Haidilao-Hot-Pot-Cupertino-meals-4.jpg',desc:'服务体验鲜明的四川火锅店，四宫格锅底、手工面表演和自助调料台适合多人聚餐。'},
+  {name:'Happy Lamb Hot Pot Cupertino',city:'Cupertino',category:'火锅',tag:'Mongolian Hot Pot',address:'19062 Stevens Creek Blvd, Cupertino, CA 95014',image:'https://cdn.wherevi.com/12536-wvphoto-4.jpg',desc:'以羊骨汤底和薄切羊肉为核心的蒙古火锅，清汤本身香浓，不蘸料也有完整风味。'},
+  {name:'YGF Malatang Cupertino',city:'Cupertino',category:'火锅',tag:'Malatang · Build Your Own',address:'19672 Stevens Creek Blvd, Cupertino, CA 95014',image:'https://img.chinarestaurant-luckypalace.com/d38/2510/11011250374351.webp',desc:'自选称重麻辣烫，可在骨汤、番茄和红酸汤等汤底中搭配蔬菜、肉类与面食。'},
+  {name:'Q-Pot Korean BBQ & Hot Pot',city:'San Jose',category:'火锅',tag:'Korean BBQ · Hot Pot',address:'1610 E Capitol Expy, San Jose, CA 95121',image:'https://www.qpotsanjose.com/gallery/Q%20Pot-8727.webp',desc:'把韩式烤肉和个人火锅放在同一桌的自助餐厅，适合想同时吃烤肉、海鲜和锅物的聚会。'},
+  {name:'Goku Korean BBQ & Hot Pot',city:'San Jose',category:'烧烤',tag:'Korean BBQ · Hot Pot',address:'1715 Lundy Ave, San Jose, CA 95131',image:'https://static.wixstatic.com/media/e2a9d7_06dfd10b23924b76a09e1fdf0051141d~mv2_d_6000_4000_s_4_2.jpg/v1/fill/w_980%2Ch_653%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_auto/e2a9d7_06dfd10b23924b76a09e1fdf0051141d~mv2_d_6000_4000_s_4_2.jpg',desc:'Lundy Avenue 的韩式烤肉火锅自助店，腌牛肉、五花肉和丰富小菜适合热闹聚餐。'},
+  {name:'Gyu-Kaku Japanese BBQ Cupertino',city:'Cupertino',category:'烧烤',tag:'Japanese BBQ · Yakiniku',address:'19620 Stevens Creek Blvd #150, Cupertino, CA 95014',image:'https://img.restaurantguru.com/c337-Gyu-Kaku-Cupertino-dishes.jpg',desc:'日式桌边烧肉连锁，可自行烤制牛舌、横膈膜和腌肉，并搭配石锅饭与日式小菜。'},
+  {name:'GEN Korean BBQ House San Jose',city:'San Jose',category:'烧烤',tag:'Korean BBQ · AYCE',address:'1628 Hostetter Rd, San Jose, CA 95131',image:'https://tb-static.uber.com/prod/image-proc/processed_images/ef0a738c494276ac0d1d53963ca1bb46/3ac2b39ad528f8c8c5dc77c59abb683d.jpeg',desc:'North San Jose 人气韩式烤肉自助，牛五花、辣猪肉和多种腌肉可分轮点单、桌边现烤。'},
+  {name:'Gochi Japanese Fusion Tapas',city:'Cupertino',category:'日料',tag:'Izakaya · Japanese Fusion',address:'19980 Homestead Rd, Cupertino, CA 95014',image:'https://img02.restaurantguru.com/c80f-Gochi-Cupertino-food-4.jpg',desc:'以分享式日式创意小菜著称，石锅饭、日式薄饼、烤物与居酒屋菜色都很有代表性。'},
+  {name:'Sushi Kuni',city:'Cupertino',category:'日料',tag:'Sushi · Sashimi',address:'10211 S De Anza Blvd, Cupertino, CA 95014',image:'https://cdn.res-menu.net/sushi-kuni/albums-3.jpg',desc:'低调的小型寿司店，重点是传统握寿司、刺身和当日鱼货，菜单不靠花式酱料取胜。'},
+  {name:'Seto Restaurant',city:'Sunnyvale',category:'日料',tag:'Sushi · Tempura · Bento',address:'511 Borregas Ave, Sunnyvale, CA 94085',image:'https://seto-restaurant.com/gallery/Seto%20Restaurant19.webp',desc:'经营多年的日式家庭餐厅，寿司吧之外还有天妇罗、定食、丼饭和榻榻米包间。'},
+  {name:'Tomi Sushi & Seafood Buffet',city:'San Jose',category:'日料',tag:'Sushi · Seafood Buffet',address:'2200 Eastridge Loop #2074, San Jose, CA 95122',image:'https://tb-static.uber.com/prod/image-proc/processed_images/52fb4e814c0a8e1c411a08fc4e37c9f1/d24a30ada2fef6c54cef8739d94823b0.webp',desc:'Eastridge Center 内的大型海鲜自助，寿司、刺身、热菜、烤物与甜点选择覆盖面广。'},
+  {name:'Kura Revolving Sushi Bar Cupertino',city:'Cupertino',category:'日料',tag:'Conveyor Belt Sushi',address:'19600 Vallco Pkwy #160, Cupertino, CA 95014',image:'https://tb-static.uber.com/prod/image-proc/processed_images/f4a5fc62fd14ea65b94b690041652f0a/5283d81c664b43c5f57a3a186d273063.jpeg',desc:'自动回转寿司店，小盘寿司可直接取用，也能从屏幕点选现做握寿司、拉面和小吃。'},
+  {name:'Jang Su Jang Milpitas',city:'Milpitas',category:'韩餐',tag:'Korean · BBQ · Stews',address:'269 W Calaveras Blvd, Milpitas, CA 95035',image:'https://i.autoreserve.com/thumb/800x800/restaurant_image/image/032/027/176/32027176/6e64cd23-3ed8-4cb4-b672-76d615ec80ca.jpg?format=webp',desc:'传统韩国家常菜馆，除了桌边烤肉，也擅长嫩豆腐锅、冷面、海鲜煎饼和丰盛小菜。'},
+  {name:'Milpitas SGD Tofu House',city:'Milpitas',category:'韩餐',tag:'Korean · Soondubu',address:'231 W Calaveras Blvd, Milpitas, CA 95035',image:'https://img.restaurantguru.com/c9ec-SGD-Tofu-House-Milpitas-food.jpg',desc:'专注韩式嫩豆腐锅，可选海鲜、牛肉或蘑菇汤料与辣度，并搭配石锅饭和烤牛小排。'},
+  {name:'Hansang Tofu',city:'Milpitas',category:'韩餐',tag:'Korean · Tofu Stew · BBQ',address:'57 N Milpitas Blvd, Milpitas, CA 95035',image:'https://tb-static.uber.com/prod/image-proc/processed_images/720acfd2e5cff9f775cfeba668761e24/5283d81c664b43c5f57a3a186d273063.jpeg',desc:'Milpitas 韩式家常菜馆，海鲜豆腐锅、牛骨汤、石锅拌饭和烤牛小排组合尤其适合一人餐。'},
+  {name:'Pho Kim Long',city:'San Jose',category:'越南菜',tag:'Pho · Vietnamese',address:'2082 N Capitol Ave, San Jose, CA 95132',image:'https://cdn.vox-cdn.com/uploads/chorus_image/image/72177881/Pho_Kim_Long__1_.0.jpg',desc:'North San Jose 长年排队的越南粉店，以清亮浓香的牛肉汤、丰富肉料和出餐速度见长。'},
+  {name:'Bún Bò Huế An Nam',city:'San Jose',category:'越南菜',tag:'Central Vietnamese · Noodle Soup',address:'740 Story Rd #3, San Jose, CA 95122',image:'https://storage.ghost.io/c/38/3a/383aa066-7fdd-4979-aad1-0e8affda33a3/content/images/size/w1000/2023/06/IMG_0007-2.JPG',desc:'以单一招牌打出名气的顺化牛肉粉店，汤头突出香茅、辣椒和虾酱的浓郁层次。'},
+  {name:'Phở Hà Nội San Jose',city:'San Jose',category:'越南菜',tag:'Northern Vietnamese · Pho',address:'969 Story Rd #6048, San Jose, CA 95122',image:'https://img02.restaurantguru.com/cd1a-Restaurant-PHo-HA-NOI-SAN-JOSE-dishes-1.jpg',desc:'Vietnam Town 的北越风格河粉店，招牌包括牛肋骨河粉、综合牛肉粉和鸡饭。'},
+  {name:'Cơm Tấm Thiên Hương',city:'San Jose',category:'越南菜',tag:'Vietnamese · Broken Rice',address:'909 Story Rd #100, San Jose, CA 95122',image:'https://static.spotapps.co/spots/b9/77a1b899fa4eb8aa56893a4f537cfc/full',desc:'专门做越南碎米饭，炭烤猪排、肉饼、猪皮丝与煎蛋可组合成份量扎实的一盘。'},
+  {name:'Sul & Beans Cupertino',city:'Cupertino',category:'甜品',tag:'Korean Dessert · Bingsu',address:'19540 Vallco Pkwy #160, Cupertino, CA 95014',image:'https://s3-media0.fl.yelpcdn.com/bphoto/XMXGmUN5KLjA5pKzj6Zy_Q/l.jpg',desc:'韩式雪花冰甜品店，细腻牛奶冰搭配芒果、草莓、抹茶或红豆，份量适合两人分享。'},
+  {name:'85°C Bakery Cafe Milpitas',city:'Milpitas',category:'甜品',tag:'Taiwanese Bakery · Cakes',address:'672 Barber Ln, Milpitas, CA 95035',image:'https://tb-static.uber.com/prod/image-proc/processed_images/66bef456c7113d3a58a596e423137bb1/5283d81c664b43c5f57a3a186d273063.jpeg',desc:'台湾连锁烘焙咖啡店，现烤甜咸面包、切片蛋糕和海盐咖啡适合外带或简单下午茶。'},
+  {name:'SomiSomi Cupertino',city:'Cupertino',category:'甜品',tag:'Soft Serve · Taiyaki',address:'19540 Vallco Pkwy #150, Cupertino, CA 95014',image:'https://tb-static.uber.com/prod/image-proc/processed_images/d2ed82281dcb81b6f49274420ca7891e/5283d81c664b43c5f57a3a186d273063.jpeg',desc:'以韩式鲷鱼烧和牛奶软冰淇淋组合闻名，可选红豆、卡仕达或芝士内馅与多种撒料。'},
+  {name:'YGF Malatang Milpitas',city:'Milpitas',category:'火锅',tag:'Malatang · Build Your Own',address:'540 Barber Ln, Milpitas, CA 95035',image:'https://imgcache.dealmoon.com/fsvrugccache.dealmoon.com/ugc/1dd/458/d6e/f067e024a15d41070b774a3.jpg_1280_1280_3_383a.jpg',desc:'Milpitas 自选麻辣烫店，从冷柜挑选肉类、豆制品、蔬菜和面食，再按重量与汤底烹煮。'}
+];
+const bayAreaRegion='San Jose / Cupertino / Sunnyvale / Milpitas';
+const grid=document.getElementById('grid');
+bayAreaRestaurants.forEach((restaurant,index)=>{
+  const article=document.createElement('article');
+  article.className='card';
+  article.dataset.category=restaurant.category;
+  article.dataset.region=bayAreaRegion;
+  article.dataset.city=restaurant.city;
+  article.dataset.neighborhood=restaurant.city;
+  article.dataset.search=`${restaurant.name} ${restaurant.city} ${restaurant.category} ${restaurant.tag}`.toLowerCase();
+  const mapQuery=encodeURIComponent(`${restaurant.name}, ${restaurant.address}`);
+  article.innerHTML=`<div class="photoWrap"><img src="${restaurant.image}" alt="${restaurant.name} 餐厅菜品" loading="lazy"><span class="rank">#${101+index}</span></div><div class="body"><div class="row"><h2>${restaurant.name}</h2><span class="tag">${restaurant.tag}</span></div><p class="desc">${restaurant.desc}</p><div class="details"><div>📍 ${restaurant.address}</div><div>🏙️ ${restaurant.city}</div></div><div class="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=${mapQuery}" target="_blank" rel="noopener">📍 Map</a><button class="fav" type="button">♡ Save</button></div></div>`;
+  grid.appendChild(article);
+});
 const cards=[...document.querySelectorAll('.card')];
-cards.forEach(card=>{const rank=card.querySelector('.rank')?.textContent.trim().replace('#','');if(rank){card.id=`restaurant-${rank}`;card.querySelector('.rank').id=`rank-${rank}`;}});
+// Restaurant card schema for future Bay Area additions:
+// data-region="San Mateo / Millbrae" data-neighborhood="Millbrae"
+// Existing cards predate the regional schema and are safely normalized to San Francisco here.
+cards.forEach(card=>{
+  const rank=card.querySelector('.rank')?.textContent.trim().replace('#','');
+  if(rank){card.id=`restaurant-${rank}`;card.querySelector('.rank').id=`rank-${rank}`;}
+  if(!card.dataset.region)card.dataset.region='San Francisco';
+});
 const verifiedPhotos={
   "Eric's Restaurant":"https://img.restaurantguru.com/c0fb-Erics-Restaurant-meals-1.jpg",
   "Ah Ma's Kitchen":"https://tb-static.uber.com/prod/image-proc/processed_images/fa659f4c8d3ed5dc0f43a59dbb56e360/5283d81c664b43c5f57a3a186d273063.jpeg",
@@ -2063,15 +2133,18 @@ cards.forEach(card=>{
   });
 });
 const filterBtns=[...document.querySelectorAll('.filters button')];
+const regionBtns=[...document.querySelectorAll('.regionFilters button')];
 const areaBtns=[...document.querySelectorAll('.areaFilters button')];
 const intro=document.getElementById('intro');
 const introSkip=document.getElementById('introSkip');
 const mapListItems=document.getElementById('mapListItems');
 const mapPins=document.getElementById('mapPins');
+const neighborhoodSection=document.getElementById('neighborhoodSection');
 const search=document.getElementById('search');
 const count=document.getElementById('count');
 const empty=document.getElementById('empty');
 let filter='全部';
+let region='全部';
 let area='全部';
 
 
@@ -2079,7 +2152,8 @@ function hideIntro(){intro.classList.add('is-hidden');}
 introSkip.addEventListener('click',hideIntro);
 setTimeout(hideIntro,4200);
 
-function areaOf(card){
+function neighborhoodOf(card){
+  if(card.dataset.neighborhood)return card.dataset.neighborhood;
   const address=card.querySelector('.details')?.innerText||'';
   if(/Jackson|Clay|Kearny|Stockton|Waverly|Walter U Lum|Grant St/.test(address))return 'Chinatown';
   if(/Mission|Valencia|18th St|24th St|Bryant|Florida|Potrero/.test(address))return 'Mission';
@@ -2093,12 +2167,24 @@ function areaOf(card){
   return '其他区域';
 }
 
+function regionOf(card){
+  return card.dataset.region||'San Francisco';
+}
+
 function renderMap(){
   const counts={};
-  cards.forEach(card=>{const key=areaOf(card);counts[key]=(counts[key]||0)+1;});
+  const regionalView=region==='全部';
+  if(regionalView){
+    regionBtns.filter(button=>button.dataset.region!=='全部').forEach(button=>{counts[button.dataset.region]=0;});
+  }
+  cards.forEach(card=>{
+    if(region!=='全部'&&regionOf(card)!==region)return;
+    const key=regionalView?regionOf(card):neighborhoodOf(card);
+    counts[key]=(counts[key]||0)+1;
+  });
   const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
   mapPins.innerHTML=entries.slice(0,5).map(([name,total])=>`<span class="mapPin">${name} ${total} 家</span>`).join('');
-  mapListItems.innerHTML=entries.map(([name,total])=>`<a class="mapSpot" href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(name+' San Francisco restaurants')}" target="_blank" rel="noopener"><strong>${name}</strong><span>${total} 家 · Map ↗</span></a>`).join('');
+  mapListItems.innerHTML=entries.map(([name,total])=>`<a class="mapSpot" href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(name+' Bay Area restaurants')}" target="_blank" rel="noopener"><strong>${name}</strong><span>${total} 家 · Map ↗</span></a>`).join('');
 }
 renderMap();
 
@@ -2107,10 +2193,11 @@ function apply(){
   let visible=[];
   cards.forEach(c=>{
     const okCat=filter==='全部'||c.dataset.category===filter;
-    const okArea=area==='全部'||areaOf(c)===area;
+    const okRegion=region==='全部'||regionOf(c)===region;
+    const okArea=area==='全部'||neighborhoodOf(c)===area;
     const text=(c.dataset.search+' '+c.innerText).toLowerCase();
     const okQ=!q||text.includes(q);
-    const show=okCat&&okArea&&okQ;
+    const show=okCat&&okRegion&&okArea&&okQ;
     c.style.display=show?'flex':'none';
     if(show) visible.push(c);
   });
@@ -2124,10 +2211,25 @@ filterBtns.forEach(b=>b.addEventListener('click',()=>{
   filter=b.dataset.filter;
   apply();
 }));
+regionBtns.forEach(b=>b.addEventListener('click',()=>{
+  regionBtns.forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  region=b.dataset.region;
+  area='全部';
+  areaBtns.forEach(x=>x.classList.toggle('active',x.dataset.area==='全部'));
+  neighborhoodSection.style.display=region==='全部'||region==='San Francisco'?'block':'none';
+  renderMap();
+  apply();
+}));
 areaBtns.forEach(b=>b.addEventListener('click',()=>{
+  if(b.dataset.area!=='全部'&&region==='全部'){
+    region='San Francisco';
+    regionBtns.forEach(x=>x.classList.toggle('active',x.dataset.region==='San Francisco'));
+  }
   areaBtns.forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
   area=b.dataset.area;
+  renderMap();
   apply();
 }));
 search.addEventListener('input',apply);
