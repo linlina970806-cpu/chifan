@@ -48,10 +48,19 @@
       background:var(--card);border-radius:22px;overflow:hidden;
       border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.04);
     }
-    .photo{
-      height:220px;display:flex;align-items:center;justify-content:center;
-      font-size:74px;background:#f3eee8;
+    .photo-wrap{
+      height:240px;
+      overflow:hidden;
+      background:#f3eee8;
     }
+    .photo{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transition:transform .35s ease;
+    }
+    .restaurant:hover .photo{transform:scale(1.045)}
     .content{padding:20px}
     .topline{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
     h2{font-size:23px;margin:0 0 6px}
@@ -67,10 +76,17 @@
     }
     .fav.active{background:#fff0f3}
     .empty{display:none;text-align:center;color:var(--muted);padding:40px 0}
+    .credits{
+      margin-top:34px;
+      font-size:12px;
+      line-height:1.6;
+      color:#8a8a8a;
+    }
+    .credits a{color:#777}
     @media(max-width:760px){
       h1{font-size:34px}
       .grid{grid-template-columns:1fr}
-      .photo{height:200px}
+      .photo-wrap{height:220px}
       .hero{padding:28px 20px}
     }
   </style>
@@ -95,7 +111,7 @@
     <main class="grid" id="restaurantGrid">
 
       <article class="restaurant" data-category="中餐" data-search="奈哥酸菜鱼 酸菜鱼 炸串 中餐">
-        <div class="photo">🐟</div>
+        <div class="photo-wrap"><img class="photo" src="naige.JPG" alt="奈哥酸菜鱼"></div>
         <div class="content">
           <div class="topline">
             <div>
@@ -113,7 +129,7 @@
       </article>
 
       <article class="restaurant" data-category="麻辣烫" data-search="青蔬麻辣烫 麻辣烫 炸串 自选菜">
-        <div class="photo">🌶️</div>
+        <div class="photo-wrap"><img class="photo" src="qingshu.JPG" alt="青蔬麻辣烫"></div>
         <div class="content">
           <div class="topline">
             <div>
@@ -131,7 +147,7 @@
       </article>
 
       <article class="restaurant" data-category="火锅" data-search="Mumu Hot Pot 火锅 Parkmerced 一人一锅 肉类拼盘">
-        <div class="photo">🍲</div>
+        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Chinese_hot_pot.jpg" alt="火锅"></div>
         <div class="content">
           <div class="topline">
             <div>
@@ -149,7 +165,7 @@
       </article>
 
       <article class="restaurant" data-category="火锅" data-search="Hotpot Bay 火锅 Taraval Parkside 一人一锅 牛肉 羊肉">
-        <div class="photo">🥘</div>
+        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Chinese_Hotpot.jpg" alt="火锅"></div>
         <div class="content">
           <div class="topline">
             <div>
@@ -167,7 +183,7 @@
       </article>
 
       <article class="restaurant" data-category="烧烤" data-search="Northern China BBQ 烧烤 烤串 羊肉串 牛肉串">
-        <div class="photo">🍢</div>
+        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Freshippo_red_willow_twig_lamb_skewers.jpg" alt="羊肉串"></div>
         <div class="content">
           <div class="topline">
             <div>
@@ -185,7 +201,7 @@
       </article>
 
       <article class="restaurant" data-category="烧烤" data-search="老街把把烧 烧烤 川味 烤串">
-        <div class="photo">🔥</div>
+        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Barbecued_lamb_sticks.jpg" alt="烧烤"></div>
         <div class="content">
           <div class="topline">
             <div>
@@ -203,7 +219,7 @@
       </article>
 
       <article class="restaurant" data-category="越南粉" data-search="Pho 2000 越南粉 牛肉河粉 Larkin Tenderloin">
-        <div class="photo">🍜</div>
+        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Vietnamese_Ph%E1%BB%9F.jpg" alt="越南粉"></div>
         <div class="content">
           <div class="topline">
             <div>
@@ -221,7 +237,7 @@
       </article>
 
       <article class="restaurant" data-category="越南粉" data-search="Perilla 越南粉 Irving Sunset garlic noodles">
-        <div class="photo">🥢</div>
+        <div class="photo-wrap"><img class="photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Vietnamese_Pho.jpg" alt="越南粉"></div>
         <div class="content">
           <div class="topline">
             <div>
@@ -241,6 +257,17 @@
     </main>
 
     <div id="empty" class="empty">没有找到符合条件的餐厅 🍽️</div>
+
+    <div class="credits">
+      部分示意美食图片来自 Wikimedia Commons：
+      <a href="https://commons.wikimedia.org/wiki/File:Chinese_hot_pot.jpg" target="_blank">Chinese hot pot</a>、
+      <a href="https://commons.wikimedia.org/wiki/File:Chinese_Hotpot.jpg" target="_blank">Chinese Hotpot</a>、
+      <a href="https://commons.wikimedia.org/wiki/File:Freshippo_red_willow_twig_lamb_skewers.jpg" target="_blank">Lamb skewers</a>、
+      <a href="https://commons.wikimedia.org/wiki/File:Barbecued_lamb_sticks.jpg" target="_blank">Barbecued lamb sticks</a>、
+      <a href="https://commons.wikimedia.org/wiki/File:Vietnamese_Ph%E1%BB%9F.jpg" target="_blank">Vietnamese Phở</a>、
+      <a href="https://commons.wikimedia.org/wiki/File:Vietnamese_Pho.jpg" target="_blank">Vietnamese Pho</a>。
+      图片仅作为菜系示意，不代表对应餐厅实拍。
+    </div>
   </div>
 
   <script>
