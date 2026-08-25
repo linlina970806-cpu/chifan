@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>今天想吃什么？｜旧金山100家餐厅</title>
+<title>Lina 的试验网站 · Beta｜今天想吃什么？</title>
 <style>
 :root{--bg:#fff8f0;--card:#fff;--text:#202020;--muted:#777;--accent:#ff6b35;--line:#ece4dc}
 *{box-sizing:border-box}
@@ -31,11 +31,26 @@ h2{font-size:19px;margin:0;line-height:1.25} .tag{font-size:12px;background:#fff
 .note{margin-top:30px;color:#8a8a8a;font-size:12px;line-height:1.6}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){h1{font-size:34px}.hero{padding:26px 20px}.grid{grid-template-columns:1fr}.photoWrap{height:215px}}
+
+.wheel-launch{position:fixed;right:20px;bottom:20px;z-index:30;border:0;background:#ff6b35;color:#fff;padding:14px 18px;border-radius:999px;font-weight:700;font-size:16px;box-shadow:0 10px 28px rgba(0,0,0,.18);cursor:pointer}
+.wheel-modal{position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.wheel-modal.show{display:flex}
+.wheel-box{width:min(680px,100%);background:#fff8f0;border-radius:28px;padding:28px;box-shadow:0 30px 80px rgba(0,0,0,.3);text-align:center}
+.wheel-box h2{font-size:30px;margin:0 0 6px}
+.wheel-tip{color:#777;margin:0 0 22px}
+.slot{background:#fff;border:2px solid #ff6b35;border-radius:22px;padding:30px 18px;margin:18px 0;font-size:30px;font-weight:800;min-height:105px;display:flex;align-items:center;justify-content:center}
+.wheel-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.wheel-actions button,.wheel-actions a{border:0;border-radius:13px;padding:11px 15px;font-size:15px;cursor:pointer;text-decoration:none}
+.spin-btn{background:#222;color:#fff}.close-btn{background:#eee;color:#222}.map-btn{background:#ff6b35;color:#fff;display:none}
+.space-key{display:inline-block;border:1px solid #bbb;border-bottom-width:3px;border-radius:8px;padding:3px 10px;background:#fff;font-family:monospace}
+.winner-cat{font-size:14px;color:#b64a1e;margin-top:8px}
+
 </style>
 </head>
 <body>
 <div class="wrap">
 <section class="hero">
+  <div style="font-size:15px;font-weight:700;color:#b64a1e;margin-bottom:8px;">Lina 的试验网站 · Beta</div>
   <h1>今天想吃什么？</h1>
   <p class="sub">旧金山 100 家餐厅 · 中文分类 · 搜索 · 收藏 · 地图</p>
   <input id="search" class="search" placeholder="搜店名或菜系，例如：火锅 / Pho / Dumpling">
@@ -1799,6 +1814,77 @@ document.getElementById('random').onclick=()=>{
   pick.scrollIntoView({behavior:'smooth',block:'center'});
   pick.animate([{transform:'scale(1)'},{transform:'scale(1.025)'},{transform:'scale(1)'}],{duration:700});
 };
+
+const wheelLaunch=document.getElementById('wheelLaunch');
+const wheelModal=document.getElementById('wheelModal');
+const slotName=document.getElementById('slotName');
+const slotCat=document.getElementById('slotCat');
+const spinBtn=document.getElementById('spinBtn');
+const closeWheel=document.getElementById('closeWheel');
+const winnerMap=document.getElementById('winnerMap');
+let wheelTimer=null;
+let spinning=false;
+let currentPick=null;
+
+function visibleRestaurantData(){
+  return cards.filter(c=>c.style.display!=='none').map(c=>({
+    name:c.querySelector('h2').textContent.trim(),
+    cat:c.dataset.category,
+    map:c.querySelector('.actions a').href
+  }));
+}
+function tickWheel(){
+  const pool=visibleRestaurantData();
+  if(!pool.length)return;
+  currentPick=pool[Math.floor(Math.random()*pool.length)];
+  slotName.textContent=currentPick.name;
+  slotCat.textContent=currentPick.cat;
+}
+function startWheel(){
+  winnerMap.style.display='none';
+  spinning=true;
+  spinBtn.textContent='■ 按空格停止';
+  tickWheel();
+  wheelTimer=setInterval(tickWheel,85);
+}
+function stopWheel(){
+  if(!spinning)return;
+  clearInterval(wheelTimer);
+  spinning=false;
+  spinBtn.textContent='↻ 再转一次';
+  if(currentPick){
+    winnerMap.href=currentPick.map;
+    winnerMap.style.display='inline-block';
+    slotName.animate([{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:520});
+  }
+}
+wheelLaunch.onclick=()=>{wheelModal.classList.add('show');wheelModal.setAttribute('aria-hidden','false');startWheel();};
+closeWheel.onclick=()=>{if(spinning)stopWheel();wheelModal.classList.remove('show');wheelModal.setAttribute('aria-hidden','true');};
+spinBtn.onclick=()=>spinning?stopWheel():startWheel();
+wheelModal.addEventListener('click',e=>{if(e.target===wheelModal)closeWheel.click();});
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space' && wheelModal.classList.contains('show')){
+    e.preventDefault();
+    spinning?stopWheel():startWheel();
+  }
+});
+
 </script>
+
+<button class="wheel-launch" id="wheelLaunch">🎡 今天吃什么</button>
+<div class="wheel-modal" id="wheelModal" aria-hidden="true">
+  <div class="wheel-box">
+    <h2>今天吃什么？</h2>
+    <p class="wheel-tip">开始后会快速跳店名，按 <span class="space-key">SPACE 空格</span> 停止</p>
+    <div class="slot" id="slotName">准备好了吗？</div>
+    <div class="winner-cat" id="slotCat"></div>
+    <div class="wheel-actions">
+      <button class="spin-btn" id="spinBtn">▶ 开始转</button>
+      <a class="map-btn" id="winnerMap" target="_blank" rel="noopener">📍 看地图</a>
+      <button class="close-btn" id="closeWheel">关闭</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
