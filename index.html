@@ -1,1862 +1,1995 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lina 的试验网站 · Beta｜今天想吃什么？</title>
 <style>
-:root{--bg:#fff8f0;--card:#fff;--text:#202020;--muted:#777;--accent:#ff6b35;--line:#ece4dc}
+:root{--bg:#fff8f0;--card:#fff;--text:#202020;--muted:#727272;--accent:#ff6b35;--line:#eadfd5}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif}
 .wrap{max-width:1180px;margin:auto;padding:28px 18px 70px}
-.hero{padding:34px;border-radius:28px;background:linear-gradient(135deg,#fff3e7,#ffd8bf);margin-bottom:18px}
-h1{margin:0;font-size:44px} .sub{color:#665f5a;margin:8px 0 0}
-.search{width:100%;margin-top:22px;padding:15px 17px;border:1px solid var(--line);border-radius:15px;font-size:16px;outline:none}
-.filters{display:flex;gap:9px;flex-wrap:wrap;margin:20px 0}
-.filters button{border:1px solid var(--line);background:white;padding:10px 15px;border-radius:999px;cursor:pointer}
-.filters button.active{background:var(--accent);color:white;border-color:var(--accent)}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 2px 18px;color:var(--muted)}
-.random{border:0;background:#222;color:white;padding:10px 14px;border-radius:12px;cursor:pointer}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:21px;overflow:hidden;box-shadow:0 7px 26px rgba(0,0,0,.04)}
-.photoWrap{height:190px;position:relative;background:#eee;overflow:hidden}
-.photoWrap img{width:100%;height:100%;object-fit:cover;display:block;transition:.3s transform}
-.card:hover img{transform:scale(1.035)}
-.rank{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.68);color:#fff;padding:6px 9px;border-radius:999px;font-size:12px}
-.body{padding:17px} .row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-h2{font-size:19px;margin:0;line-height:1.25} .tag{font-size:12px;background:#fff0e8;color:#b64a1e;padding:5px 8px;border-radius:999px;white-space:nowrap}
-.body p{font-size:14px;color:var(--muted);line-height:1.55;min-height:44px}
-.actions{display:flex;gap:8px} .actions a,.fav{font-size:14px;text-decoration:none;color:#222;background:white;border:1px solid var(--line);padding:9px 11px;border-radius:11px;cursor:pointer}
-.fav.on{background:#fff0f3} .empty{display:none;text-align:center;padding:50px;color:var(--muted)}
-.note{margin-top:30px;color:#8a8a8a;font-size:12px;line-height:1.6}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){h1{font-size:34px}.hero{padding:26px 20px}.grid{grid-template-columns:1fr}.photoWrap{height:215px}}
-
-.wheel-launch{
-  position:relative;
-  z-index:20;
-  pointer-events:auto;
-  display:block;
-  width:min(720px,100%);
-  margin:30px auto 8px;
-  border:0;
-  background:#ff6b35;
-  color:#fff;
-  padding:22px 26px;
-  border-radius:22px;
-  font-weight:800;
-  font-size:24px;
-  box-shadow:0 12px 30px rgba(0,0,0,.16);
-  cursor:pointer
-}
-.wheel-modal{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
-.wheel-modal.show{display:flex}
-.wheel-box{width:min(820px,100%);background:#fff8f0;border-radius:32px;padding:34px;box-shadow:0 30px 80px rgba(0,0,0,.3);text-align:center}
-.wheel-box h2{font-size:38px;margin:0 0 8px}
-.wheel-tip{color:#777;margin:0 0 20px;font-size:17px}
-.countdown{
-  font-size:78px;
-  line-height:1;
-  font-weight:900;
-  color:#ff6b35;
-  min-height:92px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.slot{
-  background:#fff;
-  border:3px solid #ff6b35;
-  border-radius:26px;
-  padding:38px 22px;
-  margin:18px 0 12px;
-  font-size:42px;
-  line-height:1.2;
-  font-weight:900;
-  min-height:145px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow-wrap:anywhere
-}
-.slot.spinning{animation:slotPulse .18s linear infinite}
-@keyframes slotPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
-.wheel-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.wheel-actions button,.wheel-actions a{border:0;border-radius:13px;padding:12px 17px;font-size:16px;cursor:pointer;text-decoration:none}
-.spin-btn{background:#222;color:#fff}.close-btn{background:#eee;color:#222}.map-btn{background:#ff6b35;color:#fff;display:none}
-.space-key{display:inline-block;border:1px solid #bbb;border-bottom-width:3px;border-radius:8px;padding:3px 10px;background:#fff;font-family:monospace}
-.winner-cat{font-size:14px;color:#b64a1e;margin-top:8px}
-
-
-.details{margin:12px 0 14px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;line-height:1.65;color:#555}
+.hero{padding:30px 28px;border-radius:26px;background:linear-gradient(135deg,#fff2e5,#ffd9c1);margin-bottom:18px}
+.beta{font-size:14px;font-weight:700;color:#b64a1e;margin-bottom:8px}
+h1{margin:0;font-size:42px}
+.sub{color:#665f5a;margin:8px 0 0}
+.search{width:100%;margin-top:20px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;font-size:16px;outline:none;background:#fff}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.filters button{border:1px solid var(--line);background:#fff;padding:9px 14px;border-radius:999px;cursor:pointer}
+.filters button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0 18px;color:var(--muted)}
+.random{border:0;background:#222;color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-width:0;height:100%}
+.photoWrap{position:relative;height:175px;overflow:hidden;background:#f0ebe6}
+.photoWrap img{width:100%;height:100%;display:block;object-fit:cover}
+.rank{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.68);color:#fff;padding:5px 8px;border-radius:999px;font-size:11px}
+.body{padding:15px;display:flex;flex-direction:column;flex:1;min-width:0}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
+.tag{font-size:11px;line-height:1.2;background:#fff0e8;color:#b64a1e;padding:5px 7px;border-radius:999px;white-space:normal;text-align:center;max-width:42%}
+.desc{font-size:13px;color:var(--muted);line-height:1.55;margin:10px 0}
+.details{font-size:12px;line-height:1.55;color:#555;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
 .details div{margin:2px 0}
 .details a{color:inherit;text-decoration:none}
 .rating{font-weight:700;color:#222}
+.actions{display:flex;gap:8px;margin-top:auto;padding-top:12px}
+.actions a,.fav{text-decoration:none;color:#222;background:#fff;border:1px solid var(--line);padding:8px 10px;border-radius:10px;font-size:13px;cursor:pointer}
+.fav.on{background:#fff0f3}
+.empty{display:none;text-align:center;padding:40px;color:var(--muted)}
 
-/* Uniform restaurant cards */
-.grid{
-  display:grid !important;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr)) !important;
-  gap:18px !important;
-  align-items:stretch !important;
-}
-.card{
-  display:flex !important;
-  flex-direction:column !important;
-  width:100% !important;
-  min-width:0 !important;
-  height:100% !important;
-  overflow:hidden !important;
-}
-.photoWrap{
-  width:100% !important;
-  height:190px !important;
-  min-height:190px !important;
-  aspect-ratio:auto !important;
-  overflow:hidden !important;
-}
-.photoWrap img{
-  width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
-  display:block !important;
-}
-.card .body{
-  display:flex !important;
-  flex-direction:column !important;
-  flex:1 !important;
-}
-.card .actions{
-  margin-top:auto !important;
-}
-@media (max-width:620px){
-  .grid{grid-template-columns:1fr !important;}
-  .photoWrap{height:210px !important;min-height:210px !important;}
-}
+/* Wheel */
+.wheelModal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;z-index:999;padding:18px}
+.wheelModal.show{display:flex}
+.wheelBox{width:min(760px,100%);background:#fff8f0;border-radius:28px;padding:30px;text-align:center}
+.count{font-size:66px;font-weight:900;color:var(--accent);min-height:76px}
+.slot{background:#fff;border:3px solid var(--accent);border-radius:22px;padding:28px 18px;font-size:34px;font-weight:800;min-height:120px;display:flex;align-items:center;justify-content:center}
+.wheelActions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.wheelActions button,.wheelActions a{border:0;border-radius:11px;padding:10px 14px;text-decoration:none;cursor:pointer}
+.startWheel{background:#222;color:#fff} .closeWheel{background:#eee;color:#222} .winnerMap{background:var(--accent);color:#fff;display:none}
 
-/* Final uniform card layout */
-.grid{
-  display:grid !important;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr)) !important;
-  gap:18px !important;
-  align-items:stretch !important;
-}
-.card{
-  display:flex !important;
-  flex-direction:column !important;
-  min-width:0 !important;
-  width:100% !important;
-  height:100% !important;
-}
-.photoWrap{
-  width:100% !important;
-  height:190px !important;
-  min-height:190px !important;
-  overflow:hidden !important;
-}
-.photoWrap img{
-  width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
-  display:block !important;
-}
-.card .body{
-  display:flex !important;
-  flex-direction:column !important;
-  flex:1 !important;
-  min-width:0 !important;
-}
-.card .actions{
-  margin-top:auto !important;
-}
-@media(max-width:620px){
-  .grid{grid-template-columns:1fr !important;}
-  .photoWrap{height:210px !important;min-height:210px !important;}
-}
-
-/* Keep every restaurant card in the same layout as cards 1–12 */
-.grid{
-  display:grid !important;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr)) !important;
-  gap:18px !important;
-  align-items:stretch !important;
-}
-.card{
-  display:flex !important;
-  flex-direction:column !important;
-  width:100% !important;
-  min-width:0 !important;
-  height:100% !important;
-  overflow:hidden !important;
-}
-.card .photoWrap{
-  width:100% !important;
-  height:190px !important;
-  min-height:190px !important;
-  overflow:hidden !important;
-}
-.card .photoWrap img{
-  width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
-  display:block !important;
-}
-.card .body{
-  display:flex !important;
-  flex-direction:column !important;
-  flex:1 !important;
-  min-width:0 !important;
-}
-.card .row{width:100% !important;}
-.card .details{width:100% !important;}
-.card .actions{
-  width:100% !important;
-  margin-top:auto !important;
-}
-@media(max-width:620px){
-  .grid{grid-template-columns:1fr !important;}
-  .card .photoWrap{height:210px !important;min-height:210px !important;}
-}
-
-/* FIX: every card must stay the same small vertical card as #1–#12 */
-.grid{
-  display:grid !important;
-  grid-template-columns:repeat(4, minmax(0, 1fr)) !important;
-  gap:16px !important;
-  width:100% !important;
-}
-.grid > .card{
-  display:flex !important;
-  flex-direction:column !important;
-  grid-column:auto !important;
-  grid-row:auto !important;
-  width:auto !important;
-  max-width:none !important;
-  min-width:0 !important;
-  height:auto !important;
-  margin:0 !important;
-}
-.grid > .card .photoWrap{
-  position:relative !important;
-  display:block !important;
-  width:100% !important;
-  height:170px !important;
-  min-height:170px !important;
-  flex:none !important;
-}
-.grid > .card .photoWrap img{
-  width:100% !important;
-  height:170px !important;
-  object-fit:cover !important;
-}
-.grid > .card .body{
-  display:flex !important;
-  flex-direction:column !important;
-  width:100% !important;
-  min-width:0 !important;
-  flex:1 1 auto !important;
-}
-@media (max-width:1000px){
-  .grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important;}
-}
-@media (max-width:760px){
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
-}
-@media (max-width:520px){
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:10px !important;}
-  .grid > .card .photoWrap,
-  .grid > .card .photoWrap img{height:145px !important;min-height:145px !important;}
-}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.photoWrap{height:200px}h1{font-size:34px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <section class="hero">
-<div style="font-size:15px;font-weight:700;color:#b64a1e;margin-bottom:8px;">Lina 的试验网站 · Beta</div>
-<h1>今天想吃什么？</h1>
-<p class="sub">旧金山 100 家餐厅 · 中文分类 · 搜索 · 收藏 · 地图</p>
-<input class="search" id="search" placeholder="搜店名或菜系，例如：火锅 / Pho / Dumpling"/>
+  <div class="beta">Lina 的试验网站 · Beta</div>
+  <h1>今天想吃什么？</h1>
+  <p class="sub">旧金山餐厅推荐 · 搜索 · 分类 · 收藏 · 地图</p>
+  <input id="search" class="search" placeholder="Search restaurant or cuisine">
 </section>
+
 <div class="filters">
-<button class="active" data-filter="全部">全部</button><button data-filter="中餐">中餐</button><button data-filter="点心">点心</button><button data-filter="火锅">火锅</button><button data-filter="烧烤">烧烤</button><button data-filter="越南菜">越南菜</button><button data-filter="日料">日料</button><button data-filter="韩餐">韩餐</button><button data-filter="泰国菜">泰国菜</button>
+  <button class="active" type="button" data-filter="全部">全部</button>
+  <button type="button" data-filter="中餐">中餐</button><button type="button" data-filter="点心">点心</button><button type="button" data-filter="火锅">火锅</button><button type="button" data-filter="烧烤">烧烤</button><button type="button" data-filter="越南菜">越南菜</button><button type="button" data-filter="日料">日料</button><button type="button" data-filter="韩餐">韩餐</button><button type="button" data-filter="泰国菜">泰国菜</button>
 </div>
+
 <div class="toolbar">
-<span id="count">共 100 家</span>
-<button class="random" id="random">🎲 随机帮我选一家</button>
+  <span id="count">共 100 家</span>
+  <button class="random" id="random" type="button">🎡 今天吃什么</button>
 </div>
-<button class="wheel-launch" id="wheelLaunch">🎡 今天吃什么？点这里开始随机</button>
+
 <main class="grid" id="grid">
+
 <article class="card" data-category="中餐" data-search="奈哥酸菜鱼 中餐">
-<div class="photoWrap">
-<img alt="奈哥酸菜鱼菜品" loading="lazy" src="naige.JPG"/>
-<span class="rank">#1</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>奈哥酸菜鱼<span style="display:block;font-size:14px;font-weight:500;color:#777;margin-top:4px;">NaiBrother Fish with Pickled Cabbage</span></h2>
-<span class="tag">酸菜鱼</span>
-</div>
-<p>主打酸菜鱼，酸香汤底配嫩鱼片，也有炸串和小吃，适合想吃酸辣重口味的时候。</p>
-<div class="details"><div>📍 816 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14157026255">(415) 702-6255</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=%E5%A5%88%E5%93%A5%E9%85%B8%E8%8F%9C%E9%B1%BC+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="naige.JPG" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#1</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>奈哥酸菜鱼<span style="display:block;font-size:14px;font-weight:500;color:#777;margin-top:4px;">NaiBrother Fish with Pickled Cabbage</span></h2>
+      <span class="tag">酸菜鱼</span>
+    </div>
+    <p class="desc">主打酸菜鱼，酸香汤底配嫩鱼片，也有炸串和小吃，适合想吃酸辣重口味的时候。</p>
+    <div class="details"><div>📍 816 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14157026255">(415) 702-6255</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=%E5%A5%88%E5%93%A5%E9%85%B8%E8%8F%9C%E9%B1%BC+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="青蔬麻辣烫 中餐">
-<div class="photoWrap">
-<img alt="青蔬麻辣烫菜品" loading="lazy" src="qingshu.JPG"/>
-<span class="rank">#2</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>青蔬麻辣烫<span style="display:block;font-size:14px;font-weight:500;color:#777;margin-top:4px;">Qingshu Malatang</span></h2>
-<span class="tag">麻辣烫</span>
-</div>
-<p>自选称重麻辣烫，蔬菜、肉类、丸子和主食自由搭配，一个人吃也很方便。</p>
-<div class="details"><div>📍 816 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14157026255">(415) 702-6255</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%9D%92%E8%94%AC%E9%BA%BB%E8%BE%A3%E7%83%AB+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="qingshu.JPG" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#2</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>青蔬麻辣烫<span style="display:block;font-size:14px;font-weight:500;color:#777;margin-top:4px;">Qingshu Malatang</span></h2>
+      <span class="tag">麻辣烫</span>
+    </div>
+    <p class="desc">自选称重麻辣烫，蔬菜、肉类、丸子和主食自由搭配，一个人吃也很方便。</p>
+    <div class="details"><div>📍 816 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14157026255">(415) 702-6255</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%9D%92%E8%94%AC%E9%BA%BB%E8%BE%A3%E7%83%AB+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="z &amp; y peking duck 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://www.foodgal.com/wp-content/uploads/2025/03/Peking-duck.jpg"/>
-<span class="rank">#3</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Z &amp; Y Peking Duck</h2>
-<span class="tag">Chinese · Peking Duck · Dim Sum</span>
-</div>
-<div class="details"><div class="rating">⭐ 4.5</div><div>📍 606 Jackson St, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14159861899">(415) 986-1899</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Z+%26+Y+Peking+Duck+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://www.foodgal.com/wp-content/uploads/2025/03/Peking-duck.jpg" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#3</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Z &amp; Y Peking Duck</h2>
+      <span class="tag">Chinese · Peking Duck · Dim Sum</span>
+    </div>
+    
+    <div class="details"><div class="rating">⭐ 4.5</div><div>📍 606 Jackson St, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14159861899">(415) 986-1899</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Z+%26+Y+Peking+Duck+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="r&amp;g lounge 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://bartable.bart.gov/sites/default/files/styles/body_width_/public/images/discoveries/r%20and%20g%20lounge.jpg?itok=pr_qevaF"/>
-<span class="rank">#4</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>R&amp;G Lounge</h2>
-<span class="tag">Cantonese · Seafood</span>
-</div>
-<div class="details"><div class="rating">⭐ 3.7</div><div>📍 631 Kearny St, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14159827877">(415) 982-7877</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=R%26G+Lounge+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://bartable.bart.gov/sites/default/files/styles/body_width_/public/images/discoveries/r%20and%20g%20lounge.jpg?itok=pr_qevaF" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#4</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>R&amp;G Lounge</h2>
+      <span class="tag">Cantonese · Seafood</span>
+    </div>
+    
+    <div class="details"><div class="rating">⭐ 3.7</div><div>📍 631 Kearny St, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14159827877">(415) 982-7877</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=R%26G+Lounge+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="china live 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://s.hdnux.com/photos/60/75/06/12833212/15/rawImage.jpg"/>
-<span class="rank">#5</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>China Live</h2>
-<span class="tag">Modern Chinese · Dim Sum</span>
-</div>
-<div class="details"><div class="rating">⭐ 3.9</div><div>📍 644 Broadway, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14157888188">(415) 788-8188</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=China+Live+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://s.hdnux.com/photos/60/75/06/12833212/15/rawImage.jpg" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#5</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>China Live</h2>
+      <span class="tag">Modern Chinese · Dim Sum</span>
+    </div>
+    
+    <div class="details"><div class="rating">⭐ 3.9</div><div>📍 644 Broadway, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14157888188">(415) 788-8188</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=China+Live+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
-<article class="card" data-category="中餐" data-search="mister jiu's 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://assets.bonappetit.com/photos/59808c844f130a49582c2c73/master/pass/Top%2050%20-%20MR%20JIUS%20-%20TABLESCAPE%20.jpg"/>
-<span class="rank">#6</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Mister Jiu's</h2>
-<span class="tag">Modern Chinese · Fine Dining</span>
-</div>
-<div class="details"><div class="rating">⭐ 3.7</div><div>📍 28 Waverly Pl, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14158579688">(415) 857-9688</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Mister+Jiu%27s+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+
+<article class="card" data-category="中餐" data-search="mister jiu&#x27;s 中餐">
+  <div class="photoWrap">
+    <img src="https://assets.bonappetit.com/photos/59808c844f130a49582c2c73/master/pass/Top%2050%20-%20MR%20JIUS%20-%20TABLESCAPE%20.jpg" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#6</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Mister Jiu's</h2>
+      <span class="tag">Modern Chinese · Fine Dining</span>
+    </div>
+    
+    <div class="details"><div class="rating">⭐ 3.7</div><div>📍 28 Waverly Pl, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14158579688">(415) 857-9688</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Mister+Jiu%27s+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="harborview restaurant &amp; bar 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://cdn.sfstation.com/assets/images/businesses/49/390022491391512631_orig.jpeg"/>
-<span class="rank">#7</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Harborview Restaurant &amp; Bar</h2>
-<span class="tag">Cantonese · Dim Sum · Seafood</span>
-</div>
-<div class="details"><div class="rating">⭐ 4.0</div><div>📍 4 Embarcadero Center, San Francisco, CA 94111</div><div>☎️ <a href="tel:+14153991200">(415) 399-1200</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Harborview+Restaurant+%26+Bar+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://cdn.sfstation.com/assets/images/businesses/49/390022491391512631_orig.jpeg" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#7</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Harborview Restaurant &amp; Bar</h2>
+      <span class="tag">Cantonese · Dim Sum · Seafood</span>
+    </div>
+    
+    <div class="details"><div class="rating">⭐ 4.0</div><div>📍 4 Embarcadero Center, San Francisco, CA 94111</div><div>☎️ <a href="tel:+14153991200">(415) 399-1200</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Harborview+Restaurant+%26+Bar+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="capital restaurant 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://cdn.wherevi.com/12015-wvphoto-4.jpg"/>
-<span class="rank">#8</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Capital Restaurant</h2>
-<span class="tag">Cantonese</span>
-</div>
-<p>Old-school Chinatown Cantonese restaurant best known for its crispy salt-and-pepper chicken wings, plus egg tofu, chow fun and classic stir-fries.</p><div class="details"><div class="rating">⭐ 3.9</div><div>📍 839 Clay St, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14153976269">(415) 397-6269</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Capital+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://cdn.wherevi.com/12015-wvphoto-4.jpg" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#8</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Capital Restaurant</h2>
+      <span class="tag">Cantonese</span>
+    </div>
+    <p class="desc">Old-school Chinatown Cantonese restaurant best known for its crispy salt-and-pepper chicken wings, plus egg tofu, chow fun and classic stir-fries.</p>
+    <div class="details"><div class="rating">⭐ 3.9</div><div>📍 839 Clay St, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14153976269">(415) 397-6269</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Capital+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="great eastern restaurant 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://fooddiscoveryapp.com/_next/image?q=70&amp;url=https%3A%2F%2Fd3azhvew791s0n.cloudfront.net%2Frestaurants%2F3f19c84e-498b-4aa2-b83d-2f444d84785e%2Fimage-7.jpg&amp;w=1536"/>
-<span class="rank">#9</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Great Eastern Restaurant</h2>
-<span class="tag">Cantonese · Dim Sum · Seafood</span>
-</div>
-<p>Hong Kong-style Cantonese restaurant known for dim sum and fresh seafood from live tanks, with dumplings, roast duck and banquet-style dishes.</p><div class="details"><div class="rating">⭐ 3.3</div><div>📍 649 Jackson St, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14159862500">(415) 986-2500</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Great+Eastern+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://fooddiscoveryapp.com/_next/image?q=70&amp;url=https%3A%2F%2Fd3azhvew791s0n.cloudfront.net%2Frestaurants%2F3f19c84e-498b-4aa2-b83d-2f444d84785e%2Fimage-7.jpg&amp;w=1536" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#9</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Great Eastern Restaurant</h2>
+      <span class="tag">Cantonese · Dim Sum · Seafood</span>
+    </div>
+    <p class="desc">Hong Kong-style Cantonese restaurant known for dim sum and fresh seafood from live tanks, with dumplings, roast duck and banquet-style dishes.</p>
+    <div class="details"><div class="rating">⭐ 3.3</div><div>📍 649 Jackson St, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14159862500">(415) 986-2500</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Great+Eastern+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="house of nanking 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://images.getbento.com/accounts/eecc446dc5ab4d2b8eaef51b57551588/media/Y6rI9yeES32bXHN3z5Y1_large%20food%20spread%202.jpg?auto=compress%2Cformat&amp;fit=max&amp;w=1200"/>
-<span class="rank">#10</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>House of Nanking</h2>
-<span class="tag">Chinese</span>
-</div>
-<p>Long-running Chinatown favorite known for Nanking sesame chicken, crispy honey beef, house noodles, sizzling rice soup and peanut-sauce starters.</p><div class="details"><div class="rating">⭐ 3.5</div><div>📍 919 Kearny St, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14154211429">(415) 421-1429</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=House+of+Nanking+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://images.getbento.com/accounts/eecc446dc5ab4d2b8eaef51b57551588/media/Y6rI9yeES32bXHN3z5Y1_large%20food%20spread%202.jpg?auto=compress%2Cformat&amp;fit=max&amp;w=1200" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#10</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>House of Nanking</h2>
+      <span class="tag">Chinese</span>
+    </div>
+    <p class="desc">Long-running Chinatown favorite known for Nanking sesame chicken, crispy honey beef, house noodles, sizzling rice soup and peanut-sauce starters.</p>
+    <div class="details"><div class="rating">⭐ 3.5</div><div>📍 919 Kearny St, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14154211429">(415) 421-1429</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=House+of+Nanking+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="san tung 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://images.squarespace-cdn.com/content/v1/618b56bbb50653019ebdecaf/1642046992443-FWPVQXRU63YHB0SA574W/hand.jpg"/>
-<span class="rank">#11</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>San Tung</h2>
-<span class="tag">Northern Chinese</span>
-</div>
-<div>📍 1031 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14152420828">(415) 242-0828</a></div><p>Inner Sunset institution famous for its original dry-fried chicken wings, along with handmade dumplings, black-bean noodles and Northern-style dishes.</p><div class="details"><div class="rating">⭐ 4.1</div><div>📍 1031 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14152420828">(415) 242-0828</a></div></div><div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=San+Tung+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
-</article></main></div>
+  <div class="photoWrap">
+    <img src="https://images.squarespace-cdn.com/content/v1/618b56bbb50653019ebdecaf/1642046992443-FWPVQXRU63YHB0SA574W/hand.jpg" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#11</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>San Tung</h2>
+      <span class="tag">Northern Chinese</span>
+    </div>
+    <p class="desc">Inner Sunset institution famous for its original dry-fried chicken wings, along with handmade dumplings, black-bean noodles and Northern-style dishes.</p>
+    <div class="details"><div class="rating">⭐ 4.1</div><div>📍 1031 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14152420828">(415) 242-0828</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=San+Tung+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
+</article>
+
 <article class="card" data-category="中餐" data-search="old mandarin islamic restaurant 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://s.hdnux.com/photos/01/06/40/13/18481913/4/1920x0.jpg"/>
-<span class="rank">#12</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Old Mandarin Islamic Restaurant</h2>
-<span class="tag">Halal · Northern Chinese</span>
-</div>
-<p>Halal Northern Chinese restaurant specializing in cumin lamb, lamb dumplings, Beijing-style hot pot, braised lamb ribs and spicy crack fish.</p><div class="details"><div class="rating">⭐ 3.6</div><div>📍 3132 Vicente St, San Francisco, CA 94116</div><div>☎️ <a href="tel:+14155643481">(415) 564-3481</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Old+Mandarin+Islamic+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://s.hdnux.com/photos/01/06/40/13/18481913/4/1920x0.jpg" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#12</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Old Mandarin Islamic Restaurant</h2>
+      <span class="tag">Halal · Northern Chinese</span>
+    </div>
+    <p class="desc">Halal Northern Chinese restaurant specializing in cumin lamb, lamb dumplings, Beijing-style hot pot, braised lamb ribs and spicy crack fish.</p>
+    <div class="details"><div class="rating">⭐ 3.6</div><div>📍 3132 Vicente St, San Francisco, CA 94116</div><div>☎️ <a href="tel:+14155643481">(415) 564-3481</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Old+Mandarin+Islamic+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="terra cotta warrior 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://vilf.org/img/food/terra-cotta-warrior.jpg"/>
-<span class="rank">#13</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Terra Cotta Warrior</h2>
-<span class="tag">Shaanxi Chinese</span>
-</div>
-<p>Outer Sunset spot focused on Shaanxi cooking, especially cumin-lamb rou jia mo, hand-pulled biang-biang noodles, liangpi and other bold Northwest Chinese flavors.</p><div class="details"><div class="rating">⭐ 3.9</div><div>📍 2555 Judah St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14156813288">(415) 681-3288</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Terra+Cotta+Warrior+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://vilf.org/img/food/terra-cotta-warrior.jpg" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#13</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Terra Cotta Warrior</h2>
+      <span class="tag">Shaanxi Chinese</span>
+    </div>
+    <p class="desc">Outer Sunset spot focused on Shaanxi cooking, especially cumin-lamb rou jia mo, hand-pulled biang-biang noodles, liangpi and other bold Northwest Chinese flavors.</p>
+    <div class="details"><div class="rating">⭐ 3.9</div><div>📍 2555 Judah St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14156813288">(415) 681-3288</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Terra+Cotta+Warrior+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="beijing restaurant 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://www.beijingfoodsf.com/cdn/shop/files/Beijing_Duck_1.jpg?v=1737950592&amp;width=1500"/>
-<span class="rank">#14</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Beijing Restaurant</h2>
-<span class="tag">Northern Chinese · Beijing</span>
-</div>
-<p>Long-running Beijing-style restaurant known for whole roasted duck, hand-pulled noodles, dumplings, cumin lamb and other Northern Chinese comfort dishes.</p><div class="details"><div class="rating">⭐ 4.4</div><div>📍 1801 Alemany Blvd, San Francisco, CA 94112</div><div>☎️ <a href="tel:+14153338182">(415) 333-8182</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Beijing+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://www.beijingfoodsf.com/cdn/shop/files/Beijing_Duck_1.jpg?v=1737950592&amp;width=1500" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#14</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Beijing Restaurant</h2>
+      <span class="tag">Northern Chinese · Beijing</span>
+    </div>
+    <p class="desc">Long-running Beijing-style restaurant known for whole roasted duck, hand-pulled noodles, dumplings, cumin lamb and other Northern Chinese comfort dishes.</p>
+    <div class="details"><div class="rating">⭐ 4.4</div><div>📍 1801 Alemany Blvd, San Francisco, CA 94112</div><div>☎️ <a href="tel:+14153338182">(415) 333-8182</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Beijing+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="chong qing xiao mian 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://media.timeout.com/images/105375062/image.jpg"/>
-<span class="rank">#15</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Chong Qing Xiao Mian</h2>
-<span class="tag">Sichuan · Noodles</span>
-</div>
-<p>Small Chinatown noodle shop specializing in Chongqing spicy noodles, dan dan noodles, spicy beef noodle soup, wontons in chili oil and other numbing Sichuan flavors.</p><div class="details"><div class="rating">⭐ 4.1</div><div>📍 915 Kearny St, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14159830888">(415) 983-0888</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Chong+Qing+Xiao+Mian+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://media.timeout.com/images/105375062/image.jpg" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#15</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Chong Qing Xiao Mian</h2>
+      <span class="tag">Sichuan · Noodles</span>
+    </div>
+    <p class="desc">Small Chinatown noodle shop specializing in Chongqing spicy noodles, dan dan noodles, spicy beef noodle soup, wontons in chili oil and other numbing Sichuan flavors.</p>
+    <div class="details"><div class="rating">⭐ 4.1</div><div>📍 915 Kearny St, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14159830888">(415) 983-0888</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Chong+Qing+Xiao+Mian+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="spices 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://img.cdn4dd.com/cdn-cgi/image/fit%3Dcover%2Cwidth%3D600%2Cheight%3D400%2Cformat%3Dauto%2Cquality%3D80/https%3A/doordash-static.s3.amazonaws.com/media/store/header/6602.jpg"/>
-<span class="rank">#16</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Spices</h2>
-<span class="tag">Sichuan · Hunan</span>
-</div>
-<p>Richmond District favorite for fiery dishes such as explosive-chili chicken, fish fillet in flaming red oil, cumin meats, dry pots and other spicy Sichuan-Hunan specialties.</p><div class="details"><div class="rating">⭐ 4.4</div><div>📍 291 6th Ave, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14157528885">(415) 752-8885</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Spices+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://img.cdn4dd.com/cdn-cgi/image/fit%3Dcover%2Cwidth%3D600%2Cheight%3D400%2Cformat%3Dauto%2Cquality%3D80/https%3A/doordash-static.s3.amazonaws.com/media/store/header/6602.jpg" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#16</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Spices</h2>
+      <span class="tag">Sichuan · Hunan</span>
+    </div>
+    <p class="desc">Richmond District favorite for fiery dishes such as explosive-chili chicken, fish fillet in flaming red oil, cumin meats, dry pots and other spicy Sichuan-Hunan specialties.</p>
+    <div class="details"><div class="rating">⭐ 4.4</div><div>📍 291 6th Ave, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14157528885">(415) 752-8885</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Spices+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
-<article class="card" data-category="中餐" data-search="mama ji's 中餐">
-<div class="photoWrap">
-<img alt="中餐示意图" loading="lazy" src="https://img.hoodline.com/uploads/story/image/25130/IMG_0280.JPG"/>
-<span class="rank">#17</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Mama Ji's</h2>
-<span class="tag">Sichuan · Dim Sum</span>
-</div>
-<p>Castro neighborhood restaurant combining house-made dim sum with home-style Sichuan cooking; Shanghai soup dumplings, potstickers, Chongqing chicken and hot-and-numbing fish are standouts.</p><div class="details"><div class="rating">⭐ 4.4</div><div>📍 4416 18th St, San Francisco, CA 94114</div><div>☎️ <a href="tel:+14156264416">(415) 626-4416</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Mama+Ji%27s+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+
+<article class="card" data-category="中餐" data-search="mama ji&#x27;s 中餐">
+  <div class="photoWrap">
+    <img src="https://img.hoodline.com/uploads/story/image/25130/IMG_0280.JPG" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#17</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Mama Ji's</h2>
+      <span class="tag">Sichuan · Dim Sum</span>
+    </div>
+    <p class="desc">Castro neighborhood restaurant combining house-made dim sum with home-style Sichuan cooking; Shanghai soup dumplings, potstickers, Chongqing chicken and hot-and-numbing fish are standouts.</p>
+    <div class="details"><div class="rating">⭐ 4.4</div><div>📍 4416 18th St, San Francisco, CA 94114</div><div>☎️ <a href="tel:+14156264416">(415) 626-4416</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Mama+Ji%27s+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
-<article class="card" data-category="中餐" data-search="eric's restaurant 中餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#18</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Eric's Restaurant</h2>
-<span class="tag">Hunan · Mandarin Chinese</span>
-</div>
-<p>Long-running Noe Valley neighborhood restaurant serving Hunan- and Mandarin-style comfort food. Popular picks include Shanghai chicken, sesame beef, walnut prawns, potstickers and house fried rice.</p><div class="details"><div class="rating">⭐ 3.6</div><div>📍 1500 Church St, San Francisco, CA 94131</div><div>☎️ <a href="tel:+1(415) 282-0919">(415) 282-0919</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Eric%27s+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+
+<article class="card" data-category="中餐" data-search="eric&#x27;s restaurant 中餐">
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#18</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Eric's Restaurant</h2>
+      <span class="tag">Hunan · Mandarin Chinese</span>
+    </div>
+    <p class="desc">Long-running Noe Valley neighborhood restaurant serving Hunan- and Mandarin-style comfort food. Popular picks include Shanghai chicken, sesame beef, walnut prawns, potstickers and house fried rice.</p>
+    <div class="details"><div class="rating">⭐ 3.6</div><div>📍 1500 Church St, San Francisco, CA 94131</div><div>☎️ <a href="tel:+14152820919">(415) 282-0919</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Eric%27s+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
-<article class="card" data-category="中餐" data-search="ah ma's kitchen 中餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#19</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Ah Ma's Kitchen</h2>
-<span class="tag">Hong Kong · Cantonese</span>
-</div>
-<p>Hong Kong-style comfort food with a modern twist. The signature kiln chicken is the main draw, along with salted egg yolk wings, pineapple-bun sandwiches and oversized grass-jelly milk tea.</p><div class="details"><div class="rating">⭐ 3.9</div><div>📍 1115 Clement St, San Francisco, CA 94118</div><div>☎️ <a href="tel:+1(415) 571-8478">(415) 571-8478</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Ah+Ma%27s+Kitchen+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+
+<article class="card" data-category="中餐" data-search="ah ma&#x27;s kitchen 中餐">
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#19</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Ah Ma's Kitchen</h2>
+      <span class="tag">Hong Kong · Cantonese</span>
+    </div>
+    <p class="desc">Hong Kong-style comfort food with a modern twist. The signature kiln chicken is the main draw, along with salted egg yolk wings, pineapple-bun sandwiches and oversized grass-jelly milk tea.</p>
+    <div class="details"><div class="rating">⭐ 3.9</div><div>📍 1115 Clement St, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14155718478">(415) 571-8478</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Ah+Ma%27s+Kitchen+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="homey kitchen 中餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#20</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Homey Kitchen</h2>
-<span class="tag">Chinese Comfort Food</span>
-</div>
-<p>Casual neighborhood Chinese spot known for roast duck, salt-and-pepper dishes, dumplings, fried rice and a crispy Latin American-style roast chicken.</p><div class="details"><div class="rating">⭐ 4.5</div><div>📍 1946 Market St, San Francisco, CA 94102</div><div>☎️ <a href="tel:+1(415) 757-0786">(415) 757-0786</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Homey+Kitchen+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#20</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Homey Kitchen</h2>
+      <span class="tag">Chinese Comfort Food</span>
+    </div>
+    <p class="desc">Casual neighborhood Chinese spot known for roast duck, salt-and-pepper dishes, dumplings, fried rice and a crispy Latin American-style roast chicken.</p>
+    <div class="details"><div class="rating">⭐ 4.5</div><div>📍 1946 Market St, San Francisco, CA 94102</div><div>☎️ <a href="tel:+14157570786">(415) 757-0786</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Homey+Kitchen+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="pàng 中餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#21</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Pàng</h2>
-<span class="tag">Modern Chinese</span>
-</div>
-<p>Inner Sunset restaurant putting playful twists on Chinese classics, including mapo tofu chip ’n dip, black sesame noodles, DIY scallion rolls, honey walnut shrimp and black sesame crème brûlée.</p><div class="details"><div class="rating">⭐ 4.2</div><div>📍 1309 9th Ave, San Francisco, CA 94122</div><div>☎️ Not listed</div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=P%C3%A0ng+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#21</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Pàng</h2>
+      <span class="tag">Modern Chinese</span>
+    </div>
+    <p class="desc">Inner Sunset restaurant putting playful twists on Chinese classics, including mapo tofu chip ’n dip, black sesame noodles, DIY scallion rolls, honey walnut shrimp and black sesame crème brûlée.</p>
+    <div class="details"><div class="rating">⭐ 4.2</div><div>📍 1309 9th Ave, San Francisco, CA 94122</div><div>☎️ Not listed</div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=P%C3%A0ng+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="the happy crane 中餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#22</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>The Happy Crane</h2>
-<span class="tag">Modern Cantonese</span>
-</div>
-<p>Modern Cantonese restaurant from Chef James Yeun Leong Parry, combining rooted Chinese flavors with seasonal California ingredients. The menu includes creative dim sum, seafood, meats and an advance-booked Peking duck experience.</p><div class="details"><div class="rating">⭐ 4.6</div><div>📍 451 Gough St, San Francisco, CA 94102</div><div>☎️ <a href="tel:+1(415) 610-1823">(415) 610-1823</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=The+Happy+Crane+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#22</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>The Happy Crane</h2>
+      <span class="tag">Modern Cantonese</span>
+    </div>
+    <p class="desc">Modern Cantonese restaurant from Chef James Yeun Leong Parry, combining rooted Chinese flavors with seasonal California ingredients. The menu includes creative dim sum, seafood, meats and an advance-booked Peking duck experience.</p>
+    <div class="details"><div class="rating">⭐ 4.6</div><div>📍 451 Gough St, San Francisco, CA 94102</div><div>☎️ <a href="tel:+14156101823">(415) 610-1823</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=The+Happy+Crane+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="chef xiong kitchen 中餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#23</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Chef Xiong Kitchen</h2>
-<span class="tag">Sichuan · BBQ · Hot Pot</span>
-</div>
-<p>Bold Sichuan cooking with skewers, green-peppercorn boiled fish, mapo tofu, cumin lamb, cold noodles and late-night hot-pot options.</p><div class="details"><div class="rating">⭐ 4.6</div><div>📍 2428 Clement St, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14157061623">(415) 706-1623</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Chef+Xiong+Kitchen+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#23</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Chef Xiong Kitchen</h2>
+      <span class="tag">Sichuan · BBQ · Hot Pot</span>
+    </div>
+    <p class="desc">Bold Sichuan cooking with skewers, green-peppercorn boiled fish, mapo tofu, cumin lamb, cold noodles and late-night hot-pot options.</p>
+    <div class="details"><div class="rating">⭐ 4.6</div><div>📍 2428 Clement St, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14157061623">(415) 706-1623</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Chef+Xiong+Kitchen+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="sichuan home 中餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#24</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Sichuan Home</h2>
-<span class="tag">Sichuan</span>
-</div>
-<p>Classic Sichuan spot known for chef’s special fish stew, cumin lamb chops, dan dan noodles, mapo tofu and dry-fried string beans.</p><div class="details"><div class="rating">⭐ 4.3</div><div>📍 5037 Geary Blvd, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14152213288">(415) 221-3288</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Sichuan+Home+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#24</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Sichuan Home</h2>
+      <span class="tag">Sichuan</span>
+    </div>
+    <p class="desc">Classic Sichuan spot known for chef’s special fish stew, cumin lamb chops, dan dan noodles, mapo tofu and dry-fried string beans.</p>
+    <div class="details"><div class="rating">⭐ 4.3</div><div>📍 5037 Geary Blvd, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14152213288">(415) 221-3288</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Sichuan+Home+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="中餐" data-search="tsing tao restaurant 中餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#25</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Tsing Tao Restaurant</h2>
-<span class="tag">Chinese · Seafood</span>
-</div>
-<p>Long-running neighborhood Chinese restaurant with a broad menu of seafood, chow mein, fried rice, Dragon Beef, tomato beef and honey-walnut shrimp.</p><div class="details"><div class="rating">⭐ 4.4</div><div>📍 3107 Clement St, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14153872344">(415) 387-2344</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Tsing+Tao+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#25</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Tsing Tao Restaurant</h2>
+      <span class="tag">Chinese · Seafood</span>
+    </div>
+    <p class="desc">Long-running neighborhood Chinese restaurant with a broad menu of seafood, chow mein, fried rice, Dragon Beef, tomato beef and honey-walnut shrimp.</p>
+    <div class="details"><div class="rating">⭐ 4.4</div><div>📍 3107 Clement St, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14153872344">(415) 387-2344</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Tsing+Tao+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="dumpling home 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#26</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Dumpling Home</h2>
-<span class="tag">Dumplings · Shanghai</span>
-</div>
-<div>📍 298 Gough St, San Francisco, CA 94102</div><div>☎️ <a href="tel:+14155031666">(415) 503-1666</a></div><p>Michelin Bib Gourmand dumpling house famous for juicy pork bao, pork and numb-spicy xiao long bao, green onion pancakes and dan dan noodles.</p><div class="details"><div class="rating">⭐ 4.5</div><div>📍 298 Gough St, San Francisco, CA 94102</div><div>☎️ <a href="tel:+14155031666">(415) 503-1666</a></div></div><div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Home+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#26</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Dumpling Home</h2>
+      <span class="tag">Dumplings · Shanghai</span>
+    </div>
+    <p class="desc">Michelin Bib Gourmand dumpling house famous for juicy pork bao, pork and numb-spicy xiao long bao, green onion pancakes and dan dan noodles.</p>
+    <div class="details"><div class="rating">⭐ 4.5</div><div>📍 298 Gough St, San Francisco, CA 94102</div><div>☎️ <a href="tel:+14155031666">(415) 503-1666</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Home+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="dumpling story 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#27</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Dumpling Story</h2>
-<span class="tag">Dumplings · Noodles</span>
-</div>
-<p>Modern Mission dumpling restaurant focused on pork and spicy xiao long bao, pan-fried buns, dry-cooked green beans, noodles and shareable small plates.</p><div class="details"><div class="rating">⭐ 4.7</div><div>📍 694 Valencia St, San Francisco, CA 94110</div><div>☎️ <a href="tel:+14157570890">(415) 757-0890</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Story+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#27</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Dumpling Story</h2>
+      <span class="tag">Dumplings · Noodles</span>
+    </div>
+    <p class="desc">Modern Mission dumpling restaurant focused on pork and spicy xiao long bao, pan-fried buns, dry-cooked green beans, noodles and shareable small plates.</p>
+    <div class="details"><div class="rating">⭐ 4.7</div><div>📍 694 Valencia St, San Francisco, CA 94110</div><div>☎️ <a href="tel:+14157570890">(415) 757-0890</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Story+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="dumpling kitchen 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#28</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Dumpling Kitchen</h2>
-<span class="tag">Dumplings · Shanghai</span>
-</div>
-<p>Outer Sunset favorite for Shanghai-style pan-fried pork buns, xiao long bao, dumplings, chow fun, fried rice and garlic green beans.</p><div class="details"><div class="rating">⭐ 4.1</div><div>📍 1935 Taraval St, San Francisco, CA 94116</div><div>☎️ <a href="tel:+14156828938">(415) 682-8938</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Kitchen+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#28</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Dumpling Kitchen</h2>
+      <span class="tag">Dumplings · Shanghai</span>
+    </div>
+    <p class="desc">Outer Sunset favorite for Shanghai-style pan-fried pork buns, xiao long bao, dumplings, chow fun, fried rice and garlic green beans.</p>
+    <div class="details"><div class="rating">⭐ 4.1</div><div>📍 1935 Taraval St, San Francisco, CA 94116</div><div>☎️ <a href="tel:+14156828938">(415) 682-8938</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Kitchen+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="dumpling baby 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#29</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Dumpling Baby</h2>
-<span class="tag">Dumplings · Chinese</span>
-</div>
-<p>Casual Inner Richmond spot serving steamed dumplings, shumai, chili-oil dumplings, BBQ pork buns, honey-walnut shrimp and its signature chubby noodles.</p><div class="details"><div class="rating">⭐ 4.3</div><div>📍 3751 Geary Blvd, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14155928232">(415) 592-8232</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Baby+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#29</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Dumpling Baby</h2>
+      <span class="tag">Dumplings · Chinese</span>
+    </div>
+    <p class="desc">Casual Inner Richmond spot serving steamed dumplings, shumai, chili-oil dumplings, BBQ pork buns, honey-walnut shrimp and its signature chubby noodles.</p>
+    <div class="details"><div class="rating">⭐ 4.3</div><div>📍 3751 Geary Blvd, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14155928232">(415) 592-8232</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Baby+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="dumpling specialist 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#30</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Dumpling Specialist</h2>
-<span class="tag">Shanghai · Taiwanese</span>
-</div>
-<p>Small Parkside specialist for xiao long bao, pan-fried pork buns, wontons in chili oil, sticky rice rolls, soy milk and Shanghai-style noodles.</p><div class="details"><div class="rating">⭐ 4.4</div><div>📍 1119-1123 Taraval St, San Francisco, CA 94116</div><div>☎️ <a href="tel:+14156401403">(415) 640-1403</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Specialist+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#30</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Dumpling Specialist</h2>
+      <span class="tag">Shanghai · Taiwanese</span>
+    </div>
+    <p class="desc">Small Parkside specialist for xiao long bao, pan-fried pork buns, wontons in chili oil, sticky rice rolls, soy milk and Shanghai-style noodles.</p>
+    <div class="details"><div class="rating">⭐ 4.4</div><div>📍 1119-1123 Taraval St, San Francisco, CA 94116</div><div>☎️ <a href="tel:+14156401403">(415) 640-1403</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Dumpling+Specialist+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="kingdom of dumpling 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#31</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Kingdom of Dumpling</h2>
-<span class="tag">Dumplings · Dim Sum</span>
-</div>
-<p>No-frills Taraval favorite with pork-and-cabbage dumplings, shrimp-and-chive dumplings, Shanghai soup dumplings, potstickers, chow fun and garlic string beans.</p><div class="details"><div class="rating">⭐ 4.4</div><div>📍 1713 Taraval St, San Francisco, CA 94116</div><div>☎️ <a href="tel:+14155666143">(415) 566-6143</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Kingdom+of+Dumpling+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#31</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Kingdom of Dumpling</h2>
+      <span class="tag">Dumplings · Dim Sum</span>
+    </div>
+    <p class="desc">No-frills Taraval favorite with pork-and-cabbage dumplings, shrimp-and-chive dumplings, Shanghai soup dumplings, potstickers, chow fun and garlic string beans.</p>
+    <div class="details"><div class="rating">⭐ 4.4</div><div>📍 1713 Taraval St, San Francisco, CA 94116</div><div>☎️ <a href="tel:+14155666143">(415) 566-6143</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Kingdom+of+Dumpling+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="good mong kok bakery 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#32</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Good Mong Kok Bakery</h2>
-<span class="tag">Dim Sum · Bakery</span>
-</div>
-<p>Chinatown takeout institution for fresh, inexpensive dim sum including har gow, shumai, baked char siu buns, turnip cake, sticky rice and egg custard tarts.</p><div class="details"><div class="rating">⭐ 4.2</div><div>📍 1039 Stockton St, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14153972688">(415) 397-2688</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Good+Mong+Kok+Bakery+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#32</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Good Mong Kok Bakery</h2>
+      <span class="tag">Dim Sum · Bakery</span>
+    </div>
+    <p class="desc">Chinatown takeout institution for fresh, inexpensive dim sum including har gow, shumai, baked char siu buns, turnip cake, sticky rice and egg custard tarts.</p>
+    <div class="details"><div class="rating">⭐ 4.2</div><div>📍 1039 Stockton St, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14153972688">(415) 397-2688</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Good+Mong+Kok+Bakery+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="yank sing 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#33</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Yank Sing</h2>
-<span class="tag">Dim Sum · Cantonese</span>
-</div>
-<p>Classic San Francisco dim sum institution with traditional pushcart service, known for Shanghai soup dumplings, har gow, siu mai, BBQ pork buns and a large rotating selection.</p><div class="details"><div class="rating">⭐ 3.7</div><div>📍 101 Spear St, San Francisco, CA 94105</div><div>☎️ <a href="tel:+14157811111">(415) 781-1111</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Yank+Sing+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#33</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Yank Sing</h2>
+      <span class="tag">Dim Sum · Cantonese</span>
+    </div>
+    <p class="desc">Classic San Francisco dim sum institution with traditional pushcart service, known for Shanghai soup dumplings, har gow, siu mai, BBQ pork buns and a large rotating selection.</p>
+    <div class="details"><div class="rating">⭐ 3.7</div><div>📍 101 Spear St, San Francisco, CA 94105</div><div>☎️ <a href="tel:+14157811111">(415) 781-1111</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Yank+Sing+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="dragon beaux 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#34</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Dragon Beaux</h2>
-<span class="tag">Dim Sum · Hot Pot · Cantonese</span>
-</div>
-<p>Modern dim sum destination from the Koi Palace team, known for colorful soup dumplings, sea bass dumplings, shrimp rice rolls, premium hot pot meats and live seafood.</p><div class="details"><div class="rating">⭐ 4.0</div><div>📍 5700 Geary Blvd, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14153338899">(415) 333-8899</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Dragon+Beaux+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#34</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Dragon Beaux</h2>
+      <span class="tag">Dim Sum · Hot Pot · Cantonese</span>
+    </div>
+    <p class="desc">Modern dim sum destination from the Koi Palace team, known for colorful soup dumplings, sea bass dumplings, shrimp rice rolls, premium hot pot meats and live seafood.</p>
+    <div class="details"><div class="rating">⭐ 4.0</div><div>📍 5700 Geary Blvd, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14153338899">(415) 333-8899</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Dragon+Beaux+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="hk lounge bistro 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#35</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>HK Lounge Bistro</h2>
-<span class="tag">Dim Sum · Cantonese</span>
-</div>
-<p>Small SoMa dim sum restaurant focused on made-to-order dumplings and Hong Kong-style cooking, with standout soup dumplings, siu mai, BBQ pork buns and Peking duck.</p><div class="details"><div class="rating">⭐ 4.2</div><div>📍 1136 Folsom St, San Francisco, CA 94103</div><div>☎️ <a href="tel:+14156688802">(415) 668-8802</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=HK+Lounge+Bistro+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#35</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>HK Lounge Bistro</h2>
+      <span class="tag">Dim Sum · Cantonese</span>
+    </div>
+    <p class="desc">Small SoMa dim sum restaurant focused on made-to-order dumplings and Hong Kong-style cooking, with standout soup dumplings, siu mai, BBQ pork buns and Peking duck.</p>
+    <div class="details"><div class="rating">⭐ 4.2</div><div>📍 1136 Folsom St, San Francisco, CA 94103</div><div>☎️ <a href="tel:+14156688802">(415) 668-8802</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=HK+Lounge+Bistro+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="city view restaurant 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#36</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>City View Restaurant</h2>
-<span class="tag">Dim Sum · Cantonese</span>
-</div>
-<p>Polished Chinatown dim sum spot serving har gow, siu mai, rice noodle rolls, baked BBQ pork buns, custard buns and Peking duck with lotus buns.</p><div class="details"><div class="rating">⭐ 3.9</div><div>📍 33 Walter U Lum Pl, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14153982838">(415) 398-2838</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=City+View+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#36</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>City View Restaurant</h2>
+      <span class="tag">Dim Sum · Cantonese</span>
+    </div>
+    <p class="desc">Polished Chinatown dim sum spot serving har gow, siu mai, rice noodle rolls, baked BBQ pork buns, custard buns and Peking duck with lotus buns.</p>
+    <div class="details"><div class="rating">⭐ 3.9</div><div>📍 33 Walter U Lum Pl, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14153982838">(415) 398-2838</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=City+View+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="hang ah tea room 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#37</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Hang Ah Tea Room</h2>
-<span class="tag">Dim Sum · Cantonese</span>
-</div>
-<p>Historic Chinatown tea room dating to 1920, known for classic shrimp dumplings, potstickers, BBQ pork buns, soup dumplings and house chili oil.</p><div class="details"><div class="rating">⭐ 3.5</div><div>📍 1 Pagoda Pl, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14159825686">(415) 982-5686</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Hang+Ah+Tea+Room+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#37</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Hang Ah Tea Room</h2>
+      <span class="tag">Dim Sum · Cantonese</span>
+    </div>
+    <p class="desc">Historic Chinatown tea room dating to 1920, known for classic shrimp dumplings, potstickers, BBQ pork buns, soup dumplings and house chili oil.</p>
+    <div class="details"><div class="rating">⭐ 3.5</div><div>📍 1 Pagoda Pl, San Francisco, CA 94108</div><div>☎️ <a href="tel:+14159825686">(415) 982-5686</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Hang+Ah+Tea+Room+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="palette tea house 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#38</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Palette Tea House</h2>
-<span class="tag">Modern Cantonese · Dim Sum</span>
-</div>
-<p>Design-forward Ghirardelli Square dim sum restaurant known for colorful XLB samplers, lobster dumplings, Black Swan taro puffs, Peking duck, fried rice and live seafood.</p><div class="details"><div class="rating">⭐ 4.1</div><div>📍 900 N Point St Unit B201A, San Francisco, CA 94109</div><div>☎️ <a href="tel:+14153478888">(415) 347-8888</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Palette+Tea+House+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#38</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Palette Tea House</h2>
+      <span class="tag">Modern Cantonese · Dim Sum</span>
+    </div>
+    <p class="desc">Design-forward Ghirardelli Square dim sum restaurant known for colorful XLB samplers, lobster dumplings, Black Swan taro puffs, Peking duck, fried rice and live seafood.</p>
+    <div class="details"><div class="rating">⭐ 4.1</div><div>📍 900 N Point St Unit B201A, San Francisco, CA 94109</div><div>☎️ <a href="tel:+14153478888">(415) 347-8888</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Palette+Tea+House+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="osmanthus dim sum lounge 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#39</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Osmanthus Dim Sum Lounge</h2>
-<span class="tag">Dim Sum · Chinese</span>
-</div>
-<p>Modern dim sum lounge with handmade har gow, siu mai, BBQ pork buns and spicy wontons; the fragrant garlic noodles are one of its best-known dishes.</p><div class="details"><div class="rating">⭐ 4.4</div><div>📍 504 Broadway, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14158729648">(415) 872-9648</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Osmanthus+Dim+Sum+Lounge+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#39</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Osmanthus Dim Sum Lounge</h2>
+      <span class="tag">Dim Sum · Chinese</span>
+    </div>
+    <p class="desc">Modern dim sum lounge with handmade har gow, siu mai, BBQ pork buns and spicy wontons; the fragrant garlic noodles are one of its best-known dishes.</p>
+    <div class="details"><div class="rating">⭐ 4.4</div><div>📍 504 Broadway, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14158729648">(415) 872-9648</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Osmanthus+Dim+Sum+Lounge+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="点心" data-search="dim sum bistro 点心">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#40</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Dim Sum Bistro</h2>
-<span class="tag">Dim Sum · Takeout</span>
-</div>
-<p>Fast Chinatown counter-service dim sum shop with fresh har gow, pork-and-shrimp siu mai, soup dumplings, sticky rice, BBQ pork buns and pan-fried snacks.</p><div class="details"><div class="rating">⭐ 4.3</div><div>📍 675 Broadway, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14157887028">(415) 788-7028</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Dim+Sum+Bistro+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#40</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Dim Sum Bistro</h2>
+      <span class="tag">Dim Sum · Takeout</span>
+    </div>
+    <p class="desc">Fast Chinatown counter-service dim sum shop with fresh har gow, pork-and-shrimp siu mai, soup dumplings, sticky rice, BBQ pork buns and pan-fried snacks.</p>
+    <div class="details"><div class="rating">⭐ 4.3</div><div>📍 675 Broadway, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14157887028">(415) 788-7028</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Dim+Sum+Bistro+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="火锅" data-search="mumu hot pot 火锅">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#41</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Mumu Hot Pot</h2>
-<span class="tag">Hot Pot · Wagyu</span>
-</div>
-<div>📍 2 Varela Ave Ste 203, San Francisco, CA 94132</div><div>☎️ <a href="tel:+14154666748">(415) 466-6748</a></div><p>Modern individual-pot hot pot near Stonestown, especially strong for marbled Wagyu, sukiyaki and tom yum broths, combo sets and a customizable sauce bar.</p><div class="details"><div class="rating">⭐ 4.6</div><div>📍 2 Varela Ave Ste 203, San Francisco, CA 94132</div><div>☎️ <a href="tel:+14154666748">(415) 466-6748</a></div></div><div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Mumu+Hot+Pot+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#41</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Mumu Hot Pot</h2>
+      <span class="tag">Hot Pot · Wagyu</span>
+    </div>
+    <p class="desc">Modern individual-pot hot pot near Stonestown, especially strong for marbled Wagyu, sukiyaki and tom yum broths, combo sets and a customizable sauce bar.</p>
+    <div class="details"><div class="rating">⭐ 4.6</div><div>📍 2 Varela Ave Ste 203, San Francisco, CA 94132</div><div>☎️ <a href="tel:+14154666748">(415) 466-6748</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Mumu+Hot+Pot+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="火锅" data-search="m pot 火锅">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#42</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>M Pot</h2>
-<span class="tag">Malatang · Sichuan Hot Pot</span>
-</div>
-<p>Build-your-own Sichuan malatang spot where you choose meats, vegetables, tofu and noodles by weight, then pick a broth and spice level.</p><div class="details"><div class="rating">⭐ 4.6</div><div>📍 832 Clement St, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14155718076">(415) 571-8076</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=M+Pot+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#42</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>M Pot</h2>
+      <span class="tag">Malatang · Sichuan Hot Pot</span>
+    </div>
+    <p class="desc">Build-your-own Sichuan malatang spot where you choose meats, vegetables, tofu and noodles by weight, then pick a broth and spice level.</p>
+    <div class="details"><div class="rating">⭐ 4.6</div><div>📍 832 Clement St, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14155718076">(415) 571-8076</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=M+Pot+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="火锅" data-search="the pots hot pot 火锅">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#43</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>The Pots Hot Pot</h2>
-<span class="tag">AYCE Hot Pot</span>
-</div>
-<p>Outer Sunset all-you-can-eat hot pot with individual pots, Wagyu and lamb, a large vegetable and sauce bar, multiple broths and a substantial dessert section.</p><div class="details"><div class="rating">⭐ 4.0</div><div>📍 2652 Judah St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14156827889">(415) 682-7889</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=The+Pots+Hot+Pot+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#43</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>The Pots Hot Pot</h2>
+      <span class="tag">AYCE Hot Pot</span>
+    </div>
+    <p class="desc">Outer Sunset all-you-can-eat hot pot with individual pots, Wagyu and lamb, a large vegetable and sauce bar, multiple broths and a substantial dessert section.</p>
+    <div class="details"><div class="rating">⭐ 4.0</div><div>📍 2652 Judah St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14156827889">(415) 682-7889</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=The+Pots+Hot+Pot+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="火锅" data-search="jin pot shabu house 火锅">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#44</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Jin Pot Shabu House</h2>
-<span class="tag">Japanese Shabu · AYCE</span>
-</div>
-<p>Japanese-style AYCE shabu house with Wagyu, a broad broth selection, fresh vegetables, house sauces and playful cat-and-Ghibli themed dining spaces.</p><div class="details"><div class="rating">⭐ 4.5</div><div>📍 5158 Geary Blvd, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14153794539">(415) 379-4539</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Jin+Pot+Shabu+House+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#44</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Jin Pot Shabu House</h2>
+      <span class="tag">Japanese Shabu · AYCE</span>
+    </div>
+    <p class="desc">Japanese-style AYCE shabu house with Wagyu, a broad broth selection, fresh vegetables, house sauces and playful cat-and-Ghibli themed dining spaces.</p>
+    <div class="details"><div class="rating">⭐ 4.5</div><div>📍 5158 Geary Blvd, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14153794539">(415) 379-4539</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Jin+Pot+Shabu+House+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="火锅" data-search="hotpot bay 火锅">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#45</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Hotpot Bay</h2>
-<span class="tag">Hot Pot · Wagyu</span>
-</div>
-<p>Premium Parkside hot pot with individual burners, marbled Wagyu, seafood, customizable broths, a sauce bar and a popular coconut pudding finish.</p><div class="details"><div class="rating">⭐ 4.9</div><div>📍 1626 Taraval St, San Francisco, CA 94116</div><div>☎️ <a href="tel:+14155718225">(415) 571-8225</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Hotpot+Bay+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#45</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Hotpot Bay</h2>
+      <span class="tag">Hot Pot · Wagyu</span>
+    </div>
+    <p class="desc">Premium Parkside hot pot with individual burners, marbled Wagyu, seafood, customizable broths, a sauce bar and a popular coconut pudding finish.</p>
+    <div class="details"><div class="rating">⭐ 4.9</div><div>📍 1626 Taraval St, San Francisco, CA 94116</div><div>☎️ <a href="tel:+14155718225">(415) 571-8225</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Hotpot+Bay+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="火锅" data-search="shabu club 火锅">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#46</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Shabu Club</h2>
-<span class="tag">Japanese Shabu · AYCE</span>
-</div>
-<p>Lively Inner Richmond shabu spot known for AYCE meats, spicy miso and tonkotsu broths, its garlic-cilantro green sauce and signature Kobe beef fries.</p><div class="details"><div class="rating">⭐ 4.2</div><div>📍 951 Clement St, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14157425265">(415) 742-5265</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Shabu+Club+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#46</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Shabu Club</h2>
+      <span class="tag">Japanese Shabu · AYCE</span>
+    </div>
+    <p class="desc">Lively Inner Richmond shabu spot known for AYCE meats, spicy miso and tonkotsu broths, its garlic-cilantro green sauce and signature Kobe beef fries.</p>
+    <div class="details"><div class="rating">⭐ 4.2</div><div>📍 951 Clement St, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14157425265">(415) 742-5265</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Shabu+Club+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="火锅" data-search="nan hot pot sf 火锅">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#47</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Nan Hot Pot SF</h2>
-<span class="tag">Sichuan Hot Pot</span>
-</div>
-<p>North Beach hot pot restaurant with a huge menu, premium meats such as A5 Wagyu, Sichuan mala broth, fish balls, organ meats and carefully presented platters.</p><div class="details"><div class="rating">⭐ 5.0</div><div>📍 501 Broadway, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14159868832">(415) 986-8832</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Nan+Hot+Pot+SF+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#47</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Nan Hot Pot SF</h2>
+      <span class="tag">Sichuan Hot Pot</span>
+    </div>
+    <p class="desc">North Beach hot pot restaurant with a huge menu, premium meats such as A5 Wagyu, Sichuan mala broth, fish balls, organ meats and carefully presented platters.</p>
+    <div class="details"><div class="rating">⭐ 5.0</div><div>📍 501 Broadway, San Francisco, CA 94133</div><div>☎️ <a href="tel:+14159868832">(415) 986-8832</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Nan+Hot+Pot+SF+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="火锅" data-search="tang bar 火锅">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#48</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Tang Bar</h2>
-<span class="tag">Malatang · Hot Pot</span>
-</div>
-<p>Stonestown self-serve malatang bar where you build a bowl by weight from meats, seafood, vegetables, tofu and noodles, then choose a broth or dry mix.</p><div class="details"><div class="rating">⭐ 3.9</div><div>📍 3251 20th Ave, Level 2, San Francisco, CA 94132</div><div>☎️ <a href="tel:+16282709876">(628) 270-9876</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Tang+Bar+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#48</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Tang Bar</h2>
+      <span class="tag">Malatang · Hot Pot</span>
+    </div>
+    <p class="desc">Stonestown self-serve malatang bar where you build a bowl by weight from meats, seafood, vegetables, tofu and noodles, then choose a broth or dry mix.</p>
+    <div class="details"><div class="rating">⭐ 3.9</div><div>📍 3251 20th Ave, Level 2, San Francisco, CA 94132</div><div>☎️ <a href="tel:+16282709876">(628) 270-9876</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Tang+Bar+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="火锅" data-search="muukata6395 火锅">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#49</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Muukata6395</h2>
-<span class="tag">Thai BBQ · Hot Pot</span>
-</div>
-<p>Thai mu kratha restaurant combining tabletop grilling with a broth moat, known for marinated meats, seafood, garlic fried rice and spicy Thai dipping sauces.</p><div class="details"><div class="rating">⭐ 4.6</div><div>📍 4217 Geary Blvd, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14154294956">(415) 429-4956</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Muukata6395+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#49</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Muukata6395</h2>
+      <span class="tag">Thai BBQ · Hot Pot</span>
+    </div>
+    <p class="desc">Thai mu kratha restaurant combining tabletop grilling with a broth moat, known for marinated meats, seafood, garlic fried rice and spicy Thai dipping sauces.</p>
+    <div class="details"><div class="rating">⭐ 4.6</div><div>📍 4217 Geary Blvd, San Francisco, CA 94118</div><div>☎️ <a href="tel:+14154294956">(415) 429-4956</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Muukata6395+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="火锅" data-search="boiling hot pot 火锅">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#50</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Boiling Hot Pot</h2>
-<span class="tag">AYCE Hot Pot</span>
-</div>
-<p>Richmond District AYCE hot pot with a 90-minute format, up to four broths at the table, quick tablet ordering and a wide mix of meats, seafood and vegetables.</p><div class="details"><div class="rating">⭐ 4.4</div><div>📍 5512 Geary Blvd, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14152211188">(415) 221-1188</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Boiling+Hot+Pot+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#50</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Boiling Hot Pot</h2>
+      <span class="tag">AYCE Hot Pot</span>
+    </div>
+    <p class="desc">Richmond District AYCE hot pot with a 90-minute format, up to four broths at the table, quick tablet ordering and a wide mix of meats, seafood and vegetables.</p>
+    <div class="details"><div class="rating">⭐ 4.4</div><div>📍 5512 Geary Blvd, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14152211188">(415) 221-1188</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Boiling+Hot+Pot+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="烧烤" data-search="northern china bbq 烧烤">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#51</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>NORTHERN CHINA BBQ</h2>
-<span class="tag">Northern Chinese BBQ · Skewers</span>
-</div>
-<p>Northern Chinese barbecue specialist centered on charcoal-grilled lamb, beef, chicken, duck tongue, mushrooms and vegetables seasoned with cumin and chili.</p><div class="details"><div class="rating">⭐ 4.3</div><div>📍 294 9th St, San Francisco, CA 94103</div><div>☎️ <a href="tel:+14158293837">(415) 829-3837</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=NORTHERN+CHINA+BBQ+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#51</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>NORTHERN CHINA BBQ</h2>
+      <span class="tag">Northern Chinese BBQ · Skewers</span>
+    </div>
+    <p class="desc">Northern Chinese barbecue specialist centered on charcoal-grilled lamb, beef, chicken, duck tongue, mushrooms and vegetables seasoned with cumin and chili.</p>
+    <div class="details"><div class="rating">⭐ 4.3</div><div>📍 294 9th St, San Francisco, CA 94103</div><div>☎️ <a href="tel:+14158293837">(415) 829-3837</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=NORTHERN+CHINA+BBQ+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="烧烤" data-search="taste of old street 老街把把烧 烧烤">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#52</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Taste of Old Street 老街把把烧</h2>
-<span class="tag">Chengdu BBQ · Skewers</span>
-</div>
-<p>Chengdu-style skewer shop serving lamb and other grilled skewers alongside dan dan noodles, wontons, rice noodles and spicy Sichuan snacks.</p><div class="details"><div class="rating">⭐ 4.7</div><div>📍 5336 Geary Blvd, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14156919327">(415) 691-9327</a></div></div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Taste+of+Old+Street+%E8%80%81%E8%A1%97%E6%8A%8A%E6%8A%8A%E7%83%A7+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#52</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Taste of Old Street 老街把把烧</h2>
+      <span class="tag">Chengdu BBQ · Skewers</span>
+    </div>
+    <p class="desc">Chengdu-style skewer shop serving lamb and other grilled skewers alongside dan dan noodles, wontons, rice noodles and spicy Sichuan snacks.</p>
+    <div class="details"><div class="rating">⭐ 4.7</div><div>📍 5336 Geary Blvd, San Francisco, CA 94121</div><div>☎️ <a href="tel:+14156919327">(415) 691-9327</a></div></div>
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Taste+of+Old+Street+%E8%80%81%E8%A1%97%E6%8A%8A%E6%8A%8A%E7%83%A7+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="烧烤" data-search="top sf bbq 烧烤">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#53</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Top SF BBQ</h2>
-<span class="tag">BBQ</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Top+SF+BBQ+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#53</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Top SF BBQ</h2>
+      <span class="tag">BBQ</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Top+SF+BBQ+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="烧烤" data-search="hing lung company 烧烤">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#54</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Hing Lung Company</h2>
-<span class="tag">BBQ</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Hing+Lung+Company+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#54</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Hing Lung Company</h2>
+      <span class="tag">BBQ</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Hing+Lung+Company+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="烧烤" data-search="san ho won 烧烤">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#55</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>SAN HO WON</h2>
-<span class="tag">BBQ</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=SAN+HO+WON+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#55</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>SAN HO WON</h2>
+      <span class="tag">BBQ</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=SAN+HO+WON+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="烧烤" data-search="brothers restaurant 烧烤">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#56</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Brothers Restaurant</h2>
-<span class="tag">BBQ</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Brothers+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#56</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Brothers Restaurant</h2>
+      <span class="tag">BBQ</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Brothers+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="烧烤" data-search="wooden charcoal korean village barbecue house 烧烤">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#57</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Wooden Charcoal Korean Village Barbecue House</h2>
-<span class="tag">BBQ</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Wooden+Charcoal+Korean+Village+Barbecue+House+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#57</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Wooden Charcoal Korean Village Barbecue House</h2>
+      <span class="tag">BBQ</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Wooden+Charcoal+Korean+Village+Barbecue+House+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="烧烤" data-search="yakiniq cafe 烧烤">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#58</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>YakiniQ Cafe</h2>
-<span class="tag">BBQ</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=YakiniQ+Cafe+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#58</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>YakiniQ Cafe</h2>
+      <span class="tag">BBQ</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=YakiniQ+Cafe+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="烧烤" data-search="k-elements bbq 烧烤">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#59</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>K-Elements BBQ</h2>
-<span class="tag">BBQ</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=K-Elements+BBQ+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#59</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>K-Elements BBQ</h2>
+      <span class="tag">BBQ</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=K-Elements+BBQ+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="烧烤" data-search="ilcha 烧烤">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#60</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Ilcha</h2>
-<span class="tag">BBQ</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Ilcha+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#60</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Ilcha</h2>
+      <span class="tag">BBQ</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Ilcha+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="pho 2000 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#61</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Pho 2000</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Pho+2000+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#61</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Pho 2000</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Pho+2000+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="pho huong viet 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#62</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Pho Huong Viet</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Pho+Huong+Viet+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#62</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Pho Huong Viet</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Pho+Huong+Viet+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="yummy yummy 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#63</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Yummy Yummy</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Yummy+Yummy+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#63</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Yummy Yummy</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Yummy+Yummy+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="pho tân hòa 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#64</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Pho Tân Hòa</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Pho+T%C3%A2n+H%C3%B2a+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#64</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Pho Tân Hòa</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Pho+T%C3%A2n+H%C3%B2a+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="gao viet kitchen 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#65</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Gao Viet Kitchen</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Gao+Viet+Kitchen+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#65</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Gao Viet Kitchen</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Gao+Viet+Kitchen+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="perilla 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#66</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Perilla</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Perilla+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#66</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Perilla</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Perilla+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="thanh long restaurant 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#67</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Thanh Long Restaurant</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Thanh+Long+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#67</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Thanh Long Restaurant</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Thanh+Long+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="ppq dungeness island 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#68</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>PPQ Dungeness Island</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=PPQ+Dungeness+Island+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#68</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>PPQ Dungeness Island</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=PPQ+Dungeness+Island+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="saigon sandwich 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#69</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Saigon Sandwich</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Saigon+Sandwich+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#69</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Saigon Sandwich</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Saigon+Sandwich+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="bodega sf 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#70</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Bodega SF</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Bodega+SF+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#70</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Bodega SF</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Bodega+SF+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="mong thu cafe 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#71</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Mong Thu Cafe</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Mong+Thu+Cafe+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#71</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Mong Thu Cafe</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Mong+Thu+Cafe+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="越南菜" data-search="tín vietnamese cuisine 越南菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#72</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Tín Vietnamese Cuisine</h2>
-<span class="tag">Vietnamese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=T%C3%ADn+Vietnamese+Cuisine+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#72</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Tín Vietnamese Cuisine</h2>
+      <span class="tag">Vietnamese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=T%C3%ADn+Vietnamese+Cuisine+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="mensho tokyo 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#73</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Mensho Tokyo</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Mensho+Tokyo+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#73</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Mensho Tokyo</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Mensho+Tokyo+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="marufuku ramen 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#74</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Marufuku Ramen</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Marufuku+Ramen+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#74</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Marufuku Ramen</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Marufuku+Ramen+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="hinodeya ramen 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#75</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Hinodeya Ramen</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Hinodeya+Ramen+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#75</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Hinodeya Ramen</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Hinodeya+Ramen+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="taishoken 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#76</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Taishoken</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Taishoken+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#76</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Taishoken</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Taishoken+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="izakaya sozai 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#77</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Izakaya Sozai</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Izakaya+Sozai+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#77</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Izakaya Sozai</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Izakaya+Sozai+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="rintaro 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#78</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Rintaro</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Rintaro+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#78</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Rintaro</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Rintaro+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="ebisu 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#79</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Ebisu</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Ebisu+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#79</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Ebisu</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Ebisu+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="saru sushi bar 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#80</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Saru Sushi Bar</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Saru+Sushi+Bar+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#80</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Saru Sushi Bar</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Saru+Sushi+Bar+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="hamano sushi 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#81</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Hamano Sushi</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Hamano+Sushi+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#81</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Hamano Sushi</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Hamano+Sushi+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="koo 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#82</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Koo</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Koo+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#82</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Koo</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Koo+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
-<article class="card" data-category="日料" data-search="akiko's restaurant 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#83</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Akiko's Restaurant</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Akiko%27s+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+
+<article class="card" data-category="日料" data-search="akiko&#x27;s restaurant 日料">
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#83</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Akiko's Restaurant</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Akiko%27s+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="ju-ni 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#84</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Ju-Ni</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Ju-Ni+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#84</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Ju-Ni</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Ju-Ni+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="robin 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#85</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Robin</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Robin+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#85</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Robin</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Robin+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="omakase 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#86</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Omakase</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Omakase+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#86</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Omakase</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Omakase+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="日料" data-search="wako japanese restaurant 日料">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#87</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Wako Japanese Restaurant</h2>
-<span class="tag">Japanese</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Wako+Japanese+Restaurant+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#87</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Wako Japanese Restaurant</h2>
+      <span class="tag">Japanese</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Wako+Japanese+Restaurant+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="韩餐" data-search="daeho kalbijjim &amp; beef soup 韩餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#88</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Daeho Kalbijjim &amp; Beef Soup</h2>
-<span class="tag">Korean</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Daeho+Kalbijjim+%26+Beef+Soup+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#88</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Daeho Kalbijjim &amp; Beef Soup</h2>
+      <span class="tag">Korean</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Daeho+Kalbijjim+%26+Beef+Soup+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="韩餐" data-search="han il kwan 韩餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#89</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Han Il Kwan</h2>
-<span class="tag">Korean</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Han+Il+Kwan+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#89</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Han Il Kwan</h2>
+      <span class="tag">Korean</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Han+Il+Kwan+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="韩餐" data-search="umma 韩餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#90</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Umma</h2>
-<span class="tag">Korean</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Umma+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#90</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Umma</h2>
+      <span class="tag">Korean</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Umma+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="韩餐" data-search="jin mi korean cuisine 韩餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#91</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Jin Mi Korean Cuisine</h2>
-<span class="tag">Korean</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Jin+Mi+Korean+Cuisine+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#91</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Jin Mi Korean Cuisine</h2>
+      <span class="tag">Korean</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Jin+Mi+Korean+Cuisine+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="韩餐" data-search="toyose 韩餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#92</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Toyose</h2>
-<span class="tag">Korean</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Toyose+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#92</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Toyose</h2>
+      <span class="tag">Korean</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Toyose+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="韩餐" data-search="cocobang 韩餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#93</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Cocobang</h2>
-<span class="tag">Korean</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Cocobang+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#93</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Cocobang</h2>
+      <span class="tag">Korean</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Cocobang+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="韩餐" data-search="my tofu house 韩餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#94</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>My Tofu House</h2>
-<span class="tag">Korean</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=My+Tofu+House+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#94</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>My Tofu House</h2>
+      <span class="tag">Korean</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=My+Tofu+House+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="韩餐" data-search="manna 韩餐">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#95</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Manna</h2>
-<span class="tag">Korean</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Manna+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#95</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Manna</h2>
+      <span class="tag">Korean</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Manna+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="泰国菜" data-search="kin khao 泰国菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#96</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Kin Khao</h2>
-<span class="tag">Thai</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Kin+Khao+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#96</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Kin Khao</h2>
+      <span class="tag">Thai</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Kin+Khao+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="泰国菜" data-search="nari 泰国菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#97</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Nari</h2>
-<span class="tag">Thai</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Nari+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#97</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Nari</h2>
+      <span class="tag">Thai</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Nari+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="泰国菜" data-search="farmhouse kitchen thai cuisine 泰国菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#98</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Farmhouse Kitchen Thai Cuisine</h2>
-<span class="tag">Thai</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Farmhouse+Kitchen+Thai+Cuisine+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#98</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Farmhouse Kitchen Thai Cuisine</h2>
+      <span class="tag">Thai</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Farmhouse+Kitchen+Thai+Cuisine+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="泰国菜" data-search="lers ros 泰国菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#99</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Lers Ros</h2>
-<span class="tag">Thai</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Lers+Ros+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#99</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Lers Ros</h2>
+      <span class="tag">Thai</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Lers+Ros+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
+
 <article class="card" data-category="泰国菜" data-search="saap ver authentic thai cuisine 泰国菜">
-<div class="photoWrap">
-<img alt="Dish photo coming" loading="lazy" src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming"/>
-<span class="rank">#100</span>
-</div>
-<div class="body">
-<div class="row">
-<h2>Saap Ver Authentic Thai Cuisine</h2>
-<span class="tag">Thai</span>
-</div>
-<div class="actions">
-<a href="https://www.google.com/maps/search/?api=1&amp;query=Saap+Ver+Authentic+Thai+Cuisine+San+Francisco+CA" rel="noopener" target="_blank">📍 地图</a>
-<button class="fav">♡ 收藏</button>
-</div></div>
+  <div class="photoWrap">
+    <img src="https://placehold.co/900x560/fff4eb/8a4b2b?text=Dish+Photo+Coming" alt="Restaurant dish" loading="lazy">
+    <span class="rank">#100</span>
+  </div>
+  <div class="body">
+    <div class="row">
+      <h2>Saap Ver Authentic Thai Cuisine</h2>
+      <span class="tag">Thai</span>
+    </div>
+    
+    
+    <div class="actions">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Saap+Ver+Authentic+Thai+Cuisine+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
+      <button class="fav" type="button">♡ Save</button>
+    </div>
+  </div>
 </article>
-<div class="empty" id="empty">没有找到符合条件的餐厅 🍽️</div>
-<div class="note">
-  Beta 说明：本版先收录 100 家旧金山餐厅；除前两家自有照片外，其余暂用不重复的外部美食示意图，不代表餐厅实拍；点击「地图」可查看地址、营业时间和最新状态。
-  餐厅名单参考了 2026 年旧金山餐厅指南与公开商家信息。后续可以逐家替换成你自己拍摄或取得授权的实拍照片。
+</main>
+<div class="empty" id="empty">没有找到符合条件的餐厅</div>
 </div>
-<div aria-hidden="true" class="wheel-modal" id="wheelModal">
-<div class="wheel-box">
-<h2>今天吃什么？</h2>
-<p class="wheel-tip">先倒数 3 秒，然后店名会巨快轮换。想停的时候按 <span class="space-key">SPACE 空格</span></p>
-<div class="countdown" id="countdown">3</div>
-<div class="slot" id="slotName">准备开始</div>
-<div class="winner-cat" id="slotCat"></div>
-<div class="wheel-actions">
-<button class="spin-btn" id="spinBtn">▶ 重新开始</button>
-<a class="map-btn" id="winnerMap" rel="noopener" target="_blank">📍 看地图</a>
-<button class="close-btn" id="closeWheel">关闭</button>
+
+<div class="wheelModal" id="wheelModal">
+  <div class="wheelBox">
+    <h2 style="font-size:30px;margin:0 0 8px">今天吃什么？</h2>
+    <p style="color:#777;margin:0 0 14px">3 秒倒计时后快速轮换，按空格停止</p>
+    <div class="count" id="wheelCount">3</div>
+    <div class="slot" id="slotName">准备开始</div>
+    <div class="wheelActions">
+      <button class="startWheel" id="restartWheel" type="button">重新开始</button>
+      <a class="winnerMap" id="winnerMap" target="_blank" rel="noopener">📍 Map</a>
+      <button class="closeWheel" id="closeWheel" type="button">关闭</button>
+    </div>
+  </div>
 </div>
-</div>
-</div>
+
 <script>
 const cards=[...document.querySelectorAll('.card')];
 const filterBtns=[...document.querySelectorAll('.filters button')];
@@ -1870,160 +2003,79 @@ function apply(){
   let visible=[];
   cards.forEach(c=>{
     const okCat=filter==='全部'||c.dataset.category===filter;
-    const okQ=!q||c.dataset.search.includes(q);
+    const text=(c.dataset.search+' '+c.innerText).toLowerCase();
+    const okQ=!q||text.includes(q);
     const show=okCat&&okQ;
-    c.style.display=show?'block':'none';
+    c.style.display=show?'flex':'none';
     if(show) visible.push(c);
   });
   count.textContent=`共 ${visible.length} 家`;
   empty.style.display=visible.length?'none':'block';
   return visible;
 }
-filterBtns.forEach(b=>b.onclick=()=>{
+filterBtns.forEach(b=>b.addEventListener('click',()=>{
   filterBtns.forEach(x=>x.classList.remove('active'));
-  b.classList.add('active'); filter=b.dataset.filter; apply();
-});
+  b.classList.add('active');
+  filter=b.dataset.filter;
+  apply();
+}));
 search.addEventListener('input',apply);
-document.querySelectorAll('.fav').forEach(b=>b.onclick=()=>{
+document.querySelectorAll('.fav').forEach(b=>b.addEventListener('click',()=>{
   b.classList.toggle('on');
-  b.textContent=b.classList.contains('on')?'♥ 已收藏':'♡ 收藏';
-});
-document.getElementById('random').onclick=()=>{
-  const visible=apply();
-  if(!visible.length)return;
-  const pick=visible[Math.floor(Math.random()*visible.length)];
-  pick.scrollIntoView({behavior:'smooth',block:'center'});
-  pick.animate([{transform:'scale(1)'},{transform:'scale(1.025)'},{transform:'scale(1)'}],{duration:700});
-};
+  b.textContent=b.classList.contains('on')?'♥ Saved':'♡ Save';
+}));
 
-const wheelLaunch=document.getElementById('wheelLaunch');
-const wheelModal=document.getElementById('wheelModal');
+const modal=document.getElementById('wheelModal');
+const randomBtn=document.getElementById('random');
+const restart=document.getElementById('restartWheel');
+const closeBtn=document.getElementById('closeWheel');
+const wheelCount=document.getElementById('wheelCount');
 const slotName=document.getElementById('slotName');
-const slotCat=document.getElementById('slotCat');
-const spinBtn=document.getElementById('spinBtn');
-const closeWheel=document.getElementById('closeWheel');
 const winnerMap=document.getElementById('winnerMap');
-const countdown=document.getElementById('countdown');
+let spinTimer=null,countTimer=null,spinning=false,current=null;
 
-let wheelTimer=null;
-let countdownTimer=null;
-let spinning=false;
-let countingDown=false;
-let currentPick=null;
-
-function visibleRestaurantData(){
-  return cards.filter(c=>c.style.display!=='none').map(c=>({
-    name:c.querySelector('h2').textContent.trim(),
-    cat:c.dataset.category,
-    map:c.querySelector('.actions a').href
+function pool(){
+  return apply().map(c=>({
+    name:c.querySelector('h2').innerText.trim(),
+    map:c.querySelector('.actions a')?.href||'#'
   }));
 }
-
-function tickWheel(){
-  const pool=visibleRestaurantData();
-  if(!pool.length)return;
-  currentPick=pool[Math.floor(Math.random()*pool.length)];
-  slotName.textContent=currentPick.name;
-  slotCat.textContent=currentPick.cat;
+function tick(){
+  const p=pool(); if(!p.length)return;
+  current=p[Math.floor(Math.random()*p.length)];
+  slotName.textContent=current.name;
 }
-
-function beginFastSpin(){
-  countingDown=false;
-  countdown.textContent='GO!';
-  slotName.classList.add('spinning');
-  spinning=true;
-  tickWheel();
-  wheelTimer=setInterval(tickWheel,35);
-  spinBtn.textContent='■ 按空格停止';
-  setTimeout(()=>{ if(spinning) countdown.textContent=''; },450);
-}
-
-function startCountdown(){
-  clearInterval(wheelTimer);
-  clearInterval(countdownTimer);
-  spinning=false;
-  countingDown=true;
-  currentPick=null;
-  winnerMap.style.display='none';
-  slotName.classList.remove('spinning');
+function begin(){
+  clearInterval(spinTimer);clearInterval(countTimer);
+  spinning=false;current=null;winnerMap.style.display='none';
   slotName.textContent='准备开始';
-  slotCat.textContent='';
-  spinBtn.textContent='倒计时中…';
-
-  let n=3;
-  countdown.textContent=n;
-  countdownTimer=setInterval(()=>{
-    n-=1;
-    if(n>0){
-      countdown.textContent=n;
-    }else{
-      clearInterval(countdownTimer);
-      beginFastSpin();
+  let n=3;wheelCount.textContent=n;
+  countTimer=setInterval(()=>{
+    n--;
+    if(n>0) wheelCount.textContent=n;
+    else{
+      clearInterval(countTimer);
+      wheelCount.textContent='GO!';
+      spinning=true;
+      spinTimer=setInterval(tick,35);
+      setTimeout(()=>{if(spinning)wheelCount.textContent=''},350);
     }
   },1000);
 }
-
-function stopWheel(){
+function stop(){
   if(!spinning)return;
-  clearInterval(wheelTimer);
-  spinning=false;
-  slotName.classList.remove('spinning');
-  spinBtn.textContent='↻ 再来一次';
-  countdown.textContent='就吃这个！';
-  if(currentPick){
-    winnerMap.href=currentPick.map;
-    winnerMap.style.display='inline-block';
-    slotName.animate(
-      [{transform:'scale(1)'},{transform:'scale(1.10)'},{transform:'scale(1)'}],
-      {duration:650}
-    );
-  }
+  clearInterval(spinTimer);spinning=false;
+  wheelCount.textContent='就吃这个！';
+  if(current){winnerMap.href=current.map;winnerMap.style.display='inline-block';}
 }
-
-wheelLaunch.addEventListener('click', (e)=>{
-  e.preventDefault();
-  e.stopPropagation();
-  wheelModal.classList.add('show');
-  wheelModal.setAttribute('aria-hidden','false');
-  startCountdown();
-});
-
-closeWheel.onclick=()=>{
-  clearInterval(wheelTimer);
-  clearInterval(countdownTimer);
-  spinning=false;
-  countingDown=false;
-  slotName.classList.remove('spinning');
-  wheelModal.classList.remove('show');
-  wheelModal.setAttribute('aria-hidden','true');
-};
-
-spinBtn.onclick=()=>{
-  if(spinning) stopWheel();
-  else if(!countingDown) startCountdown();
-};
-
-wheelModal.addEventListener('click',e=>{
-  if(e.target===wheelModal) closeWheel.click();
-});
-
+randomBtn.addEventListener('click',()=>{modal.classList.add('show');begin();});
+restart.addEventListener('click',begin);
+closeBtn.addEventListener('click',()=>{clearInterval(spinTimer);clearInterval(countTimer);spinning=false;modal.classList.remove('show');});
 document.addEventListener('keydown',e=>{
-  const editable=['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
-  if(e.code==='Space' && wheelModal.classList.contains('show') && !editable){
-    e.preventDefault();
-    if(spinning) stopWheel();
+  if(e.code==='Space'&&modal.classList.contains('show')&&!['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)){
+    e.preventDefault(); stop();
   }
 });
-
-
-document.querySelectorAll('.card img').forEach(img=>{
-  img.addEventListener('error',()=>{
-    img.removeAttribute('src');
-    img.alt='菜品图片暂未加载';
-    img.style.background='#fff1e8';
-  });
-});
-
 </script>
 </body>
 </html>
