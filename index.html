@@ -19,6 +19,10 @@ h1{margin:0;font-size:42px}
 .filters button{border:1px solid var(--line);background:rgba(255,255,255,.9);padding:9px 14px;border-radius:999px;cursor:pointer;transition:transform .18s,background .18s,box-shadow .18s}
 .filters button:hover,.areaFilters button:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(91,58,39,.1)}
 .filters button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pickFilterRow{display:flex;align-items:center;margin:-8px 0 18px}
+.pickFilter{border:1px solid #e8b9bf;background:rgba(255,255,255,.92);color:#9d3545;padding:9px 14px;border-radius:999px;cursor:pointer;font-weight:700;letter-spacing:.35px;transition:transform .18s,background .18s,box-shadow .18s}
+.pickFilter:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(157,53,69,.12)}
+.pickFilter.active{background:#a93648;color:#fff;border-color:#a93648}
 .areaTitle{font-size:12px;font-weight:700;color:var(--muted);margin-top:4px}
 .regionFilters{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
 .regionFilters button{border:1px solid #dfd3ca;background:rgba(255,255,255,.92);color:#58483e;padding:9px 13px;border-radius:999px;cursor:pointer;transition:transform .18s,background .18s,box-shadow .18s}
@@ -50,6 +54,7 @@ h1{margin:0;font-size:42px}
 .photoWrap img{width:100%;height:100%;display:block;object-fit:cover}
 .photoWrap img.photoFallback{object-fit:contain;padding:28px;background:linear-gradient(135deg,#fff4eb,#f8dfcf)}
 .rank{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.68);color:#fff;padding:5px 8px;border-radius:999px;font-size:11px}
+.pickBadge{position:absolute;top:10px;right:10px;z-index:1;display:inline-flex;align-items:center;gap:4px;padding:5px 8px;border:1px solid rgba(255,255,255,.7);border-radius:999px;background:rgba(157,53,69,.92);color:#fff;font-size:10px;font-weight:800;letter-spacing:.45px;box-shadow:0 4px 12px rgba(74,20,30,.2);backdrop-filter:blur(5px)}
 .body{padding:15px;display:flex;flex-direction:column;flex:1;min-width:0}
 .row{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
 h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
@@ -62,7 +67,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 .actions{display:flex;gap:8px;margin-top:auto;padding-top:12px}
 .actions a,.fav{text-decoration:none;color:#222;background:#fff;border:1px solid var(--line);padding:8px 10px;border-radius:10px;font-size:13px;cursor:pointer}
 .fav.on{background:#fff0f3}
-.filters button:focus-visible,.regionFilters button:focus-visible,.areaFilters button:focus-visible,.random:focus-visible,.fav:focus-visible,.actions a:focus-visible,.introSkip:focus-visible,.wheelActions button:focus-visible,.wheelActions a:focus-visible{outline:3px solid rgba(255,107,53,.35);outline-offset:2px}
+.filters button:focus-visible,.pickFilter:focus-visible,.regionFilters button:focus-visible,.areaFilters button:focus-visible,.random:focus-visible,.fav:focus-visible,.actions a:focus-visible,.introSkip:focus-visible,.wheelActions button:focus-visible,.wheelActions a:focus-visible{outline:3px solid rgba(255,107,53,.35);outline-offset:2px}
 .empty{display:none;text-align:center;padding:40px;color:var(--muted)}
 @keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
@@ -102,7 +107,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.foodMap{grid-template-columns:1fr}}
-@media(max-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.photoWrap{height:108px}.body{padding:9px}.row{display:block}h2{font-size:14px}.tag{display:inline-block;margin-top:5px;max-width:100%;font-size:9px;padding:4px 5px}.desc{font-size:11px;line-height:1.4;margin:7px 0}.details{font-size:10px;line-height:1.4;padding-top:6px}.actions{display:block;padding-top:8px}.actions a,.fav{display:block;width:100%;padding:6px 4px;text-align:center;font-size:10px;margin-top:4px}h1{font-size:34px}}
+@media(max-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.photoWrap{height:108px}.body{padding:9px}.row{display:block}h2{font-size:14px}.tag{display:inline-block;margin-top:5px;max-width:100%;font-size:9px;padding:4px 5px}.desc{font-size:11px;line-height:1.4;margin:7px 0}.details{font-size:10px;line-height:1.4;padding-top:6px}.actions{display:block;padding-top:8px}.actions a,.fav{display:block;width:100%;padding:6px 4px;text-align:center;font-size:10px;margin-top:4px}.pickBadge{top:6px;right:6px;max-width:calc(100% - 42px);padding:4px 6px;font-size:8px;letter-spacing:.15px}h1{font-size:34px}}
 </style>
 </head>
 <body>
@@ -113,7 +118,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
     <div class="introKicker">SAN FRANCISCO · FOOD GUIDE</div>
     <h2><span>旧金山</span><span>吃货地图</span></h2>
     <div class="introLine"></div>
-    <p>130 家值得吃的餐厅</p>
+    <p>200 家值得吃的湾区餐厅</p>
     <div class="introMeta"><span>GOLDEN GATE</span><span>EST. 2026</span></div>
   </div>
   <div class="introProgress" aria-hidden="true"><i></i></div>
@@ -129,6 +134,9 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 <div class="filters">
   <button class="active" type="button" data-filter="全部">全部</button>
   <button type="button" data-filter="中餐">中餐</button><button type="button" data-filter="点心">点心</button><button type="button" data-filter="火锅">火锅</button><button type="button" data-filter="烧烤">烧烤</button><button type="button" data-filter="越南菜">越南菜</button><button type="button" data-filter="日料">日料</button><button type="button" data-filter="韩餐">韩餐</button><button type="button" data-filter="泰国菜">泰国菜</button><button type="button" data-filter="甜品">甜品</button>
+</div>
+<div class="pickFilterRow">
+  <button class="pickFilter" id="pickFilter" type="button" aria-pressed="false">❤️ CHIFAN PICK</button>
 </div>
 
 <div class="areaTitle">按湾区城市区域</div>
@@ -151,7 +159,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 </div>
 
 <div class="toolbar">
-  <span id="count">共 130 家</span>
+  <span id="count">共 200 家</span>
 </div>
 
 <section class="foodMap" aria-labelledby="foodMapTitle">
@@ -2019,28 +2027,114 @@ const bayAreaRestaurants=[
   {name:'SomiSomi Cupertino',city:'Cupertino',category:'甜品',tag:'Soft Serve · Taiyaki',address:'19540 Vallco Pkwy #150, Cupertino, CA 95014',image:'https://tb-static.uber.com/prod/image-proc/processed_images/d2ed82281dcb81b6f49274420ca7891e/5283d81c664b43c5f57a3a186d273063.jpeg',desc:'以韩式鲷鱼烧和牛奶软冰淇淋组合闻名，可选红豆、卡仕达或芝士内馅与多种撒料。'},
   {name:'YGF Malatang Milpitas',city:'Milpitas',category:'火锅',tag:'Malatang · Build Your Own',address:'540 Barber Ln, Milpitas, CA 95035',image:'https://imgcache.dealmoon.com/fsvrugccache.dealmoon.com/ugc/1dd/458/d6e/f067e024a15d41070b774a3.jpg_1280_1280_3_383a.jpg',desc:'Milpitas 自选麻辣烫店，从冷柜挑选肉类、豆制品、蔬菜和面食，再按重量与汤底烹煮。'}
 ];
+const eastBayRestaurants=[
+  {name:'Great China',city:'Berkeley',category:'中餐',tag:'Northern Chinese · Peking Duck',address:'2190 Bancroft Way, Berkeley, CA 94704',image:'https://gr-images.viamichelin.com/images/michelin_guide/max/445329_003.jpg',desc:'Berkeley 代表性的北方中餐馆，招牌北京鸭、什锦拉皮和海鲜菜之外，还有一份出色的勃艮第酒单。',chifanPick:true},
+  {name:'Ippuku',city:'Berkeley',category:'日料',tag:'Izakaya · Yakitori',address:'2130 Center St, Berkeley, CA 94704',image:'https://img02.restaurantguru.com/c6e0-Ippuku-Berkeley-meals.jpg',desc:'藏在 Downtown Berkeley 木门后的居酒屋，以炭火鸡串、鸡肉生肉料理、烧酎和昏暗亲密的空间著称。',chifanPick:true},
+  {name:'Shan Dong',city:'Oakland',category:'中餐',tag:'Shandong · Handmade Noodles',address:'328 10th St #101, Oakland, CA 94607',image:'https://s.hdnux.com/photos/01/35/53/67/24559043/3/rawImage.jpg',desc:'Oakland Chinatown 长青店，开放式厨房每天制作大量水饺，手切麻酱面与椒盐鱼同样值得专程前往。',chifanPick:true},
+  {name:"Ming's Tasty Restaurant",city:'Oakland',category:'点心',tag:'Cantonese · Dim Sum',address:'940 Webster St, Oakland, CA 94607',image:'https://s.hdnux.com/photos/01/43/41/44/26089780/3/rawImage.jpg',desc:'小而忙碌的 Chinatown 点心店，点心即点即蒸，虾肠、烧卖、炸虾球与煲仔饭兼具水准和性价比。'},
+  {name:'Champa Garden',city:'Oakland',category:'泰国菜',tag:'Lao · Thai · Vietnamese',address:'2102 8th Ave, Oakland, CA 94606',image:'https://assets.simpleviewinc.com/simpleview/image/fetch/c_limit%2Cq_80%2Cw_1200/https%3A/s3-media1.fl.yelpcdn.com/bphoto/sAclWPVcRqkoQTXUlnjZXw/o.jpg',desc:'住宅区里的老牌老挝餐厅，脆米沙拉、老挝香肠和酸辣蘸酱组成很有辨识度的 Champa Sampler。',chifanPick:true},
+  {name:'Imm Thai Street Food',city:'Berkeley',category:'泰国菜',tag:'Thai Street Food',address:'2068 University Ave, Berkeley, CA 94704',image:'https://cdn.res-menu.net/imm-thai-street-food/albums-3.jpg',desc:'靠近校园的热闹泰国街头菜小馆，船面、打抛饭、醉面和脆皮猪芥兰出餐快速且调味直接。'},
+  {name:'U :Dessert Story Berkeley',city:'Berkeley',category:'甜品',tag:'Asian Dessert · Bingsu',address:'1849 Shattuck Ave, Berkeley, CA 94709',image:'https://s3-media0.fl.yelpcdn.com/bphoto/kdWHhHrfrHPSg_D7d04XEw/l.jpg',desc:'主打亚洲融合甜品的夜间甜点店，芒果雪花冰、千层蛋糕和蜜糖吐司以精致摆盘见长。'},
+  {name:'Kiraku',city:'Berkeley',category:'日料',tag:'Izakaya · Japanese Tapas',address:'2566B Telegraph Ave, Berkeley, CA 94704',image:'https://kirakuberkeley.com/wp-content/uploads/elementor/thumbs/mystery1-oo5198l6wvu170ds1dtg3xq7ullmplufvudrzsys74.jpg',desc:'热闹而精致的 Berkeley 居酒屋，玉米天妇罗、整条烤鱿鱼、猪颈肉串和迷你海鲜丼都适合配清酒分享。',chifanPick:true},
+  {name:'Kirala',city:'Berkeley',category:'日料',tag:'Sushi · Robata',address:'2100 Ward St, Berkeley, CA 94705',image:'https://assets-hubbiz.s3.amazonaws.com/menus/b_menu-item-kirala-japanese-restaurants-in-berkeley-ca-189257.jpg',desc:'经营自 1989 年的日式餐厅，除了传统寿司与刺身，炭火炉端烤黑鳕鱼、牛肉和时蔬也很受欢迎。'},
+  {name:'Funky Elephant',city:'Berkeley',category:'泰国菜',tag:'Thai · Michelin Guide',address:'1313 9th St #120, Berkeley, CA 94710',image:'https://cdn.vox-cdn.com/uploads/chorus_image/image/70112923/Funky_Elephant.0.jpeg',desc:'菜单精简但个性鲜明的泰国小馆，以自制咖喱酱、脆米酸肉沙拉、蓝花饭和层次细致的香料调味见长。',chifanPick:true},
+  {name:'United Dumplings Rockridge',city:'Oakland',category:'点心',tag:'Dumplings · Northern Chinese',address:'6247 College Ave, Oakland, CA 94618',image:'https://s.hdnux.com/photos/01/31/63/10/23540263/3/rawImage.jpg',desc:'把北方家常水饺与加州口味结合的 Rockridge 餐厅，既有猪肉白菜、小笼包，也有牛肉面和创新馅料。'},
+  {name:'Pyeong Chang Tofu House Oakland',city:'Oakland',category:'韩餐',tag:'Korean · Soondubu',address:'4701 Telegraph Ave, Oakland, CA 94609',image:'https://assets.simpleviewinc.com/simpleview/image/fetch/c_limit%2Cq_75%2Cw_1200/https%3A/s3-media0.fl.yelpcdn.com/bphoto/LSUTa4RPC4chIpxTauhl6Q/o.jpg',desc:'Temescal 的韩式嫩豆腐锅老店，汤底滚烫浓郁，海鲜、泡菜和蘑菇锅可搭配石锅饭、烤肉与小菜。'},
+  {name:'Ohgane Oakland',city:'Oakland',category:'烧烤',tag:'Korean BBQ · AYCE',address:'3915 Broadway, Oakland, CA 94611',image:'https://s.hdnux.com/photos/06/70/67/1805763/10/1200x0.jpg',desc:'2005 年开业的 Oakland 韩式烧肉店，以桌边烤牛小排、辣猪肉和数量丰富的小菜营造热闹的多人用餐体验。',chifanPick:true},
+  {name:'Moo Bong Ri Oakland',city:'Oakland',category:'韩餐',tag:'Korean · Soondae Soup',address:'4390 Telegraph Ave #K, Oakland, CA 94609',image:'https://ftcsfo3digitaloceanspaces.b-cdn.net/original/3X/1/f/1fc9675653f82914678a44c70f7086f6e866af0e.jpeg',desc:'专攻韩式米肠与内脏汤的深夜餐厅，乳白骨汤可用虾酱、紫苏粉和辣酱自行调味，配泡菜尤其暖胃。'},
+  {name:'Vien Huong Restaurant',city:'Oakland',category:'越南菜',tag:'Teochew · Vietnamese Noodles',address:'712 Franklin St, Oakland, CA 94607',image:'https://s.hdnux.com/photos/01/25/50/67/22452619/3/rawImage.jpg',desc:'Oakland Chinatown 数十年历史的潮州越南面店，鱼饼、叉烧与内脏可配蛋面或米粉，清汤鲜甜利落。',chifanPick:true},
+  {name:'Tay Ho Oakland',city:'Oakland',category:'越南菜',tag:'Vietnamese · Regional Specialties',address:'344 12th St, Oakland, CA 94607',image:'https://assets.simpleviewinc.com/simpleview/image/upload/c_fill,h_600,q_75,w_900/v1/clients/oakland/Tay_Ho_Oakland_4c5cd95f-940c-49b5-a948-d94f40f27481.jpg',desc:'由越南家庭经营的 downtown 小馆，菜单从 bánh cuốn 蒸粉卷到顺化面和香茅烤肉，展现不同地区的家常味。'},
+  {name:'Peony Seafood Restaurant',city:'Oakland',category:'点心',tag:'Cantonese · Dim Sum · Seafood',address:'388 9th St #288, Oakland, CA 94607',image:'https://s.hdnux.com/photos/01/20/61/35/21170409/3/rawImage.jpg',desc:'Pacific Renaissance Plaza 内的大型粤菜酒楼，午市点心、烧味和活海鲜齐全，适合多人家庭聚餐。'},
+  {name:'Spices 3',city:'Oakland',category:'中餐',tag:'Sichuan · Hunan',address:'369 12th St, Oakland, CA 94607',image:'https://s.hdnux.com/photos/01/33/43/51/23994510/3/rawImage.jpg',desc:'以川湘重口味见长的 Chinatown 餐厅，麻辣水煮鱼、孜然羊肉与干锅菜香气强烈，辣度也不含糊。'},
+  {name:'Shooting Star Cafe',city:'Oakland',category:'中餐',tag:'Hong Kong Cafe · Late Night',address:'1022 Webster St, Oakland, CA 94607',image:'https://s.hdnux.com/photos/01/23/66/65/21965608/3/rawImage.jpg',desc:'营业到深夜的港式茶餐厅，从焗猪扒饭、菠萝包到鸳鸯与甜品覆盖很广，是 Chinatown 宵夜据点。'},
+  {name:'Huangcheng Noodle House',city:'Oakland',category:'中餐',tag:'Hand-Pulled Noodles · Chinese',address:'911 Washington St, Oakland, CA 94607',image:'https://cdn.vox-cdn.com/uploads/chorus_image/image/69480688/Huangcheng_Noodle_House.0.jpg',desc:'主打现拉宽面和陕西风味的面馆，油泼面、番茄牛腩面与肉夹馍突出麦香和扎实口感。'},
+  {name:'Daughter Thai Kitchen',city:'Oakland',category:'泰国菜',tag:'Thai · Isan · Cocktails',address:'6118 Medau Pl, Oakland, CA 94611',image:'https://cdn.vox-cdn.com/uploads/chorus_image/image/62539712/Daughter_Thai.0.0.jpg',desc:'Montclair Village 的现代泰国餐厅，把北部香肠、蟹肉炒饭和慢炖牛肋咖喱做成适合分享的精致菜式。'},
+  {name:'Soba Ichi',city:'Oakland',category:'日料',tag:'Soba · Japanese',address:'2311A Magnolia St, Oakland, CA 94607',image:'https://cdn.vox-cdn.com/uploads/chorus_image/image/63630010/Soba_Ichi.0.jpg',desc:'在安静庭院旁自制荞麦面，冷笼板荞麦面最能体现香气与弹性，也供应天妇罗、玉子烧和清酒。',chifanPick:true},
+  {name:'Viridian',city:'Oakland',category:'甜品',tag:'Asian American · Cocktails · Dessert',address:'2216 Broadway, Oakland, CA 94612',image:'https://cdn.vox-cdn.com/uploads/chorus_image/image/68863525/Viridian_Interior.0.jpg',desc:'以亚洲风味鸡尾酒与甜点著称的 Uptown 酒吧餐厅，番茄牛肉、麻糬华夫饼和色彩鲜明的饮品同样有创意。',chifanPick:true},
+  {name:'Noodle Dynasty',city:'Berkeley',category:'中餐',tag:'Hand-Pulled Noodles · Chinese',address:'2426 Telegraph Ave, Berkeley, CA 94704',image:'https://s.hdnux.com/photos/01/44/07/21/26194868/3/rawImage.jpg',desc:'Telegraph Avenue 的手工面馆，开放厨房现拉不同粗细的面条，搭配兰州牛肉汤、油泼辣子或炸酱。'},
+  {name:'84 Viet',city:'Berkeley',category:'越南菜',tag:'Vietnamese · Modern',address:'2017 University Ave, Berkeley, CA 94704',image:'https://s3-media0.fl.yelpcdn.com/bphoto/7e4Y4fGMBzMWMoT-OaUFjQ/o.jpg',desc:'以越南国家区号命名的 Berkeley 餐厅，用细致摆盘呈现河粉、烤肉米线和越式小吃，同时保留香草与鱼露的鲜明味道。'},
+  {name:'Kuboba Spot',city:'Berkeley',category:'甜品',tag:'Filipino Dessert · Boba',address:'2618 Telegraph Ave, Berkeley, CA 94704',image:'https://s3-media0.fl.yelpcdn.com/bphoto/fRjTIwrLA44aGR_1ysDWgA/o.jpg',desc:'菲律宾风味甜品饮料店，把紫薯、椰子和西米融入奶茶、halo-halo 与软冰淇淋，色彩鲜明但不只靠外表。'}
+];
+const peninsulaRestaurants=[
+  {name:'Sushi Yoshizumi',city:'San Mateo',category:'日料',tag:'Edomae Sushi · Omakase',address:'325 E 4th Ave, San Mateo, CA 94401',image:'https://img02.restaurantguru.com/c0f6-Restaurant-Sushi-Yoshizumi-dishes.jpg',desc:'只有少量吧台座位的江户前寿司店，主厨以熟成、醋饭和克制调味呈现当季鱼货，套餐节奏严谨。',chifanPick:true},
+  {name:'Taishoken San Mateo',city:'San Mateo',category:'日料',tag:'Tsukemen · Ramen',address:'47 E 4th Ave, San Mateo, CA 94401',image:'https://s.hdnux.com/photos/77/44/30/16664090/4/2200x0.jpg',desc:'把东京大胜轩系蘸面带到湾区，粗面条分碗上桌，蘸入浓厚猪鸡与鱼介汤底后仍保有清晰麦香。',chifanPick:true},
+  {name:'Ramen Dojo',city:'San Mateo',category:'日料',tag:'Ramen · Spicy Garlic',address:'805 S B St, San Mateo, CA 94401',image:'https://ramendojosanmateo.com/assets/gallery-photo-4.jpg',desc:'座位不多的拉面老店，以辛香蒜味豚骨汤、鹌鹑蛋和厚切叉烧形成辨识度很高的一碗。'},
+  {name:'Gao Viet Kitchen San Mateo',city:'San Mateo',category:'越南菜',tag:'Vietnamese · Pho · Seafood',address:'313 S San Mateo Dr, San Mateo, CA 94401',image:'https://img.restaurantguru.com/ca2c-Gao-Viet-Kitchen-food-1.jpg',desc:'菜单把巨型牛骨河粉、海鲜和越式街头小吃做得大胆丰盛，传统汤底与戏剧化摆盘兼具。',chifanPick:true},
+  {name:'Daeho Kalbijjim San Mateo',city:'San Mateo',category:'韩餐',tag:'Korean · Braised Short Rib',address:'213 2nd Ave, San Mateo, CA 94401',image:'https://s.hdnux.com/photos/01/21/41/45/21371223/10/rawImage.jpg',desc:'招牌辣炖牛肋骨以滚烫石锅上桌，可加年糕和芝士并现场炙烤，浓郁份量适合多人分享。'},
+  {name:'Sushi Maruyama',city:'San Mateo',category:'日料',tag:'Sushi · Omakase',address:'279 Baldwin Ave, San Mateo, CA 94401',image:'https://img3.restaurantguru.com/c82a-Restaurant-Sushi-Maruyama-sushi-6.jpg',desc:'低调的街角寿司店，握寿司注重当季鱼料与温热醋饭，也提供让主厨安排节奏的 omakase。'},
+  {name:'Yakitori Kokko',city:'San Mateo',category:'烧烤',tag:'Yakitori · Japanese',address:'509 2nd Ave, San Mateo, CA 94401',image:'https://tblg.k-img.com/restaurant/images/Rvw/186213/640x640_rect_8c751ccc37b1fd170b06ef385ad3579e.jpg',desc:'专门经营日式鸡肉串烧的小馆，从鸡腿、鸡皮到心肝等部位分别掌握火候，炭香适合配啤酒或清酒。'},
+  {name:"Beard Papa's San Mateo",city:'San Mateo',category:'甜品',tag:'Japanese Cream Puffs',address:'365 2nd Ave, San Mateo, CA 94401',image:'https://images.squarespace-cdn.com/content/v1/600a96cbf8894d79eb1e1b1f/1663696168875-6J5Z1551DONCQG107IF4/IMG_0215-2.jpg?format=1000w',desc:'现烤酥皮泡芙在点单后注入香草、巧克力或抹茶卡仕达，外壳轻脆、内馅冰凉，是方便外带的日式甜点。'},
+  {name:'Koi Palace Daly City',city:'Daly City',category:'点心',tag:'Cantonese · Dim Sum · Seafood',address:'365 Gellert Blvd, Daly City, CA 94015',image:'https://tb-static.uber.com/prod/image-proc/processed_images/8e64480dce2291613a879f9fb6fe1409/fb86662148be855d931b37d6c1e5fcbe.jpeg',desc:'湾区粤式酒楼代表之一，午市以精细蒸点、烧味和海鲜点心为主，晚餐则适合点活海鲜与宴席菜。',chifanPick:true},
+  {name:'Chibog',city:'Daly City',category:'烧烤',tag:'Filipino · Comfort Food',address:'2055 Gellert Blvd #5, Daly City, CA 94015',image:'https://img.restaurantguru.com/c2b4-Restaurant-Chibog-dishes.jpg',desc:'菲律宾家庭菜餐厅，脆皮 lechon kawali、sisig、猪肉 adobo 和蒜香饭份量豪爽，味道直接而亲切。'},
+  {name:'Porridge & Things',city:'Millbrae',category:'中餐',tag:'Teochew · Porridge',address:'235 Broadway, Millbrae, CA 94030',image:'https://s.hdnux.com/photos/01/50/20/26/27308688/3/rawImage.jpg',desc:'少见的潮州白粥主题餐厅，用清淡米粥搭配卤水、蚝烙、腌菜与海鲜小炒，讲究一桌菜之间的浓淡。',chifanPick:true},
+  {name:'The Rice Monster',city:'Millbrae',category:'中餐',tag:'Cantonese · Clay Pot Rice',address:'347 Broadway, Millbrae, CA 94030',image:'https://img.restaurantguru.com/cbe4-Restaurant-The-Rice-Monster-food.jpg',desc:'专攻港式煲仔饭，腊味、排骨或鸡肉在砂锅中焖熟，酱油沿锅边淋下后形成焦香锅巴。'}
+];
+const fremontNewarkRestaurants=[
+  {name:'Home Eat Fremont',city:'Fremont',category:'中餐',tag:'Chinese · Late Night',address:'46573 Mission Blvd, Fremont, CA 94539',image:'https://dci-merchant-assets.s3.amazonaws.com/dci-prod-merchant-images/HomeEat-1677.jpeg',desc:'营业至深夜的现代中餐厅，菜单横跨川味小炒、烤鱼、干锅和奶茶，适合人数多、口味不同的一桌。'},
+  {name:'Joyful DimSum Bistro',city:'Fremont',category:'点心',tag:'Cantonese · Dim Sum',address:'43486 Ellsworth St, Fremont, CA 94539',image:'https://tb-static.uber.com/prod/image-proc/processed_images/82e5b75ea02fbbf13481006093383159/1651207c9cb2a7942b37b3f3e4a0b899.jpeg',desc:'Mission San Jose 一带的点心小馆，虾饺、烧卖、叉烧包和肠粉现点现蒸，比大型酒楼更轻松。'},
+  {name:'Miga Korean Restaurant',city:'Fremont',category:'韩餐',tag:'Korean · Home Style',address:'39033 State St, Fremont, CA 94538',image:'https://img.restaurantguru.com/cfce-Miga-Korean-Restaurant-Fremont-dishes-4.jpg',desc:'温暖朴实的韩国家常菜馆，石锅拌饭、海鲜煎饼、嫩豆腐锅和烤肉都有稳定表现。',chifanPick:true},
+  {name:'Soo Ja Fusion Bistro',city:'Fremont',category:'韩餐',tag:'Korean Fusion · Late Night',address:'6038 Stevenson Blvd, Fremont, CA 94538',image:'https://static.wixstatic.com/media/17e0dc_6f878b0fe04a44dab74ea3a1a7a96543~mv2.jpg/v1/fill/w_980,h_654,al_c,q_85/17e0dc_6f878b0fe04a44dab74ea3a1a7a96543~mv2.jpg',desc:'晚间营业很迟的韩式融合餐厅，炸鸡、部队锅、炒年糕与下酒菜适合朋友聚会。'},
+  {name:'Burma Bay Cafe',city:'Fremont',category:'泰国菜',tag:'Burmese · Southeast Asian',address:'47966 Warm Springs Blvd, Fremont, CA 94539',image:'https://images.squarespace-cdn.com/content/v1/5fc6786f116eb00e3c724f3d/6e25a4a1-ca46-42d0-9eab-aa0d07709558/best-pad-thai-in-fremont-ca.jpg',desc:'Warm Springs 的缅甸餐厅，茶叶沙拉、椰香面、咖喱和蒜香面在酸、辣、坚果香之间层次丰富。'},
+  {name:'SOHO Modern Japanese',city:'Fremont',category:'日料',tag:'Modern Japanese · Sushi',address:'40520 Albrae St, Fremont, CA 94538',image:'https://www.fremontrestaurantweek.com/uploads/1/4/4/0/144038542/20240214-cof-soho-modern-japanese-0100_orig.jpg',desc:'环境简洁的现代日料餐厅，以精致握寿司、季节小菜和创意早午餐展现传统技法之外的轻盈风格。',chifanPick:true},
+  {name:'Umi Tea & Ramen',city:'Fremont',category:'日料',tag:'Ramen · Tea · Dessert',address:'43691 Mission Blvd, Fremont, CA 94539',image:'https://tb-static.uber.com/prod/image-proc/processed_images/bb1523f0b5af214e3ffe592485e7dade/8a42ee7a692dfa4155879820804a277f.jpeg',desc:'把拉面、乌冬与现调茶饮放在一起的休闲小店，豚骨、味噌汤面之外还有炸物和抹茶甜点。'},
+  {name:'Din Ding Dumpling House Fremont',city:'Fremont',category:'点心',tag:'Shanghai · Xiao Long Bao',address:'3768 Capitol Ave Unit J, Fremont, CA 94538',image:'https://s3-media0.fl.yelpcdn.com/bphoto/Y2PQomU6OEsmlHvnzCVD1g/o.jpg',desc:'开放厨房每天手工包制小笼包和水饺，蟹粉小笼、锅贴与红烧牛肉面体现扎实面点功夫。',chifanPick:true},
+  {name:'Gangnam Tofu House',city:'Fremont',category:'韩餐',tag:'Korean · Soondubu',address:'3619 Thornton Ave, Fremont, CA 94536',image:'https://gangnam-tofu-house.cafes-guide.com/cdn/img/gangnam-tofu-house/photo1.jpg',desc:'Thornton Avenue 的社区韩餐馆，滚烫嫩豆腐锅可选多种配料与辣度，搭配烤牛小排和小菜。'},
+  {name:'Satomi Sushi',city:'Fremont',category:'日料',tag:'Sushi · Japanese',address:'3655 Thornton Ave, Fremont, CA 94536',image:'https://www.satomisushi.com/wp-content/uploads/2017/09/home_fancy_rolls.jpg',desc:'经营多年的社区寿司店，握寿司、刺身和创意卷选择全面，午市便当也很适合日常用餐。'},
+  {name:'Amazing Basil',city:'Fremont',category:'越南菜',tag:'Vietnamese · Southeast Asian',address:'46831 Warm Springs Blvd, Fremont, CA 94539',image:'https://static.wixstatic.com/media/45c0fd_83d0dc5b78d64ab39c82d28203447bdc~mv2.jpg/v1/fill/w_980,h_653,al_c,q_85/45c0fd_83d0dc5b78d64ab39c82d28203447bdc~mv2.jpg',desc:'越南、新加坡、马来西亚和泰国风味交汇的小馆，烧肉饭、叻沙、炒粿条和特色饮品各有重点。'},
+  {name:'Haidilao Hot Pot Fremont',city:'Fremont',category:'火锅',tag:'Sichuan Hot Pot',address:'43349 Boscell Rd, Fremont, CA 94538',image:'https://img.restaurantguru.com/rfbd-Haidilao-Hot-Pot-Fremont-City-dishes-2022-09.jpg',desc:'Pacific Commons 附近的四川火锅店，四宫格锅底、丰富自助蘸料与细致桌边服务适合长时间聚餐。'},
+  {name:'Pearl Bay',city:'Fremont',category:'点心',tag:'Cantonese · Dim Sum · Seafood',address:'43635 Boscell Rd, Fremont, CA 94538',image:'https://img02.restaurantguru.com/c808-Pearl-Bay-Restaurant-meat.jpg',desc:'宽敞明亮的粤菜与点心酒楼，虾饺、酥皮叉烧包、烧鸭和煲仔饭适合家庭午茶或多人晚餐。',chifanPick:true},
+  {name:'Fairwood Cafe Newark',city:'Newark',category:'中餐',tag:'Hong Kong Cafe',address:'35204 Newark Blvd, Newark, CA 94560',image:'https://cdn.menu-res.com/975-albums-3.jpg',desc:'典型港式茶餐厅，从早餐火腿通粉到焗饭、咖喱和鸳鸯一应俱全，全天都能找到合适的一餐。'},
+  {name:'Full House Dumpling',city:'Fremont',category:'点心',tag:'Chinese · Taiwanese · Dumplings',address:'6092 Stevenson Blvd, Fremont, CA 94538',image:'https://img3.restaurantguru.com/c808-food-Full-House-Dumpling-2.jpg',desc:'以现蒸小笼包、蟹粉汤包和丝瓜虾仁包见长，也有醉鸡、金沙豆腐与北方家常菜。'},
+  {name:'Wadaya Mazemen & Ramen',city:'Fremont',category:'日料',tag:'Mazemen · Ramen · Izakaya',address:'34460 Fremont Blvd #F, Fremont, CA 94555',image:'https://s.hdnux.com/photos/01/54/31/11/28414568/5/rawImage.jpg',desc:'湾区首家 Wadaya，以加入麻糬粉的弹韧面条制作拌面，搭配温泉蛋、肉末、叉烧和居酒屋小菜。',chifanPick:true},
+  {name:"Hanson's Pastry",city:'Newark',category:'甜品',tag:'Chinese Bakery · Pastry',address:'6180 Jarvis Ave #C, Newark, CA 94560',image:'https://s3-media0.fl.yelpcdn.com/bphoto/J88gwPgBhWxZGOU7HjkRQg/o.jpg',desc:'社区中式面包店，蛋挞、菠萝包、奶油蛋糕和咸味面包每天出炉，是低调的早餐与点心去处。'},
+  {name:'ZhangFei Hot Pot',city:'Fremont',category:'火锅',tag:'Sichuan Hot Pot · AYCE',address:'43844 Pacific Commons Blvd, Fremont, CA 94538',image:'https://cdn.res-menu.net/zhangfei-hot-pot/albums-1.jpg',desc:'以川式麻辣和青花椒锅底为特色的自助火锅，肉类、海鲜和蔬菜选择充足，适合多人围炉。'},
+  {name:'Halal Street',city:'Newark',category:'火锅',tag:'Halal Chinese · Hot Pot',address:'5605 Mowry School Rd, Newark, CA 94560',image:'https://imgcache.dealmoon.com/fsvrugccache.dealmoon.com/ugc/4b5/f3d/14b/e2c7fe5d6b84f107ad9c886.jpg_1280_1280_3_22e1.jpg',desc:'提供清真中餐与火锅，羊肉串、孜然菜和锅物突出西北香料，适合需要 halal 选择的聚餐。'},
+  {name:'Cafe Mei',city:'Fremont',category:'中餐',tag:'Taiwanese Breakfast · Cafe',address:'43761 Boscell Rd #5125, Fremont, CA 94538',image:'https://www.fremontrestaurantweek.com/uploads/1/4/4/0/144038542/cafe-mei-image_orig.jpg',desc:'白天营业的台式早餐店，黑胡椒面、蛋饼、萝卜糕和三明治组合带有熟悉的家庭早餐气息。'},
+  {name:'Hu Din Ji Shanghai Bistro',city:'Newark',category:'点心',tag:'Shanghai · Soup Dumplings',address:'39169 Cedar Blvd, Newark, CA 94560',image:'https://imgprod.beyondmenu.com/63564/Menu/349382/624.jpg',desc:'上海风味小馆，生煎、小笼包、葱油拌面和本帮热菜兼备，面点适合多人各点几样分享。'},
+  {name:'Legend Hot Pot & Grill',city:'Newark',category:'火锅',tag:'Hot Pot · Grill · AYCE',address:'35233 Newark Blvd #A, Newark, CA 94560',image:'https://img02.restaurantguru.com/c8f2-Legend-Hot-Pot-and-Grill-Newark-hot-pot.jpg',desc:'把自助火锅与烤盘放在同一餐桌，肉类、海鲜、蔬菜和丸滑选择多，适合热闹团体。'},
+  {name:'Cloudland Rice Noodle',city:'Newark',category:'中餐',tag:'Yunnan · Rice Noodles',address:'39185 Cedar Blvd, Newark, CA 94560',image:'https://apis3.fantuan.ca/photo/restaurant_photo_1608895294.7891817.jpg',desc:'主攻云南米线，滚烫汤底搭配薄肉片、豆制品和蔬菜，米线滑韧，酸辣口味尤其开胃。'},
+  {name:'Little Sichuan Newark',city:'Newark',category:'中餐',tag:'Sichuan · Tea-Smoked Duck',address:'39193 Cedar Blvd, Newark, CA 94560',image:'https://cdn.res-menu.net/little-sichuan-restaurant/albums-2.jpg',desc:'经典川菜馆，茶熏鸭、麻婆豆腐和重庆辣子鸡兼顾烟香、麻辣与锅气，是适合合菜的一站。'},
+  {name:'New HuiJi',city:'Newark',category:'中餐',tag:'Chinese · Comfort Food',address:'39135 Cedar Blvd, Newark, CA 94560',image:'https://img02.restaurantguru.com/c120-Restaurant-New-HuiJi-interior.jpg',desc:'新式中餐小馆以家常炒菜、米饭与面食为主，明亮空间和直接口味适合日常快速聚餐。'},
+  {name:'LongMen Bay Hot Pot',city:'Newark',category:'火锅',tag:'Sichuan Hot Pot',address:'39055 Cedar Blvd #189, Newark, CA 94560',image:'https://img.restaurantguru.com/c558-Kung-Fu-Hot-Pot-Newark-meals.jpg',desc:'龙门湾以川式红汤和双拼锅为核心，手切肉、内脏、菌菇与蔬菜可按自己的节奏涮煮。'},
+  {name:'Kong Sarang Tofu & BBQ',city:'Newark',category:'韩餐',tag:'Korean · Tofu · BBQ',address:'6180 Jarvis Ave #A, Newark, CA 94560',image:'https://img.cdn4dd.com/cdn-cgi/image/fit%3Dcover%2Cwidth%3D600%2Cheight%3D400%2Cformat%3Dauto%2Cquality%3D80/https%3A/doordash-static.s3.amazonaws.com/media/store/header/856e78ed-bb3c-4bdd-89cd-66458e2d6a3b.jpg',desc:'店名把“豆”与“爱”结合，嫩豆腐锅是核心，也供应韩式炸鸡、烤肉和石锅饭。'},
+  {name:'King Katsu Land Newark',city:'Newark',category:'日料',tag:'Korean Style Katsu',address:'5890 Mowry School Rd, Newark, CA 94560',image:'https://storage.ghost.io/c/5f/1c/5f1c4077-9e9d-4769-8f28-06863640ad73/content/images/size/w1200/2025/09/IMG_5594.jpeg',desc:'韩式巨型炸猪排外壳金黄酥脆，配浓厚酱汁、卷心菜、通心粉沙拉和米饭，份量很适合分享。'},
+  {name:'Milk & Honey Cafe',city:'Fremont',category:'甜品',tag:'Taiwanese Cafe · Dessert · Boba',address:'34265 Fremont Blvd, Fremont, CA 94555',image:'https://cdn.businessyab.com/assets/uploads/5596630e8301945e35d346843228c6a7_-united-states-california-alameda-county-fremont-northgate/fremont_boulevard/34265/milk_and_honey_cafe.jpg',desc:'布置温暖的台式甜品咖啡馆，雪花冰、豆花和奶茶之外也供应臭豆腐、刈包等咸食，适合慢慢坐下聊天。'},
+  {name:'Venus Cafe Newark',city:'Newark',category:'中餐',tag:'Hong Kong Cafe',address:'6267 Jarvis Ave, Newark, CA 94560',image:'https://static.wixstatic.com/media/706597_46890640fef94b09bd03c82cba97c622~mv2.jpg/v1/fill/w_980,h_653,al_c,q_85/706597_46890640fef94b09bd03c82cba97c622~mv2.jpg',desc:'老牌港式茶餐厅，从早晨粥粉面到晚间铁板、焗饭和甜品连续供应，选择丰富且营业时间长。'},
+  {name:'Tasty Pot Newark',city:'Newark',category:'火锅',tag:'Taiwanese Individual Hot Pot',address:'34909 Newark Blvd, Newark, CA 94560',image:'https://tb-static.uber.com/prod/image-proc/processed_images/754c406a04e050dd84862bb3e4410ef9/8a42ee7a692dfa4155879820804a277f.jpeg',desc:'每人一锅的台式小火锅，臭臭锅、牛肉锅与海鲜锅配料已经组合好，辣度和米饭可按喜好调整。'},
+  {name:'Tasty Chinese Restaurant Newark',city:'Newark',category:'中餐',tag:'Chinese · Family Style',address:'5576 Newpark Mall Rd, Newark, CA 94560',image:'https://tastychinesenewark.com/wp-content/uploads/2025/01/Tasty-Chinese-Restaurant-Mongolian-beef-Newark.jpg',desc:'NewPark Mall Road 的家庭式中餐馆，以蒙古牛肉、核桃虾和现炒蔬菜等熟悉菜色服务社区。'}
+];
 const bayAreaRegion='San Jose / Cupertino / Sunnyvale / Milpitas';
 const grid=document.getElementById('grid');
-bayAreaRestaurants.forEach((restaurant,index)=>{
+const expansionRestaurants=[...bayAreaRestaurants,...eastBayRestaurants,...peninsulaRestaurants,...fremontNewarkRestaurants];
+expansionRestaurants.forEach((restaurant,index)=>{
+  restaurant.chifanPick=restaurant.chifanPick===true;
   const article=document.createElement('article');
   article.className='card';
   article.dataset.category=restaurant.category;
-  article.dataset.region=bayAreaRegion;
+  article.dataset.region=['Oakland','Berkeley'].includes(restaurant.city)?'Oakland / Berkeley':['San Mateo','Millbrae'].includes(restaurant.city)?'San Mateo / Millbrae':['Daly City','South San Francisco'].includes(restaurant.city)?'Daly City / South San Francisco':['Fremont','Newark'].includes(restaurant.city)?'Fremont / Newark':bayAreaRegion;
   article.dataset.city=restaurant.city;
   article.dataset.neighborhood=restaurant.city;
+  article.dataset.chifanPick=String(restaurant.chifanPick);
   article.dataset.search=`${restaurant.name} ${restaurant.city} ${restaurant.category} ${restaurant.tag}`.toLowerCase();
   const mapQuery=encodeURIComponent(`${restaurant.name}, ${restaurant.address}`);
-  article.innerHTML=`<div class="photoWrap"><img src="${restaurant.image}" alt="${restaurant.name} 餐厅菜品" loading="lazy"><span class="rank">#${101+index}</span></div><div class="body"><div class="row"><h2>${restaurant.name}</h2><span class="tag">${restaurant.tag}</span></div><p class="desc">${restaurant.desc}</p><div class="details"><div>📍 ${restaurant.address}</div><div>🏙️ ${restaurant.city}</div></div><div class="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=${mapQuery}" target="_blank" rel="noopener">📍 Map</a><button class="fav" type="button">♡ Save</button></div></div>`;
+  article.innerHTML=`<div class="photoWrap"><img src="${restaurant.image}" alt="${restaurant.name} 餐厅菜品" loading="lazy"><span class="rank">#${101+index}</span>${restaurant.chifanPick?'<span class="pickBadge">❤️ CHIFAN PICK</span>':''}</div><div class="body"><div class="row"><h2>${restaurant.name}</h2><span class="tag">${restaurant.tag}</span></div><p class="desc">${restaurant.desc}</p><div class="details"><div>📍 ${restaurant.address}</div><div>🏙️ ${restaurant.city}</div></div><div class="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=${mapQuery}" target="_blank" rel="noopener">📍 Map</a><button class="fav" type="button">♡ Save</button></div></div>`;
   grid.appendChild(article);
 });
 const cards=[...document.querySelectorAll('.card')];
 // Restaurant card schema for future Bay Area additions:
-// data-region="San Mateo / Millbrae" data-neighborhood="Millbrae"
+// data-region="San Mateo / Millbrae" data-neighborhood="Millbrae" data-chifan-pick="false"
 // Existing cards predate the regional schema and are safely normalized to San Francisco here.
 cards.forEach(card=>{
   const rank=card.querySelector('.rank')?.textContent.trim().replace('#','');
   if(rank){card.id=`restaurant-${rank}`;card.querySelector('.rank').id=`rank-${rank}`;}
   if(!card.dataset.region)card.dataset.region='San Francisco';
+  if(!card.dataset.chifanPick)card.dataset.chifanPick='false';
+  if(card.dataset.chifanPick==='true'&&!card.querySelector('.pickBadge')){
+    const badge=document.createElement('span');
+    badge.className='pickBadge';
+    badge.textContent='❤️ CHIFAN PICK';
+    card.querySelector('.photoWrap')?.appendChild(badge);
+  }
 });
 const verifiedPhotos={
   "Eric's Restaurant":"https://img.restaurantguru.com/c0fb-Erics-Restaurant-meals-1.jpg",
@@ -2133,6 +2227,7 @@ cards.forEach(card=>{
   });
 });
 const filterBtns=[...document.querySelectorAll('.filters button')];
+const pickBtn=document.getElementById('pickFilter');
 const regionBtns=[...document.querySelectorAll('.regionFilters button')];
 const areaBtns=[...document.querySelectorAll('.areaFilters button')];
 const intro=document.getElementById('intro');
@@ -2144,6 +2239,7 @@ const search=document.getElementById('search');
 const count=document.getElementById('count');
 const empty=document.getElementById('empty');
 let filter='全部';
+let pickOnly=false;
 let region='全部';
 let area='全部';
 
@@ -2188,16 +2284,21 @@ function renderMap(){
 }
 renderMap();
 
-function apply(){
+function matchesCard(c,includePick=true){
   const q=search.value.trim().toLowerCase();
+  const okCat=filter==='全部'||c.dataset.category===filter;
+  const okRegion=region==='全部'||regionOf(c)===region;
+  const okArea=area==='全部'||neighborhoodOf(c)===area;
+  const text=(c.dataset.search+' '+c.innerText).toLowerCase();
+  const okQ=!q||text.includes(q);
+  const okPick=!includePick||!pickOnly||c.dataset.chifanPick==='true';
+  return okCat&&okRegion&&okArea&&okQ&&okPick;
+}
+
+function apply(){
   let visible=[];
   cards.forEach(c=>{
-    const okCat=filter==='全部'||c.dataset.category===filter;
-    const okRegion=region==='全部'||regionOf(c)===region;
-    const okArea=area==='全部'||neighborhoodOf(c)===area;
-    const text=(c.dataset.search+' '+c.innerText).toLowerCase();
-    const okQ=!q||text.includes(q);
-    const show=okCat&&okRegion&&okArea&&okQ;
+    const show=matchesCard(c);
     c.style.display=show?'flex':'none';
     if(show) visible.push(c);
   });
@@ -2233,6 +2334,12 @@ areaBtns.forEach(b=>b.addEventListener('click',()=>{
   apply();
 }));
 search.addEventListener('input',apply);
+pickBtn.addEventListener('click',()=>{
+  pickOnly=!pickOnly;
+  pickBtn.classList.toggle('active',pickOnly);
+  pickBtn.setAttribute('aria-pressed',String(pickOnly));
+  apply();
+});
 let savedFavorites=[];
 try{savedFavorites=JSON.parse(localStorage.getItem('chifan-favorites')||'[]');}catch(_){savedFavorites=[];}
 document.querySelectorAll('.fav').forEach(b=>{
@@ -2258,7 +2365,7 @@ const winnerMap=document.getElementById('winnerMap');
 let spinTimer=null,countTimer=null,autoStopTimer=null,spinning=false,current=null;
 
 function pool(){
-  return apply().map(c=>({
+  return cards.filter(c=>matchesCard(c,false)).map(c=>({
     name:c.querySelector('h2').innerText.trim(),
     card:c
   }));
