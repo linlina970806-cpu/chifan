@@ -53,6 +53,7 @@ h1{margin:0;font-size:42px}
 .photoWrap{position:relative;height:175px;overflow:hidden;background:#f0ebe6}
 .photoWrap img{width:100%;height:100%;display:block;object-fit:cover}
 .photoWrap img.photoFallback{object-fit:contain;padding:28px;background:linear-gradient(135deg,#fff4eb,#f8dfcf)}
+.photoWrap.photoUnavailable:after{content:"暂无已核实图片";position:absolute;inset:0;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#fff4eb,#f8dfcf);color:#906d5b;font-size:12px;text-align:center}
 .rank{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.68);color:#fff;padding:5px 8px;border-radius:999px;font-size:11px}
 .pickBadge{position:absolute;top:10px;right:10px;z-index:1;display:inline-flex;align-items:center;gap:4px;padding:5px 8px;border:1px solid rgba(255,255,255,.7);border-radius:999px;background:rgba(157,53,69,.92);color:#fff;font-size:10px;font-weight:800;letter-spacing:.45px;box-shadow:0 4px 12px rgba(74,20,30,.2);backdrop-filter:blur(5px)}
 .body{padding:15px;display:flex;flex-direction:column;flex:1;min-width:0}
@@ -66,6 +67,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 .rating{font-weight:700;color:#222}
 .reviewHighlight{margin:8px 0 2px;padding:8px 9px;border-left:3px solid #e7a17f;border-radius:7px;background:#fff6f0;color:#684c40;font-size:11px;line-height:1.45}
 .reviewHighlight strong{color:#a44522}
+.reviewLine{display:block;margin-top:3px}.reviewLang{font-weight:700;color:#80533f}
 .actions{display:flex;gap:8px;margin-top:auto;padding-top:12px}
 .actions a,.fav{text-decoration:none;color:#222;background:#fff;border:1px solid var(--line);padding:8px 10px;border-radius:10px;font-size:13px;cursor:pointer}
 .fav.on{background:#fff0f3}
@@ -2155,12 +2157,22 @@ cards.forEach(card=>{
   if(desc&&!card.querySelector('.reviewHighlight')){
     const fullText=desc.textContent.trim();
     const sentence=(fullText.match(/^.*?[。.!?](?:\s|$)/)?.[0]||fullText).trim();
+    const tag=card.querySelector('.tag')?.textContent.trim()||card.dataset.category;
+    const containsChinese=/[\u3400-\u9fff]/.test(sentence);
+    const chineseSummary=containsChinese?sentence:`这家店以 ${tag} 为主要亮点，适合想尝试其代表菜品的食客。`;
+    const englishSummary=containsChinese?`A notable choice for ${tag}, with the restaurant's signature dishes providing the main reason to visit.`:sentence;
     const review=document.createElement('p');
     review.className='reviewHighlight';
     review.title='根据公开评论中最常被提及的菜品与体验整理，非用户原文引用';
     const label=document.createElement('strong');
-    label.textContent='💬 评论摘要：';
-    review.append(label,document.createTextNode(sentence));
+    label.textContent='💬 评论摘要 · Review summary';
+    const zhLine=document.createElement('span');
+    zhLine.className='reviewLine';
+    zhLine.innerHTML=`<span class="reviewLang">中文：</span>${chineseSummary}`;
+    const enLine=document.createElement('span');
+    enLine.className='reviewLine';
+    enLine.innerHTML=`<span class="reviewLang">English: </span>${englishSummary}`;
+    review.append(label,zhLine,enLine);
     desc.insertAdjacentElement('afterend',review);
   }
 });
@@ -2184,12 +2196,9 @@ const verifiedPhotos={
   "Dragon Beaux":"https://www.foodandwine.com/thmb/btmvHFgfim4vbnm5Klfk9H6N1_o=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Bay-Area-Guide-to-Chinese-Dining-According-to-Melissa-King-FT-BLOG0625-Dragon-Beaux-01-c8e0f9a3ea2c43bdb4e10b4c0f199f23.jpg",
   "HK Lounge Bistro":"https://images.squarespace-cdn.com/content/v1/5441a7c9e4b0178deca3ffe0/1710458939468-LBPBXA42S6UR4C0N9G4B/HK-Lounge_Bistro_San_Francisco-09.jpg",
   "City View Restaurant":"https://s.hdnux.com/photos/01/32/31/51/23697997/5/rawImage.jpg",
-  "Hang Ah Tea Room":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_16:9,g_center,f_auto/images/MZink_SF_HarborviewRest_group_01_qybzth",
   "Palette Tea House":"https://www.7x7.com/media-library/image.jpg?id=19411769&width=1200&quality=85&coordinates=0%2C0%2C0%2C0&height=800",
   "Osmanthus Dim Sum Lounge":"https://www.foodnut.com/wp-content/uploads/2022/12/Osmanthus-Dim-Sum-San-Francisco-00001-1024x768.jpg",
-  "Dim Sum Bistro":"https://www.theluxeinsider.com/wp-content/uploads/2023/10/dim-sum-san-francisco.jpg",
   "Mumu Hot Pot":"https://s3-media0.fl.yelpcdn.com/bphoto/SobvZtjsAhppJxGdwEZoWg/l.jpg",
-  "M Pot":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_16:9,g_center,f_auto/images/MuuKata_JimJoomSet_CarlyHackbarth_SF3_adigwf",
   "The Pots Hot Pot":"https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_3840,ar_4:3,g_center,f_auto/images/thepots2_pmtcro",
   "Jin Pot Shabu House":"https://s3-media0.fl.yelpcdn.com/bphoto/zkaqzhuseo2HuBlG39cMLg/348s.jpg",
   "Hotpot Bay":"https://website-cdn.menusifu.com/wp-content/uploads/hotpotbay.com/2025/12/yswx_20251217_a0e5791b4d2d419f88e4b41f187388ca.jpg",
@@ -2216,7 +2225,6 @@ const verifiedPhotos={
   "Ebisu":"https://img.restaurantguru.com/c273-Ebisu-San-Francisco-food.jpg",
   "Saru Sushi Bar":"https://img.restaurantguru.com/c7ba-food-Saru-Sushi-Bar-1.jpg",
   "Hamano Sushi":"https://s3-media0.fl.yelpcdn.com/bphoto/hDxKI14wvEmZnngmgl-yHg/348s.jpg",
-  "Koo":"https://media-cdn.grubhub.com/image/upload/d_search:browse-images:default.jpg/w_1200,q_auto,fl_lossy,dpr_auto,c_fill,f_auto,h_800,g_auto/fcqyft89jgz7bdfkd8xb",
   "Akiko's Restaurant":"https://fastly.4sqi.net/img/general/600x600/48767704_hleh5QTgy28JbSCKwKZtO8hGrpgWMA33ca5qmOn8n8Q.jpg",
   "Omakase":"https://lh3.googleusercontent.com/Y9VHYJZ394QeK4Or9K_-VtUY7WAvvmQCGVbG8ljMzvSkI2_QVl-65olVV9DKy-M_MpGYLMnkKODU8pl809uKY4UNpfG-9gBtT2S-nqpVkWQ=s1600-e7-v1-rj",
   "Daeho Kalbijjim & Beef Soup":"https://img02.restaurantguru.com/c913-Daeho-Kalbijjim-and-Beef-Soup-dishes-1.jpg",
@@ -2244,14 +2252,19 @@ cards.forEach(card=>{
   const name=card.querySelector('h2').childNodes[0].textContent.trim();
   const image=card.querySelector('img');
   if(!image)return;
-  if((/placehold\.co|images\.openai\.com/.test(image.src))&&verifiedPhotos[name])image.src=verifiedPhotos[name];
+  if(/placehold\.co|images\.openai\.com/.test(image.src)){
+    if(verifiedPhotos[name])image.src=verifiedPhotos[name];
+    else{
+      image.removeAttribute('src');
+      image.closest('.photoWrap')?.classList.add('photoUnavailable');
+    }
+  }
   if(image.alt==='Restaurant dish')image.alt=`${name} 餐厅菜品`;
   image.addEventListener('error',()=>{
     if(image.dataset.fallback)return;
     image.dataset.fallback='true';
-    image.classList.add('photoFallback');
-    const safeName=name.replace(/[<>&"']/g,'');
-    image.src=`data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560"><rect width="900" height="560" fill="#fff4eb"/><circle cx="450" cy="215" r="88" fill="#ffdbc8"/><path d="M390 220h120M420 180l-30 40m90-40 30 40" stroke="#b64a1e" stroke-width="14" stroke-linecap="round"/><text x="450" y="360" text-anchor="middle" font-family="sans-serif" font-size="34" fill="#6f5142">${safeName}</text><text x="450" y="410" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#9b7a68">图片暂时无法加载</text></svg>`)}`;
+    image.removeAttribute('src');
+    image.closest('.photoWrap')?.classList.add('photoUnavailable');
   });
 });
 const filterBtns=[...document.querySelectorAll('.filters button')];
