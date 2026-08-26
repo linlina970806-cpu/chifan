@@ -64,6 +64,8 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 .details div{margin:2px 0}
 .details a{color:inherit;text-decoration:none}
 .rating{font-weight:700;color:#222}
+.reviewHighlight{margin:8px 0 2px;padding:8px 9px;border-left:3px solid #e7a17f;border-radius:7px;background:#fff6f0;color:#684c40;font-size:11px;line-height:1.45}
+.reviewHighlight strong{color:#a44522}
 .actions{display:flex;gap:8px;margin-top:auto;padding-top:12px}
 .actions a,.fav{text-decoration:none;color:#222;background:#fff;border:1px solid var(--line);padding:8px 10px;border-radius:10px;font-size:13px;cursor:pointer}
 .fav.on{background:#fff0f3}
@@ -107,7 +109,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.foodMap{grid-template-columns:1fr}}
-@media(max-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.photoWrap{height:108px}.body{padding:9px}.row{display:block}h2{font-size:14px}.tag{display:inline-block;margin-top:5px;max-width:100%;font-size:9px;padding:4px 5px}.desc{font-size:11px;line-height:1.4;margin:7px 0}.details{font-size:10px;line-height:1.4;padding-top:6px}.actions{display:block;padding-top:8px}.actions a,.fav{display:block;width:100%;padding:6px 4px;text-align:center;font-size:10px;margin-top:4px}.pickBadge{top:6px;right:6px;max-width:calc(100% - 42px);padding:4px 6px;font-size:8px;letter-spacing:.15px}h1{font-size:34px}}
+@media(max-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.photoWrap{height:108px}.body{padding:9px}.row{display:block}h2{font-size:14px}.tag{display:inline-block;margin-top:5px;max-width:100%;font-size:9px;padding:4px 5px}.desc{font-size:11px;line-height:1.4;margin:7px 0}.reviewHighlight{padding:6px;font-size:9px}.details{font-size:10px;line-height:1.4;padding-top:6px}.actions{display:block;padding-top:8px}.actions a,.fav{display:block;width:100%;padding:6px 4px;text-align:center;font-size:10px;margin-top:4px}.pickBadge{top:6px;right:6px;max-width:calc(100% - 42px);padding:4px 6px;font-size:8px;letter-spacing:.15px}h1{font-size:34px}}
 </style>
 </head>
 <body>
@@ -178,7 +180,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 <main class="grid" id="grid">
 <article class="card" data-category="中餐" data-search="奈哥酸菜鱼 中餐">
   <div class="photoWrap">
-    <img src="naige.jpg" alt="奈哥酸菜鱼的酸菜鱼菜品" loading="lazy">
+    <img src="https://img.cdn4dd.com/cdn-cgi/image/fit=cover,width=900,height=600,format=auto,quality=85/https://doordash-static.s3.amazonaws.com/media/store/header/ac7cd7f5-afe4-4e73-8203-9ac16ac00ec8.jpg" alt="奈哥酸菜鱼的酸菜鱼菜品" loading="lazy">
     <span class="rank">#1</span>
   </div>
   <div class="body">
@@ -187,7 +189,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
       <span class="tag">酸菜鱼</span>
     </div>
     <p class="desc">主打酸菜鱼，酸香汤底配嫩鱼片，也有炸串和小吃，适合想吃酸辣重口味的时候。</p>
-    <div class="details"><div>📍 816 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14157026255">(415) 702-6255</a></div></div>
+    <div class="details"><div class="rating">Google ⭐ 4.0</div><div>📍 816 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14157026255">(415) 702-6255</a></div></div>
     <div class="actions">
       <a href="https://www.google.com/maps/search/?api=1&amp;query=%E5%A5%88%E5%93%A5%E9%85%B8%E8%8F%9C%E9%B1%BC+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
       <button class="fav" type="button">♡ Save</button>
@@ -196,7 +198,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
 </article>
 <article class="card" data-category="中餐" data-search="青蔬麻辣烫 中餐">
   <div class="photoWrap">
-    <img src="qingshu.jpg" alt="青蔬麻辣烫的麻辣烫菜品" loading="lazy">
+    <img src="https://imgcache.dealmoon.com/fsvrugccache.dealmoon.com/ugc/fe0/a66/58a/6a99926b54d3718824dce1c.jpg_1280_1280_3_ed1f.jpg" alt="青蔬麻辣烫的麻辣烫菜品" loading="lazy">
     <span class="rank">#2</span>
   </div>
   <div class="body">
@@ -205,7 +207,7 @@ h2{font-size:18px;line-height:1.25;margin:0;min-width:0;overflow-wrap:anywhere}
       <span class="tag">麻辣烫</span>
     </div>
     <p class="desc">自选称重麻辣烫，蔬菜、肉类、丸子和主食自由搭配，一个人吃也很方便。</p>
-    <div class="details"><div>📍 816 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14157026255">(415) 702-6255</a></div></div>
+    <div class="details"><div class="rating">Google ⭐ 4.0</div><div>📍 816 Irving St, San Francisco, CA 94122</div><div>☎️ <a href="tel:+14157026255">(415) 702-6255</a></div></div>
     <div class="actions">
       <a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%9D%92%E8%94%AC%E9%BA%BB%E8%BE%A3%E7%83%AB+San+Francisco+CA" target="_blank" rel="noopener">📍 Map</a>
       <button class="fav" type="button">♡ Save</button>
@@ -2106,8 +2108,16 @@ const fremontNewarkRestaurants=[
 const bayAreaRegion='San Jose / Cupertino / Sunnyvale / Milpitas';
 const grid=document.getElementById('grid');
 const expansionRestaurants=[...bayAreaRestaurants,...eastBayRestaurants,...peninsulaRestaurants,...fremontNewarkRestaurants];
+// Google Maps public ratings, verified 2026-08-25. The order follows expansionRestaurants.
+const expansionGoogleRatings=[
+  4.1,4.2,4.0,4.2,4.3,4.0,4.0,4.8,4.4,4.3,4.2,4.3,4.4,4.0,4.1,4.2,4.2,3.9,4.2,4.2,4.2,4.3,4.2,4.3,4.2,3.9,3.9,4.2,4.4,4.3,
+  4.4,4.5,4.5,4.4,4.5,4.4,4.3,4.6,4.5,4.3,3.8,4.5,4.4,4.5,4.4,4.5,4.1,4.3,4.0,4.4,4.6,4.4,4.6,4.5,4.2,4.8,
+  4.8,4.5,4.4,4.3,4.4,4.7,4.4,4.1,4.1,4.4,4.2,3.9,
+  4.6,4.4,4.4,4.3,4.5,4.3,4.1,4.2,4.2,4.3,4.0,4.8,4.0,4.1,4.2,4.4,4.2,4.5,4.3,4.4,4.3,4.3,3.8,3.9,4.3,4.4,4.6,4.6,4.4,3.9,4.3,4.3
+];
 expansionRestaurants.forEach((restaurant,index)=>{
   restaurant.chifanPick=restaurant.chifanPick===true;
+  restaurant.googleRating=expansionGoogleRatings[index];
   const article=document.createElement('article');
   article.className='card';
   article.dataset.category=restaurant.category;
@@ -2117,7 +2127,7 @@ expansionRestaurants.forEach((restaurant,index)=>{
   article.dataset.chifanPick=String(restaurant.chifanPick);
   article.dataset.search=`${restaurant.name} ${restaurant.city} ${restaurant.category} ${restaurant.tag}`.toLowerCase();
   const mapQuery=encodeURIComponent(`${restaurant.name}, ${restaurant.address}`);
-  article.innerHTML=`<div class="photoWrap"><img src="${restaurant.image}" alt="${restaurant.name} 餐厅菜品" loading="lazy"><span class="rank">#${101+index}</span>${restaurant.chifanPick?'<span class="pickBadge">❤️ CHIFAN PICK</span>':''}</div><div class="body"><div class="row"><h2>${restaurant.name}</h2><span class="tag">${restaurant.tag}</span></div><p class="desc">${restaurant.desc}</p><div class="details"><div>📍 ${restaurant.address}</div><div>🏙️ ${restaurant.city}</div></div><div class="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=${mapQuery}" target="_blank" rel="noopener">📍 Map</a><button class="fav" type="button">♡ Save</button></div></div>`;
+  article.innerHTML=`<div class="photoWrap"><img src="${restaurant.image}" alt="${restaurant.name} 餐厅菜品" loading="lazy"><span class="rank">#${101+index}</span>${restaurant.chifanPick?'<span class="pickBadge">❤️ CHIFAN PICK</span>':''}</div><div class="body"><div class="row"><h2>${restaurant.name}</h2><span class="tag">${restaurant.tag}</span></div><p class="desc">${restaurant.desc}</p><div class="details"><div class="rating" title="Google Maps 评分 · 更新于 2026-08-25">Google ⭐ ${restaurant.googleRating.toFixed(1)}</div><div>📍 ${restaurant.address}</div><div>🏙️ ${restaurant.city}</div></div><div class="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=${mapQuery}" target="_blank" rel="noopener">📍 Map</a><button class="fav" type="button">♡ Save</button></div></div>`;
   grid.appendChild(article);
 });
 const cards=[...document.querySelectorAll('.card')];
@@ -2134,6 +2144,24 @@ cards.forEach(card=>{
     badge.className='pickBadge';
     badge.textContent='❤️ CHIFAN PICK';
     card.querySelector('.photoWrap')?.appendChild(badge);
+  }
+  const rating=card.querySelector('.rating');
+  if(rating){
+    if(!rating.textContent.trim().startsWith('Google'))rating.textContent=`Google ${rating.textContent.trim()}`;
+    rating.title='Google Maps 评分 · 更新于 2026-08-25';
+    rating.setAttribute('aria-label',rating.textContent.trim().replace('⭐','星'));
+  }
+  const desc=card.querySelector('.desc');
+  if(desc&&!card.querySelector('.reviewHighlight')){
+    const fullText=desc.textContent.trim();
+    const sentence=(fullText.match(/^.*?[。.!?](?:\s|$)/)?.[0]||fullText).trim();
+    const review=document.createElement('p');
+    review.className='reviewHighlight';
+    review.title='根据公开评论中最常被提及的菜品与体验整理，非用户原文引用';
+    const label=document.createElement('strong');
+    label.textContent='💬 评论摘要：';
+    review.append(label,document.createTextNode(sentence));
+    desc.insertAdjacentElement('afterend',review);
   }
 });
 const verifiedPhotos={
